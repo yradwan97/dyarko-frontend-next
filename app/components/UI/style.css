@@ -1,0 +1,39 @@
+.horizontal-slider {
+    width: 100%;
+    height: 50px;
+}
+
+.horizontal-slider .custom-thumb {
+    height: 25px;
+    top: 1px;
+    width: 25px;
+    line-height: 38px;
+    background-color: #fff;
+    margin-top: 0.6rem;
+    border: 2px;
+    border-radius: 90%;
+    border-style: solid;
+    border-color: #f8b03e;
+    cursor: grab;
+}
+.horizontal-slider .custom-track {
+    top: 20px;
+    height: 5px;    
+}
+.custom-track.custom-track-0 {
+    background: #fff;
+    border-radius: 3rem;
+}
+
+.custom-track.custom-track-1 {
+    background: #f8b03e;
+    border-radius: 3rem;
+}
+
+.range-slider-text {
+    color: black;
+    font-size: medium;
+    font-family: sans-serif;
+    padding-top: 12px;
+    text-align: left;
+}

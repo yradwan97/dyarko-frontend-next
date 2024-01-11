@@ -2,26 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+ :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
-}
-
+} 
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
   }
+} */
+
+.circle {
+  clip-path: circle(25%);
+}
+
+.swiper {
+  align-content: center;
+}
+
+.swiper-slide {
+  width: 140px;
+  height: 140px;
+  flex-direction: row;
+}
+
+.swiper-container {
+  align-items: center;
+  justify-content: baseline;
+  
+}
+
+company-image {
+  float: left;
+  width:  100px;
+  height: 100px;
+  object-fit: contain;
+  
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  padding: 1rem;
+}
+
+.bg-walletBase {
+  background-image: url('/assets/Base.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.bg-walletItem {
+  background-image: url('/assets/wallet-item.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center; 
 }

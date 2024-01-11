@@ -1,0 +1,25 @@
+/* Tabs.css */
+.tabs-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5vh
+  }
+  
+  .tab {
+    padding: 10px 15px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-right: 5px;
+  }
+  
+  .tab:hover {
+    background-color: #C9ECFA;
+  }
+  
+  .tab.active {
+    background-color: #3DBAEC;
+    color: white;
+  }
+  

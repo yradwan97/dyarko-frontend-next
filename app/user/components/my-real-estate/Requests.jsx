@@ -1,0 +1,118 @@
+'use client'
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
+import React, { useEffect, useState } from "react";
+import Button from "../../../components/Shared/Button"
+import Typography from "../../../components/Shared/Typography"
+import Select from "@/app/components/Shared/Form/Select";
+import { axiosClient as axios } from "@/app/services/axiosClient"
+import { format } from "date-fns"
+import Paginator from "@/app/components/Shared/pagination/Pagination"
+import { capitalizeFirst } from "@/app/utils/utils";
+import { checkForInvoices } from "../../userApi";
+
+const values = [
+  { name: "paid", icon: "Paid" },
+  { name: "unpaid", icon: "Unpaid" }
+];
+function Requests({ setShowRequest, id }) {
+  const [selected, setSelected] = useState(values[0]);
+  const [page, setPage] = useState(1)
+  const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
+
+  const getInvoices = async () => {
+    try {
+      let response = await axios.get(`/invoices?property=${id}&page=${page}`)
+
+      if (response.status === 200) {
+        setInvoices(response.data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    getInvoices()
+  }, [id, page])
+
+
+  return (
+    <div>
+      <div
+        className="mb-7 flex cursor-pointer items-center"
+        onClick={() => setShowRequest(false)}
+      >
+        <ChevronLeftIcon className="mr-2.5 h-6 w-5 text-main-600" />
+        <span className="text-md font-bold text-main-600">
+          Back to my real-estates
+        </span>
+      </div>
+
+      <div className="mb-8 flex items-center justify-between">
+        <Typography variant="body-xl-bold" as="h2" className=" text-black">
+          Transactions
+        </Typography>
+        <div className="hidden items-center justify-end space-x-4 md:flex">
+          <Button
+            variant="primary"
+            className="!border-main-orange-500 !bg-main-orange-500 hover:!border-main-orange-600 hover:!bg-main-orange-600 hover:!text-white "
+          >
+            Terminate Contract
+          </Button>
+          <Select
+            containerClass="py-3 px-5 w-full rounded-lg !justify-between"
+            values={values}
+            selected={selected}
+            setSelected={e => setSelected(e)}
+          />
+        </div>
+      </div>
+      <table className="w-full table-auto text-center">
+        <thead>
+          <tr className="flex justify-between">
+            <th className="text-md flex-1 text-left font-bold text-black">
+              Paid On
+            </th>
+            <th className="text-md flex-1 text-center font-bold text-black">
+              Purpose
+            </th>
+            <th className="text-md flex-1 text-right font-bold text-black">
+              Amount
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
+            <tr className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100">
+              <td className="flex-1 text-left text-sm font-medium text-gray-500">
+                {format(new Date(invoice?.paid_at), "dd/MM/yyyy HH:mm")}
+              </td>
+              <td className="flex-1 capitalize text-center text-sm font-medium text-black">
+                {invoice?.title} - {capitalizeFirst(invoice?.property[0]?.type)}
+              </td>
+              <td className="flex-1 text-right text-sm font-medium text-black">
+                {Math.abs(invoice?.amount)}
+              </td>
+            </tr>
+          ))}
+
+        </tbody>
+      </table>
+      <div className="mt-7 flex items-center justify-center">
+        <Paginator
+          lastPage={invoices?.pages}
+          page={page}
+          onChange={(e) => setPage(e)}
+        />
+      </div>
+      <Button
+        variant="primary"
+        className="mx-auto mt-4 block !border-main-orange-500 !bg-main-orange-500 hover:!border-main-orange-600 hover:!bg-main-orange-600 hover:!text-white md:hidden"
+      >
+        Terminate Contract
+      </Button>
+    </div>
+  );
+}
+
+export default Requests;
