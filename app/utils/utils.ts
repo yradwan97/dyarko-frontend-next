@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const getPropertyAddress = (property: Property): string => {
-    return `${property.code}, ${property.region}, ${property.city}`
+    return `${property?.code}, ${property?.region}, ${property?.city}`
 }
 
 export const toParams = (params: any = ""): string =>{

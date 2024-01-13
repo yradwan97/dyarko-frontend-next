@@ -40,7 +40,7 @@ export const options: NextAuthOptions = {
     ],
     pages: {
         signIn: "/login",
-        newUser: "/sign-up"
+        newUser: "/new-user"    
     },
     callbacks: {
         

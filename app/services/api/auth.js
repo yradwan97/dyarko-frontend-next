@@ -25,7 +25,7 @@ const signup = async (newUser) => {
     email: newUser.email,
     name: newUser.name,
     type: newUser.type,
-    group: newUser.group,
+    group: newUser.group ? newUser.group : "",
     password: newUser.password,
   });
   return res.data;

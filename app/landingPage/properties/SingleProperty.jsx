@@ -17,9 +17,9 @@ const SingleProperty = ({ property, className, location, listView }) => {
     <div className={`flex-1 ${className}`}>
       <div className={`relative ${listView && "w-1/2"}`}>
         {property?.payment_type === "rent" && <TopBadge />}
-        {property.popular && <PopularBadge />}
+        {property?.popular && <PopularBadge />}
         <Image
-          src={property.image || propertyOne}
+          src={property?.image || propertyOne}
           alt="property"
           className={` w-full ${listView ? "h-full rounded-l-lg" : "h-44 rounded-t-lg sm:h-32"
             } `}
@@ -42,11 +42,11 @@ const SingleProperty = ({ property, className, location, listView }) => {
               period={getPropertyPeriod(property)}
             />
           }
-          <AddWishlist location={location} id={property._id} />
+          <AddWishlist location={location} id={property?._id} />
         </div>
-        <Link href={`/property-details/${property._id}`}>
+        <Link href={`/property-details/${property?._id}`}>
           <Typography variant="h4" as="h4" className="mt-1">
-            {property.title}
+            {property?.title}
           </Typography>
         </Link>
         <Typography
@@ -54,7 +54,7 @@ const SingleProperty = ({ property, className, location, listView }) => {
           as="p"
           className="my-2 text-gray-500"
         >
-          {getPropertyAddress(property)}
+          {property && getPropertyAddress(property)}
         </Typography>
         <div className="mt-5 flex items-center justify-between border-t border-main-100 pt-3">
           <div className="flex items-end justify-between space-x-2 mx-2">
@@ -64,7 +64,7 @@ const SingleProperty = ({ property, className, location, listView }) => {
               as="p"
               className="text-gray-500"
             >
-              {property.bedrooms || 5} {location !== "search" ? "Bedrooms" : ""}
+              {property?.bedrooms || 5} {location !== "search" ? "Bedrooms" : ""}
             </Typography>
           </div>
           <div className="flex items-end justify-between space-x-2 mx-2 py-2">
@@ -74,7 +74,7 @@ const SingleProperty = ({ property, className, location, listView }) => {
               as="p"
               className="text-gray-500 "
             >
-              {property.bathrooms || 3} {location !== "search" ? "Bathrooms" : ""}
+              {property?.bathrooms || 3} {location !== "search" ? "Bathrooms" : ""}
             </Typography>
           </div>
           <div className="flex items-end justify-stretch space-x-2 mx-2">
@@ -84,7 +84,7 @@ const SingleProperty = ({ property, className, location, listView }) => {
               as="p"
               className="text-gray-500 "
             >
-              {property.area || 100} m²
+              {property?.area || 100} m²
             </Typography>
           </div>
         </div>

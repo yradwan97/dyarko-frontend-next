@@ -17,14 +17,16 @@ import Modal from "../../../components/Shared/Modal"
 import Input from "../../../components/Shared/Form/Input"
 import Button from "../../../components/Shared/Button"
 import Requests from "./Requests";
+import Line from "@/app/property-search/components/Line";
 
 function RealEstateProperty({ property, onShowInvoices }) {
-  const [showInvoices, setShowInvoices] = useState(false)
+  
   const [anchorEl, setAnchorEl] = useState(null);
-  const [anchorElServices, setAnchorElServices] = useState(null)
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)
   const [reason, setReason] = useState("")
+  const [selectedService, setSelectedService] = useState()
+  const [showServicesModal, setShowServicesModal] = useState(false)
 
   const { data: session } = useSession()
 
@@ -56,49 +58,44 @@ function RealEstateProperty({ property, onShowInvoices }) {
   };
 
   const handleSelectService = async (service) => {
-    console.log(service)
+    
     const body = {
       property: property._id,
       service: service._id
     }
+    try {
     let response = await axios.post("/additional_service_requests", body)
     console.log(response)
     if (response.data.success) {
       toast.success(`Service: ${service.name} requested successfully. Pending confirmation.`)
-      setAnchorElServices(null)
-      setAnchorEl(null)
+      setShowServicesModal(false)
     }
+  } catch (e) {
+    console.error(e)
+  }
   }
 
   const handleMenuItemClick = async (event) => {
-    let response;
+    
     if (event.target.textContent === "Financial Discharge") {
       try {
-        response = await axios.post(`/disclaimer/${property?._id}`)
+        let response = await axios.post(`/disclaimer/${property?._id}`)
         console.log(response)
         if (response.data.status === 200) {
           toast.success("Request created successfully.")
         }
       } catch (e) {
         console.error(e)
-      } finally {
-        handleClose();
       }
 
     } else if (event.target.textContent === "Services") {
-      console.log(services)
-      if (anchorElServices !== null) {
-        setAnchorElServices(null)
-      } else {
-        setAnchorElServices(event.currentTarget)
-      }
+      setShowServicesModal(true)
     } else if (event.target.textContent === "Terminate Contract") {
       setShowReason(true)
-      setAnchorEl(null)
     } else if (event.target.textContent === "Invoices") {
       onShowInvoices(property?._id)
     }
-
+    handleClose()
   };
 
   const handleTerminateContract = async () => {
@@ -148,7 +145,7 @@ function RealEstateProperty({ property, onShowInvoices }) {
             )}
           </div>
           <div className="flex items-center">
-            <AddWishlist />
+            <AddWishlist id={property?._id} />
             {property?.payment_type === "rent" && <div className="cursor-pointer ml-2" onClick={handleClick}>
               <Image src={menuImage} alt="menu" width={30} height={30} />
             </div>}
@@ -158,24 +155,7 @@ function RealEstateProperty({ property, onShowInvoices }) {
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
           <MenuItem onClick={(e) => handleMenuItemClick(e)}>Financial Discharge</MenuItem>
           <MenuItem onClick={(e) => handleMenuItemClick(e)}>Invoices</MenuItem>
-          <MenuItem onClick={(e) => handleMenuItemClick(e)}>
-            Services
-            <Menu
-              anchorEl={anchorElServices}
-              open={Boolean(anchorElServices)}
-              onClose={() => setAnchorElServices(null)}
-            >
-              {services.length === 0 ? (
-                <MenuItem>No services are available</MenuItem>
-              ) : (
-                services.map((service) => (
-                  <MenuItem key={service._id} onClick={() => handleSelectService(service)}>
-                    {service.name}
-                  </MenuItem>
-                ))
-              )}
-            </Menu>
-          </MenuItem>
+          <MenuItem onClick={(e) => handleMenuItemClick(e)}>Services</MenuItem>
           <MenuItem onClick={(e) => handleMenuItemClick(e)}>Terminate Contract</MenuItem>
         </Menu>
         <Typography variant="h4" as="h4" className="mt-1">
@@ -185,14 +165,56 @@ function RealEstateProperty({ property, onShowInvoices }) {
           {property?.locations.join(", ")}
         </Typography>
       </div>
-      <Modal isOpen={showReason} onClose={() => {
-        setShowReason(false)
-      }}>
+      <Modal isOpen={showReason} onClose={() => setShowReason(false)}>
         <div className="flex flex-col space-y-3 items-center justify-center">
           <Input type="text" className="text-black" placeholder="Enter Termination Reason." value={reason} onChange={e => setReason(e.target.value)} />
           <Button variant="primary" onClick={handleTerminateContract}>Submit</Button>
         </div>
       </Modal>
+      <Modal isOpen={showServicesModal} onClose={() => setShowServicesModal(false)}>
+        <div className="flex flex-col space-y-3 items-center justify-center">
+          <Typography as="h1" variant="body-lg-medium">Available Services</Typography>
+          {services.length === 0 ? (
+            <Typography as="p" variant="body-sm-medium">No services are available</Typography>
+          ) : (
+            <>
+              <Line />
+              {services.map((service) => (
+                <div key={service._id} className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id={`${service._id}`}
+                    name="selectedService"
+                    className="capitalize text-black"
+                    value={service.name}
+                    onChange={() => setSelectedService(service)}
+                  />
+                  <label htmlFor={`service-${service._id}`}>
+                    <Typography as="p" variant="body-sm-medium">
+                      {service.name}
+                    </Typography>
+                  </label>
+                </div>
+              ))}
+              
+              
+            </>
+          )}
+          <div className="flex flex-row space-x-2">
+          {services && services.length > 0 && <Button className="mt-8" variant="primary" onClick={() => {
+                handleSelectService(selectedService)
+              }}>
+                Submit
+              </Button>}
+          <Button className="mt-8" variant="primary" onClick={() => {
+                setShowServicesModal(false)
+              }}>
+                Close
+              </Button>
+          </div>
+        </div>
+      </Modal>
+
     </div>
 
 

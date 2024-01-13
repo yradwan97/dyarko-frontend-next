@@ -1,14 +1,22 @@
 'use client'
 import HeartSolid from '../../components/UI/icons/HeartSolid'
 import HeartOutline from '../../components/UI/icons/HeartOutline'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { axiosClient as axios } from "../../services/axiosClient"
 import { useSession } from 'next-auth/react'
+import { useIsPropertySaved } from '@/app/property-listing/propertiesApis'
 
-function AddWishlist({ location, id, property }) {
+function AddWishlist({ location, id }) {
 
-  const [pressed, setPressed] = useState(property?.saved > 0 || location === "savedProperties" || false)
+  const isLiked = useIsPropertySaved(id)
+  const [pressed, setPressed] = useState(isLiked || location === "savedProperties")
   const { data: session } = useSession()
+
+  useEffect(() => {
+    if (location !== "savedProperties") {
+    setPressed(isLiked)
+    }
+  }, [isLiked])
 
   const handleLikePressed = async (method) => {
     let response =

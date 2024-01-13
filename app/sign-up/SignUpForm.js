@@ -13,9 +13,17 @@ import HouseColoredIcon from "../components/UI/icons/HouseColoredIcon"
 
 const OWNER_DASHBOARD_URL = process.env.NEXT_PUBLIC_NEXT_APP_OWNER_DASHBOARD_URL;
 
+
+
 const SignUpForm = (props) => {
-  
-  const [userType, setUserType] = useState(null);
+  const userTypes = [
+    {
+      value: "consumer",
+      label: "Buy or Rent",
+      icon: <HouseColoredIcon />,
+    }
+  ];
+  const [userType, setUserType] = useState(userTypes[0]);
   const [userGroup, setUserGroup] = useState(null);
 
   const {
@@ -25,13 +33,7 @@ const SignUpForm = (props) => {
     formState: { errors },
   } = useForm();
 
-  const userTypes = [
-    {
-      value: "consumer",
-      label: "Buy or Rent",
-      icon: <HouseColoredIcon />,
-    }
-  ];
+  
 
   const userGroups = [
     {
@@ -148,7 +150,7 @@ const SignUpForm = (props) => {
       error: errors.group,
     };
 
-  const submitHandler = (data) => props.handler(data, reset);
+  const submitHandler = (data) => props.handler({...data, type: userType.value, role: "user"}, reset);
 
   return (
     <Form formHandleSubmit={handleSubmit} submitHandler={submitHandler}>
@@ -173,7 +175,8 @@ const SignUpForm = (props) => {
       <InputGroup {...signUpSchema.name} />
       <InputGroup {...signUpSchema.email} />
       <InputGroup {...signUpSchema.civilianId} />
-      <PhoneInput {...signUpSchema.phoneNumber} />
+      <InputGroup {...signUpSchema.phoneNumber} register={signUpSchema.phoneNumber.register} error={errors.phoneNumber} />
+      {/* <PhoneInput {...signUpSchema.phoneNumber} /> */}
       <PasswordInput {...signUpSchema.password} />
       <Button
         type="submit"
@@ -198,9 +201,9 @@ const SignUpForm = (props) => {
           as="p"
       >
         Already have an owner account?{" "}
-        <a href={OWNER_DASHBOARD_URL} className="text-black">
+        <Link href={OWNER_DASHBOARD_URL} className="text-black">
           Login Here
-        </a>
+        </Link>
       </Typography>
     </Form>
   );

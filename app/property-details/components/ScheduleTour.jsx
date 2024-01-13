@@ -127,14 +127,18 @@ function ScheduleTour({ visible, setVisible, id }) {
 
   const onSubmit = async (e) => {
     e.preventDefault()
+    let date;
     if (availableTimeSlots.length === 0) {
-      if (!selectedDate || selectedTimeSlot || !phoneNumber || !id) return
+      if (!selectedDate || !selectedTimeSlot || !phoneNumber || !id) return
+      date = format(new Date(selectedDate), "yyyy/MM/dd")
     } else {
-      if (!phoneNumber || selectedTimeSlot || !id) return
+      if (!phoneNumber || !selectedTimeSlot || !id) return
+      date = selectedTimeSlot.split("-").map(d => d.trim().split(" ")[0])[0]
+      console.log(date)
     }
 
     const tourData = {
-      date: format(new Date(selectedDate), "yyyy/MM/dd"),
+      date,
       phone: phoneNumber,
       property: id
     }
