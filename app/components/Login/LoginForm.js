@@ -11,12 +11,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import {axiosClient as axios} from "../../services/axiosClient"
 import { firebaseCloudMessaging } from "../../lib/firebase/firebase";
 
-
 const LoginForm = () => {
   const router = useRouter()  
   const searchParams = useSearchParams().toString()
   let callBack = decodeURIComponent(searchParams.substring(searchParams.indexOf("=") + 1))
-  console.log(callBack)
+
+  const getLoggedInUser = async () => {
+    let res = await axios.get("/users")
+    console.log(res.data)
+    return res.data
+  }
+  
   const {data:session, update} = useSession()
   const {
     register,
@@ -67,8 +72,14 @@ const LoginForm = () => {
         return
       } else if (response.ok) {
         await update()
-        console.log(session)
-        if (!session || !session?.user?.device_token) {
+        
+        
+        // if (!user.data.is_confirmed) {
+        //   router.push("/login/confirm")
+        //   return
+        // }
+          
+        if (!session?.user?.device_token) {
           const token = await firebaseCloudMessaging.init();
           if (token) {
             axios.put("/users/device_token", { device_token: token })

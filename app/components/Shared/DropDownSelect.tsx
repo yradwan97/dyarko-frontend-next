@@ -5,10 +5,13 @@ import { useState } from "react";
 
 interface DropDownSelectProps {
   list: string[];
+  selectedValue?: string
   onSelect: (selectedIndx: number) => void;
 }
-function DropDownSelect({ list, onSelect }: DropDownSelectProps) {
-  const [selected, setSelected] = useState("0");
+function DropDownSelect({ list, onSelect, selectedValue }: DropDownSelectProps) {
+  let idx = list.indexOf(selectedValue!) || -1
+  console.log(idx)
+  const [selected, setSelected] = useState(selectedValue ? list[idx] : "0");
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value);

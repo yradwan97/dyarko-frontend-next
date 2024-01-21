@@ -6,19 +6,32 @@ import DropDownSelect from "@/app/components/Shared/DropDownSelect"
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useGetPropertyTypes } from "@/app/property-listing/propertiesApis";
+import Select from "@/app/components/Shared/Form/Select";
 
+
+const governerates = [
+  { id: "al ahmadi", icon: "Al Ahmadi" },
+  { id: "al asimah", icon: "Al Asimah" },
+  { id: "al farwaniyah", icon: "Al Farwaniya" },
+  { id: "hawalli", icon: "Hawalli" },
+  { id: "al jahra", icon: "Al Jahra" },
+  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
+  { id: "kuwait city", icon: "Kuwait City" }
+]
 
  function TabContent({tab, session}) {
+   const {data: propertyTypes} = useGetPropertyTypes(session?.user?.accessToken)
   const [date, setDate] = useState("");
   const [location, setLocation] = useState("")
-  const [selectedPropertyType, setSelectedPropertyType] = useState("")
+  const [selectedGov, setSelectedGov] = useState(governerates[0].id)
+  const [selectedPropertyType, setSelectedPropertyType] = useState(propertyTypes?.length > 0 ? propertyTypes[0] : "")
 
   let queryParams = () => {
     let str = []
     let final = ``
     if (date !== "") str.push(`date=${date}`)
-    if (location !== "") str.push(`location=${location}`)
-    if (selectedPropertyType !== "") str.push(`type=${selectedPropertyType}`)
+    if (selectedGov !== "") str.push(`location=${selectedGov}`)
+    if (selectedPropertyType !== "") str.push(`type=${selectedPropertyType.value}`)
     
     switch (str.length) {
       case 0:
@@ -37,29 +50,29 @@ import { useGetPropertyTypes } from "@/app/property-listing/propertiesApis";
 
   let finalQueryStr = queryParams()
 
-  const {data: propertyTypes} = useGetPropertyTypes(session?.user?.accessToken)
 
   return (
     <>
-      <div className={`flex flex-row ${session ? "w-[900px]" : "w-[800px]"}`}>
-        <div className="flex flex-col border-r border-main-200 px-6 lg:px-8">
+      <div className={`flex flex-row ${session ? "w-[960px]" : "w-[800px]"}`}>
+        <div className="flex flex-col border-r w-3/5 border-main-200 px-4 lg:px-8">
           <Typography variant="body-sm" as="p" className="mb-1 text-gray-600">
             Location
           </Typography>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="border-0 focus:outline-none !px-0 !py-0 w-full !text-base !font-bold !text-black !placeholder-gray-300"
-            placeholder="Kuwait City, Kuwait"
+          <div className="w-full sm:w-full md:mx-0 ">
+            <Select
+              containerClass="py-2 px-6 w-full rounded-lg !justify-between"
+              values={governerates}
+              selected={selectedGov}
+              setSelected={(e) => setSelectedGov(e.id)}
+            />
 
-          />
+          </div>
         </div>
         <div className="w-5/12 border-r border-main-200 px-2 lg:px-8">
           <Typography variant="body-sm" as="p" className="mb-1 text-gray-600">
             When
           </Typography>
-          <div className="relative">
+          <div className="relative space-x-2">
             <DatePicker
               className="bg-inherit w-full appearance-none rounded-lg border-0 border-main-200  px-0 text-base 
                   font-bold text-black !placeholder-grey-200 focus:border-main-400 focus-visible:outline-0"
@@ -76,6 +89,7 @@ import { useGetPropertyTypes } from "@/app/property-listing/propertiesApis";
           </Typography>
           <DropDownSelect
             list={propertyTypes?.map((type) => type.name) || []}
+            selectedValue={selectedPropertyType.name}
             onSelect={(indx) => setSelectedPropertyType(propertyTypes[indx].value)}
           />
         </div>}

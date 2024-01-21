@@ -4,7 +4,7 @@ import FeatureItem from './FeatureItem'
 import { format } from '@/app/utils/utils'
 
 function ServicesComponent({ services }) {
-    console.log(services)
+
     return (
         <div className='py-12 border-b border-gray-200'>
             <Typography variant='h4' as="h4" className="mb-8">Available Extra Services</Typography>

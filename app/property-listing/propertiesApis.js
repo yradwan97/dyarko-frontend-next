@@ -52,8 +52,9 @@ export const useGetProperties = (searchParams = "") => {
         ["properties", searchParams],
         async () => await axios.get(`/properties?${searchParams}`)
     )
+    // console.log(data)
 
-    return {data: data?.data, totalCount: data?.itemsCount || 0, isLoading, refetch}
+    return {data: data?.data, totalCount: data?.data.itemsCount || 0, isLoading, refetch}
 }
 
 export const useIsPropertySaved = (propertyId) => {

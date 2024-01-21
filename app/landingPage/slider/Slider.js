@@ -8,7 +8,6 @@ import CircleIcon from "../../components/UI/icons/CircleIcon"
 import Typography from "../../components/Shared/Typography";
 import Tabs from "./Tabs";
 import CountUp from "react-countup";
-import dynamic from "next/dynamic";
 
 
 function Slider() {

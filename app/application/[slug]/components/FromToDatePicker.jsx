@@ -24,8 +24,13 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
 
     const getRentedDates = async (id) => {
         try {
-            let response = await axios.get(`/rents/dates/${id}`)
+            let response = await axios.get(`/rents/dates/${id}`, {
+                headers: {
+                    "auth-token": `Bearer ${session?.user?.accessToken}`
+                }
+            })
             if (response.status === 200) {
+                console.log("rentedDates", response.data.data)
                 setRentedDates(response.data.data)
             }
         } catch (e) {

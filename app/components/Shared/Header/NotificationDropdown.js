@@ -76,15 +76,15 @@ function NotificationDropdown() {
             Notifications
           </Typography>
           <div>
-            <Typography
+            {notifications.length > 0 && <Typography
               variant="body-sm"
               as="span"
               className="px-5 text-gray-500"
             >
               Today
-            </Typography>
+            </Typography>}
             <div>
-              {notifications.map((n, i) => (
+              {notifications.length > 0 ? notifications.map((n, i) => (
                 /* Use the `active` state to conditionally style the active item. */
                 <Menu.Item key={i} as={Fragment}>
                   {({ active }) => (
@@ -115,17 +115,24 @@ function NotificationDropdown() {
                     </div>
                   )}
                 </Menu.Item>
-              ))}
+              ))
+            : 
+            <div className="text-center">
+            <Typography as="h3" variant="body-md-medium">
+              No New Notifications.  
+            </Typography>
+            </div>
+            }
             </div>
           </div>
           
           
-          <Link
+          {notifications.length > 0 && <Link
             href="/notifications"
             className="block text-center text-sm font-bold text-main-600"
           >
             See All
-          </Link>
+          </Link>}
         </div>
       </Menu.Items>
     </Transition>

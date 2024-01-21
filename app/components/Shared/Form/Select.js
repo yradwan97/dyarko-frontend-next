@@ -4,7 +4,7 @@ import {  ChevronDownIcon } from "@heroicons/react/20/solid";
 import PropTypes from "prop-types";
 
 const Select = (props) => {
-  const { values, containerClass } = props;
+  const { values, containerClass, selected: selectedValue } = props;
   const [selected, setSelected] = useState(values[0]);
   return (
     <Listbox value={selected} onChange={(e) => {
@@ -32,9 +32,9 @@ const Select = (props) => {
         >
           
           <Listbox.Options className="absolute top-full left-0 right-0 p-1 z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-0 ring-black ring-opacity-5 focus:outline-none">
-            {values.map((value) => (
+            {values.map((value, index) => (
               <Listbox.Option
-                key={value.id}
+                key={index}
                 className={({ active }) =>
                   `relative flex cursor-default select-none items-center rounded-lg py-2 pl-3 pr-4 ${
                     active ? "bg-main-100" : ""

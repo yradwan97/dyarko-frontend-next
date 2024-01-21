@@ -15,7 +15,7 @@ function CustomProperty({property}) {
       </div>
       <div className='bg-white py-4 px-6 border border-main-100 grow'>
       <div className='flex items-end'>
-          <Typography variant='body-lg-bold' as="p" className="tracking-tightest text-main-600">${getPropertyPrice(property)}</Typography>
+          <Typography variant='body-lg-bold' as="p" className="tracking-tightest text-main-yellow-600">KWD {getPropertyPrice(property)}</Typography>
           <Typography variant='body-md-medium' as="p" className="text-gray-400">{getPropertyPeriod(property)}</Typography>
       </div>
         <Typography variant='h4' as="h4" className="mt-1">{capitalizeFirst(property?.title)}</Typography>

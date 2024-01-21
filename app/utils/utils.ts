@@ -97,7 +97,7 @@ export const validateImageSource = (src: any) => {
 export const useUrlSearchParams = (searchParams: ReadonlyURLSearchParams) => {
     const urlSearchParams = new URLSearchParams()
     if (searchParams.get("date")!) urlSearchParams.append("date", searchParams.get("date")!.toString())
-    if (searchParams.get("location")!) urlSearchParams.append("location", searchParams.get("location")!)
+    if (searchParams.get("location")!) urlSearchParams.append("city", searchParams.get("location")!)
     if (searchParams.get("type")!) urlSearchParams.append("type", searchParams.get("type")!)
     return urlSearchParams.toString() || ""
 }
@@ -119,3 +119,14 @@ export const removePlusFromParam = (param: string) => {
     return param.replace("+", " ")
 }
 
+export const prettifyError = (error: string) => {
+    let newError = error.replace(".", ": ").replaceAll("_", " ")
+    return `${newError[0].toUpperCase()}${newError.substring(1)}`
+}
+
+export const fixRefundUrl = (src: string) => {
+    let baseUrl = "https://api.dyarko.com/refund_policy/files"
+    if (!src.includes(baseUrl)) {
+        return src[0] === "/" ? `${baseUrl}${src}` : `${baseUrl}/${src}`
+    }
+}

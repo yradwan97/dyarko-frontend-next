@@ -13,6 +13,8 @@ import Paginator from '@/app/components/Shared/pagination/Pagination'
 import Loader from '@/app/components/Shared/Loader'
 import Footer from '@/app/components/Shared/Footer/Footer'
 import ClientReview from "../components/ClientReview"
+import {axiosClient as axios} from "@/app/services/axiosClient"
+import { useGetProperties } from '@/app/property-listing/propertiesApis'
 
 const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
 
@@ -31,19 +33,12 @@ const CompanyDetails = () => {
     searchParams.append("page", page.toString())
     searchParams.append("owner", slug as string)
 
-    const {data, isLoading, refetch} = useQuery(["owner-properties"], 
-        async () => await fetch(`${baseUrl}/properties?${searchParams.toString()}`).then(res => res.json())
-    )    
-
-    // TODO: To be removed
-    
-    const {data: property, refetch: refetchProperty} = useQuery("temp-owner-property", async () => await fetch(`${baseUrl}/properties?page=${page}&size=1`).then(res=>res.json()))
+    const {data, totalCount, isLoading, refetch} = useGetProperties(`${searchParams.toString()}`)    
     
     useEffect(() => {
-        refetch()    
-        refetchProperty()    
+        refetch()        
     }, [slug, page, activeTab])
-    // TODO: return all "property" back to "data"
+    // TODO: return all "data" back to "data"
   return isLoading ? <Loader/> : (
     <>
         <Header />
@@ -75,7 +70,7 @@ const CompanyDetails = () => {
                     </Tab.List>
                 </Tab.Group>
 
-                {property?.data.length > 0 ? (
+                {data?.data.length > 0 ? (
                     <>
                         <div className="mt-9 flex items-center justify-between">
                             <Typography variant="h2" as="h2" className="text-black ">
@@ -84,13 +79,13 @@ const CompanyDetails = () => {
                             <div className="hidden items-end sm:flex">
                                 <BuildingSolid className="mr-3 h-5 w-5 fill-main-500" />
                                 <Typography variant="body-sm" as="p" className="text-black/75">
-                                    {property?.data.length} {`${property?.data.length === 1 ? "Property" : "Properties"}`}
+                                    {totalCount} {`${totalCount === 1 ? "Property" : "Properties"}`}
                                 </Typography>
                             </div>
                         </div>
-                        <PropertiesSection properties={property?.data} />
+                        <PropertiesSection properties={data?.data} />
                         <Paginator
-                            lastPage={property?.pages}
+                            lastPage={data?.pages}
                             page={page}
                             onChange={(e) => setPage(e)}
                         />

@@ -7,7 +7,7 @@ import Link from "next/link";
 import StatusButton from "./StatusButton";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { capitalizeFirst, fixImageSource, getPropertyPeriod, getPropertyPrice } from "@/app/utils/utils";
+import { capitalizeFirst, fixImageSource, getPropertyPeriod, getPropertyPrice, prettifyError } from "@/app/utils/utils";
 import { Menu, MenuItem } from "@mui/material";
 import menuImage from "@/public/assets/menu.png";
 import { axiosClient as axios } from "@/app/services/axiosClient"
@@ -16,11 +16,10 @@ import { toast } from "react-toastify"
 import Modal from "../../../components/Shared/Modal"
 import Input from "../../../components/Shared/Form/Input"
 import Button from "../../../components/Shared/Button"
-import Requests from "./Requests";
 import Line from "@/app/property-search/components/Line";
 
-function RealEstateProperty({ property, onShowInvoices }) {
-  
+function RealEstateProperty({ property, onShowInvoices, }) {
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)
@@ -58,34 +57,33 @@ function RealEstateProperty({ property, onShowInvoices }) {
   };
 
   const handleSelectService = async (service) => {
-    
+
     const body = {
       property: property._id,
       service: service._id
     }
     try {
-    let response = await axios.post("/additional_service_requests", body)
-    console.log(response)
-    if (response.data.success) {
-      toast.success(`Service: ${service.name} requested successfully. Pending confirmation.`)
-      setShowServicesModal(false)
+      let response = await axios.post("/additional_service_requests", body)
+      console.log(response)
+      if (response.data.success) {
+        toast.success(`Service: ${service.name} requested successfully. Pending confirmation.`)
+        setShowServicesModal(false)
+      }
+    } catch (e) {
+      console.error(e)
     }
-  } catch (e) {
-    console.error(e)
-  }
   }
 
   const handleMenuItemClick = async (event) => {
-    
+
     if (event.target.textContent === "Financial Discharge") {
       try {
         let response = await axios.post(`/disclaimer/${property?._id}`)
-        console.log(response)
-        if (response.data.status === 200) {
-          toast.success("Request created successfully.")
+        if (response.data.success) {
+          toast.success("Request created successfully. Pending owner confirmation.")
         }
       } catch (e) {
-        console.error(e)
+        toast.error(prettifyError(e.response.data.errors[0].msg))
       }
 
     } else if (event.target.textContent === "Services") {
@@ -168,7 +166,10 @@ function RealEstateProperty({ property, onShowInvoices }) {
       <Modal isOpen={showReason} onClose={() => setShowReason(false)}>
         <div className="flex flex-col space-y-3 items-center justify-center">
           <Input type="text" className="text-black" placeholder="Enter Termination Reason." value={reason} onChange={e => setReason(e.target.value)} />
-          <Button variant="primary" onClick={handleTerminateContract}>Submit</Button>
+          <div className="flex space-x-2 flex-row">
+            <Button variant="primary" onClick={handleTerminateContract}>Submit</Button>
+            <Button variant="primary" onClick={() => setShowReason(false)}>Cancel</Button>
+          </div>
         </div>
       </Modal>
       <Modal isOpen={showServicesModal} onClose={() => setShowServicesModal(false)}>
@@ -196,21 +197,21 @@ function RealEstateProperty({ property, onShowInvoices }) {
                   </label>
                 </div>
               ))}
-              
-              
+
+
             </>
           )}
           <div className="flex flex-row space-x-2">
-          {services && services.length > 0 && <Button className="mt-8" variant="primary" onClick={() => {
-                handleSelectService(selectedService)
-              }}>
-                Submit
-              </Button>}
-          <Button className="mt-8" variant="primary" onClick={() => {
-                setShowServicesModal(false)
-              }}>
-                Close
-              </Button>
+            {services && services.length > 0 && <Button className="mt-8" variant="primary" onClick={() => {
+              handleSelectService(selectedService)
+            }}>
+              Submit
+            </Button>}
+            <Button className="mt-8" variant="primary" onClick={() => {
+              setShowServicesModal(false)
+            }}>
+              Close
+            </Button>
           </div>
         </div>
       </Modal>

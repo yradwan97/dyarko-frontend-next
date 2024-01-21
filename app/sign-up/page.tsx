@@ -1,29 +1,30 @@
 'use client'
-import React, { useEffect, useState } from "react";
-import Alert from "@/app/components/Shared/Alert"
+import React, { useState } from "react";
+
 import Typography from "../components/Shared/Typography";
-import { useRouter } from "next/navigation";
+
 import SimpleNavbar from "../components/Login/SimpleNavbar";
 import signupArt from "@/public/assets/signup-art.jpg";
 import SignUpForm from "./SignUpForm";
 import PoweredBy from "../components/Login/PoweredBy";
-import scrollToTop from "../utils/scrollToTop";
-import AlertModal from "../components/Shared/AlertModal";
 import { signup } from "../services/api/auth";
+import SignUpSuccessful from "./SignUpSuccessful";
 
 
 const SignUp = () => {
-    const [userType, setUserType] = useState();
-    const [isOpen, setIsOpen] = useState(false);
-    const router = useRouter();
+    const [isSuccess, setIsSuccess] = useState(false)
   
     const signUpSubmitHandler = async (data: any) => {
       console.log(data)
       const response = await signup(data)
+      if (response.status === 200) {
+        setIsSuccess(true)
+      }
     };
-
-    const onClose = () => setIsOpen(false);
   
+    if (isSuccess) {
+      return <SignUpSuccessful visible={isSuccess} setVisible={setIsSuccess} />
+    }
     return (
       <>
         

@@ -54,8 +54,8 @@ const governerates = [
   { id: "al farwaniyah", icon: "Farwaniya" },
   { id: "hawalli", icon: "Hawalli" },
   { id: "al jahra", icon: "Jahra" },
-  // TODO: ask about the spelling and count of all govs.
-  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" }
+  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
+  { id: "kuwait city", icon: "Kuwait City" }
 ]
 
 function SearchControl({ slug = "", onSearch, onReset }: SearchControlProps) {

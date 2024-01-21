@@ -45,7 +45,7 @@ function Tabs(props) {
         </li>
       </ul>
       {props.content && (
-        <div className={`absolute top-full left-0 rounded-lg bg-white py-6 shadow-xl ${session ? "md:w-[940px] lg:w-[940px]": "md:w-[840px] lg:w-[840px]"}`}>
+        <div className={`absolute top-full left-0 rounded-lg bg-white py-6 shadow-xl ${session ? "w-[1000px]": "w-[840px]"}`}>
             <TabContent tab={activeTab} session={session} />
         </div>
       )}

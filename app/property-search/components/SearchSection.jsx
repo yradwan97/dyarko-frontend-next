@@ -13,29 +13,22 @@ const sortingValues = [
   { name: "Highest Price", icon: "Highest Price", id: 2 }
 ];
 
-function SearchSection({ onSearchParamsChange }) {
+function SearchSection({ onSearchParamsChange, finalTypes, selectedPropertyType, setSelectedPropertyType }) {
   const [selectedSort, setSelectedSort] = useState(sortingValues[0]);
   const { data: session } = useSession()
-  const { data: propertyTypes } = useGetPropertyTypes(session?.user?.accessToken)
   const [priceTo, setPriceTo] = useState("")
   const [bedrooms, setBedrooms] = useState("")
 
-  let finalTypes = propertyTypes?.map((type, index) => {
-    return {
-      ...type,
-      id: index,
-      icon: type.name
-    }
-  })
 
-  const [selectedPropertyType, setSelectedPropertyType] = useState(finalTypes?.length > 0 ? finalTypes[0].value : "")
+
 
   const handleSearchParamsChange = () => {
+    console.log(selectedPropertyType)
     const searchParams = {
       bedrooms: bedrooms,
       price_from: priceTo ? 0 : null,
       price_to: priceTo,
-      type: selectedPropertyType,
+      type: selectedPropertyType?.id,
       sort: selectedSort.icon === "Highest Price" ? "price" : "-price",
     };
 
@@ -98,8 +91,7 @@ function SearchSection({ onSearchParamsChange }) {
             iconStyle="!right-4"
             containerClass="py-3 px-5 w-full outline-main-600 outline rounded-md !justify-between"
             values={finalTypes || []}
-            selected={selectedPropertyType}
-            setSelected={e => setSelectedPropertyType(e.value)}
+            setSelected={e => setSelectedPropertyType(e)}
           />
         </div>}
         <div className="relative  ">
@@ -114,7 +106,7 @@ function SearchSection({ onSearchParamsChange }) {
             iconStyle="!right-4"
             containerClass="py-3 px-5 w-full outline-main-600 outline rounded-md !justify-between"
             values={sortingValues}
-            selected={selectedSort}
+            selected={selectedSort.name}
             setSelected={setSelectedSort}
           />
         </div>

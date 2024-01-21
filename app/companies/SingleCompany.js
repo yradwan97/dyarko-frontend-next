@@ -10,7 +10,6 @@ import Image from "next/image";
 import React from "react";
 import { sendFollowRequest } from "./ownersApi";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 
 const SingleCompany = ({owner}) => {
@@ -69,7 +68,10 @@ const SingleCompany = ({owner}) => {
                 <Typography variant="body-md" as="p" className="mt-4 mb-8 text-gray-600">
                     {owner.about
                         ? owner.about
-                        : "We offer our customer property protection of liability coverage and insurance for their better life."}
+                        :
+                        //  "We offer our customers property protection of liability coverage and insurance for their better life."
+                        "We provide comprehensive property protection and liability coverage to ensure our customers enjoy a secure and worry-free life. Our insurance solutions are designed to safeguard your assets and enhance your peace of mind, offering you a better and more secure future."
+                         }
                 </Typography>   
                 {/* <Link
                     href={`/company-details/${owner._id}`}

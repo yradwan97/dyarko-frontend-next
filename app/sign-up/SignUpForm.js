@@ -24,7 +24,6 @@ const SignUpForm = (props) => {
     }
   ];
   const [userType, setUserType] = useState(userTypes[0]);
-  const [userGroup, setUserGroup] = useState(null);
 
   const {
     register,

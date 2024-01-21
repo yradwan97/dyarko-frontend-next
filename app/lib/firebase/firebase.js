@@ -2,7 +2,7 @@ import "firebase/messaging";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import localforage from "localforage";
-import { getMessaging, onTokenRefresh, getToken } from "firebase/messaging";
+import { getMessaging, getToken, onMessage } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCXSQcYiIK6ERzr1AFCUW2dSWru5Sv5ARw",
@@ -16,8 +16,8 @@ const firebaseConfig = {
 
 const vapidKey = "BAIz69eVdYmIfUfqLvVubckGwL0Yzm1TfzTulRGu78gmOnePX5jANCR2I-upDno4Q0yq3Gxwd-AlMcjBfdbBGfU"
 
-export const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app)
+initializeApp(firebaseConfig);
+const messaging = getMessaging()
 
 const firebaseCloudMessaging = {
   init: async () => {
@@ -55,5 +55,14 @@ const firebaseCloudMessaging = {
   },
   getMessagingInstance: () => messaging
 };
+
+export const onMessageListener = async () => {
+  new Promise((resolve) => {
+    onMessage(messaging, (payload) => {
+      console.log("payload", payload)
+      resolve(payload)
+    })
+  })
+}
 
 export { firebaseCloudMessaging };

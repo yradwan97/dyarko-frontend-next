@@ -11,7 +11,7 @@ import PhoneInput from "../../components/Shared/Form/PhoneInput";
 import CloseOutline from "../../components/UI/icons/CloseOutline";
 import CalendarComponent from "./Calendar/Calendar";
 import { useSession } from "next-auth/react";
-import InputGroup from "@/app/components/Shared/Form/InputGroup";
+import { toast } from "react-toastify"
 import { format } from "date-fns"
 
 
@@ -19,16 +19,15 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-function ScheduleTour({ visible, setVisible, id }) {
+function ScheduleTour({ visible, setVisible, id, propertyId }) {
   const { register, formState: { errors }, reset } = useForm();
   const { data: session } = useSession();
   const [selectedPeriod, setSelectedPeriod] = useState("AM");
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const [comment, setComment] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("")
-
 
   const scheduleTourSchema = {
     phoneNumber: {
@@ -56,7 +55,7 @@ function ScheduleTour({ visible, setVisible, id }) {
             "auth-token": `Bearer ${session?.user?.accessToken}`
           }
         });
-        console.log("schedule", response.data.data)
+
         setAvailableTimeSlots(response.data.data);
       } catch (error) {
         console.error("Error fetching unavailable time slots:", error);
@@ -66,23 +65,13 @@ function ScheduleTour({ visible, setVisible, id }) {
     fetchAvailableTimeSlots();
   }, [id, session]);
 
-  const isSlotAvailable = (slot) => {
-    // return !unavailableTimeSlots.some(
-    //   (unavailableSlot) =>
-    //     new Date(unavailableSlot.from) <= new Date(slot) &&
-    //     new Date(unavailableSlot.to) >= new Date(slot)
-    // ); 
-    return true
-  };
-
   const handleTabClick = (period) => {
     setSelectedPeriod(period);
   };
 
   const handleSlotClick = (slot) => {
-    if (isSlotAvailable(slot)) {
-      setSelectedTimeSlot(slot);
-    }
+    setSelectedTimeSlot(slot);
+    console.log(slot)
   };
 
   const handleDateChange = (date) => {
@@ -93,12 +82,11 @@ function ScheduleTour({ visible, setVisible, id }) {
     if (availableTimeSlots.length > 0) {
       // If availableTimeSlots is not an empty array, use it for rendering time slots
       return availableTimeSlots.map((slot) => {
-        // console.log(format(new Date(slot.from), "dd/MM/yyyy HH:mm"), format(new Date(slot.to), "dd/MM/yyyy HH:mm"))
         return ({
           key: slot._id,
-          from: format(new Date(slot.from), "dd/MM/yyyy HH:mm"),
-          to: format(new Date(slot.to), "dd/MM/yyyy HH:mm"),
-          slot: `${format(new Date(slot.from), "dd/MM/yyyy HH:mm")} - ${format(new Date(slot.to), "dd/MM/yyyy HH:mm")}`
+          from: format(new Date(slot.from), "dd/MM/yyyy"),
+          to: format(new Date(slot.to), "dd/MM/yyyy"),
+          slot: `${format(new Date(slot.from), "dd/MM/yyyy")} - ${format(new Date(slot.to), "dd/MM/yyyy")}`
         });
       });
     }
@@ -127,20 +115,16 @@ function ScheduleTour({ visible, setVisible, id }) {
 
   const onSubmit = async (e) => {
     e.preventDefault()
-    let date;
-    if (availableTimeSlots.length === 0) {
-      if (!selectedDate || !selectedTimeSlot || !phoneNumber || !id) return
-      date = format(new Date(selectedDate), "yyyy/MM/dd")
-    } else {
-      if (!phoneNumber || !selectedTimeSlot || !id) return
-      date = selectedTimeSlot.split("-").map(d => d.trim().split(" ")[0])[0]
-      console.log(date)
+
+    if (!selectedDate || !selectedTimeSlot || !phoneNumber) {
+      toast.error("Please make sure to select a date and time slot, and enter your phone number!")
+      return
     }
 
     const tourData = {
-      date,
+      date: format(new Date(selectedDate), "yyyy/MM/dd"),
       phone: phoneNumber,
-      property: id
+      property: propertyId
     }
     if (comment) tourData.comment = comment
 
@@ -153,11 +137,12 @@ function ScheduleTour({ visible, setVisible, id }) {
 
       // Handle success
       console.log("Tour added successfully:", response.data);
-      // You can add any additional logic here, such as closing the dialog
-      setVisible(false);
+      if (response.data.success) {
+        toast.success("Tour added successfully, pending owner confirmation.")
+      }
+      setVisible(false)
     } catch (error) {
       console.error("Error adding tour:", error);
-      // Handle error, e.g., display an error message
     }
   };
 
@@ -176,10 +161,10 @@ function ScheduleTour({ visible, setVisible, id }) {
           </span>
         </div>
         <Line />
-        <div className="p-6">
+        <div className="p-6 ">
           <div className="flex flex-col space-x-4 md:flex-row">
-            <div className="md:w-1/2">
-              <CalendarComponent onDateChange={handleDateChange} />
+            <div className="w-1/2">
+              <CalendarComponent onDateChange={handleDateChange} dateRanges={availableTimeSlots} />
               <div className="mt-6 flex items-center justify-between">
                 <Typography variant="body-md-bold" as="p">
                   Time Slot
@@ -189,10 +174,11 @@ function ScheduleTour({ visible, setVisible, id }) {
                     {["AM", "PM"].map((tab) => (
                       <Tab
                         key={tab}
+                        disabled={availableTimeSlots.length > 0}
                         className={({ selected }) =>
                           classNames(
                             "rounded-lg p-2 text-xs",
-                            selected
+                            (availableTimeSlots.length === 0 && selected)
                               ? "bg-white font-bold text-main-yellow-600"
                               : "font-regular text-gray-500"
                           )
@@ -207,7 +193,6 @@ function ScheduleTour({ visible, setVisible, id }) {
               </div>
               <ul className="mt-2 grid grid-cols-2 gap-2.5 px-8 sm:grid-cols-3 md:px-0">
                 {generateTimeSlots().map((slot, i) => {
-                  // console.log(slot)
                   return (
                     <li
                       key={i}
@@ -227,15 +212,16 @@ function ScheduleTour({ visible, setVisible, id }) {
                 })}
               </ul>
             </div>
+
             <form>
 
-              <div className="mt-3 text-left md:mt-0 md:w-1/2">
-                <InputGroup {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
+              <div className="w-full mt-3  md:mt-0 md:w-1/2">
+                <PhoneInput className='w-[250px]' {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
                 <div className="flex flex-col space-y-3">
                   <Label htmlFor="comment">Comments</Label>
                   <textarea
                     id="comment"
-                    className="w-full rounded-lg border border-gray-200 py-4 px-6 outline-0 focus:border-main-600"
+                    className="w-[250px] rounded-lg border border-gray-200 py-4 px-6 outline-0 focus:border-main-600"
                     rows={6}
                     placeholder="Leave a comment"
                     value={comment}
@@ -257,7 +243,7 @@ function ScheduleTour({ visible, setVisible, id }) {
           </div>
         </div>
       </Dialog.Panel>
-    </Overlay>
+    </Overlay >
   );
 }
 

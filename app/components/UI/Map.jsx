@@ -5,8 +5,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 
 const Map = ({ latitude, longitude, isSelectable, onSelect }) => {
     const [selectedPosition, setSelectedPosition] = useState({ lat: latitude, lng: longitude });
-    const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
-
+    const googleMapsApiKey = "AIzaSyCT3dCEg1vWJEHdlrYjeKD9LZBTrQhuKkM"
     const mapStyles = {
         height: '400px',
         width: '100%',

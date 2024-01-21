@@ -12,7 +12,7 @@ import AvailableServices from "./AvailableSevices"
 import { useSession } from 'next-auth/react'
 
 const RentingDetails = ({ property, setStep, onChange }) => {
-  console.log(property)
+
   const [fromToDates, setFromToDates] = useState({})
   const [availableTents, setAvailableTents] = useState([])
   const [selectedTents, setSelectedTents] = useState([])
@@ -23,7 +23,10 @@ const RentingDetails = ({ property, setStep, onChange }) => {
   const [caravanLocation, setCaravanLocation] = useState('')
   const { data: session } = useSession()
   let rentingInfo = {}
-  let caravanMovable = (property?.category === "caravan" && property?.type === "movable")
+  let isCaravanMovable = (property?.category === "caravan" && property?.type === "movable")
+  let isTentGroup = property?.category === "tent_group"
+  let isRent = property?.payment_type === "rent"
+  let hasServices = property?.services?.length > 0
 
 
   useEffect(() => {
@@ -54,7 +57,7 @@ const RentingDetails = ({ property, setStep, onChange }) => {
   const validateAndProceed = () => {
     setValidationError('');
 
-    if (caravanMovable) {
+    if (isCaravanMovable) {
       if (caravanLocation === "") {
         setValidationError("Please select a location to deliver the caravan.")
         return
@@ -91,7 +94,7 @@ const RentingDetails = ({ property, setStep, onChange }) => {
     }
     selectedServices.length > 0 && (rentingInfo.services = selectedServices)
     if (property?.category === 'tent_group') rentingInfo.tents = selectedTents
-    if (caravanMovable) {
+    if (isCaravanMovable) {
       rentingInfo.lat = caravanLocation.lat
       rentingInfo.long = caravanLocation.lng
     }
@@ -112,14 +115,16 @@ const RentingDetails = ({ property, setStep, onChange }) => {
         }
 
         {/* PaymentFrequency selector not rendered in tent_group, frequency fixed to daily */}
-        {property?.category !== "tent_group" &&
+        {(!isTentGroup && isRent) &&
           <PaymentFrequency property={property} onChange={(value) => setPaymentFrequency(value)} />
         }
-        <FromToDatePicker paymentFrequency={paymentFrequency} property={property} onDateChange={(values) => {
-          if (values.fromDate !== null && values.toDate !== null) {
-            setFromToDates(values)
-          }
-        }} />
+        {isRent && <FromToDatePicker paymentFrequency={paymentFrequency} property={property}
+          onDateChange={(values) => {
+            if (values.fromDate !== null && values.toDate !== null) {
+              setFromToDates(values)
+            }
+          }}
+        />}
         {showTents &&
           <TentsSelector
             options={availableTents}
@@ -128,7 +133,7 @@ const RentingDetails = ({ property, setStep, onChange }) => {
             }}
           />
         }
-        {property?.services?.length > 0 &&
+        {hasServices &&
           <AvailableServices property={property} onChange={(values) => setSelectedServices(values)} />
         }
 

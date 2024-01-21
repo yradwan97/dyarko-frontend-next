@@ -31,12 +31,12 @@ const OTP = ({ onComplete }) => {
         }
     };
 
-    useEffect(() => {
-        // Check if there is a session and generateOTP has not been called yet
-        if (session && !otpGeneratedOnce) {
-            generateOTP();
-        }
-    }, [session]);
+    // useEffect(() => {
+    //     // Check if there is a session and generateOTP has not been called yet
+    //     if (session && !otpGeneratedOnce) {
+    //         generateOTP();
+    //     }
+    // }, [session]);
 
     const handleComplete = async (otp) => {
         try {
@@ -62,7 +62,7 @@ const OTP = ({ onComplete }) => {
     return (
         <div className="mt-12 p-6 border border-gray-200 rounded-lg text-center">
             <Typography variant='body-md' as="h4" className="mt-1">
-                Please enter the OTP you received on your Dyakro OTP mobile application!
+                Please click on <span className='font-bold'>Generate OTP</span> below and enter the OTP you received on your Dyakro OTP mobile application!
             </Typography>
             <Typography variant='body-xs-medium' as="p" className="mt-3">
                 Make sure to download your OTP application from the App store or Play store,

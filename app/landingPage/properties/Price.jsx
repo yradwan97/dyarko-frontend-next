@@ -9,7 +9,7 @@ function Price(props) {
         as="p"
         className="tracking-tightest text-main-yellow-600"
       >
-        ${props.price}
+        KWD {props.price}
       </Typography>
       {props.paymentType === "rent" && <Typography variant="body-md-medium" as="p" className="text-gray-400">
         {props.period && `${props.period}`}

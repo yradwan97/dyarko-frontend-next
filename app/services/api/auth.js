@@ -19,15 +19,17 @@ export const login = async (user) => {
 };
 
 const signup = async (newUser) => {
-  const res = await axiosClient.post(SIGNUP_AUTH_API_URI, {
+  let signUpBody = {
     civilian_id: newUser.civilianId,
     phone: newUser.phoneNumber,
     email: newUser.email,
     name: newUser.name,
     type: newUser.type,
+    role: newUser.role,
     group: newUser.group ? newUser.group : "",
     password: newUser.password,
-  });
+  }
+  const res = await axiosClient.post(SIGNUP_AUTH_API_URI, signUpBody);
   return res.data;
 };
 

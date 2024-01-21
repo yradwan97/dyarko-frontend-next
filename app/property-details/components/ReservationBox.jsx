@@ -1,20 +1,41 @@
-import React, { useState } from 'react'
-import DatePicker from "react-datepicker";
+import React, { useEffect, useState } from 'react'
 import Line from '../../property-search/components/Line'
 import Button from '../../components/Shared/Button'
 import Typography from '../../components/Shared/Typography'
 import DocumentOutline from '../../components/UI/icons/DocumentOutline'
-import CalenderOutline from '../../components/UI/icons/CalenderOutline'
-import ChevronDown from '../../components/UI/icons/ChevronDown'
 import LocationControlSolid from '../../components/UI/icons/LocationControlSolid'
 import ScheduleTour from './ScheduleTour'
-import { getPropertyPeriod, getPropertyPrice } from '@/app/utils/utils'
+import { getPropertyPeriod, getPropertyPrice, prettifyError } from '@/app/utils/utils'
+import { axiosClient as axios } from "@/app/services/axiosClient"
+import { useSession } from 'next-auth/react'
+import { toast } from "react-toastify"
 
 
 function ReservationBox({ property }) {
-
-    const [date, setDate] = useState(null)
     const [visible, setVisible] = useState(false)
+    const { data: session } = useSession()
+    const [confirmedUser, setConfirmedUser] = useState(false)
+
+    const isUserConfirmed = async () => {
+        try {
+            let res = await axios.get("/otp_requests/check", {
+                headers: {
+                    "auth-token": `Bearer ${session?.user?.accessToken}`
+                }
+            })
+
+            if (res.data.success && res.data.status !== "has_pending_request") {
+                setConfirmedUser(true)
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    useEffect(() => {
+        isUserConfirmed()
+    }, [session])
+
 
     const getSubmitButtonText = () => {
         let text = ""
@@ -33,23 +54,62 @@ function ReservationBox({ property }) {
         return text
     }
 
+    const decideSubmitButtonLinkHref = () => {
+        if (property?.payment_type === "rent" || property?.payment_type === "cash") {
+            if (confirmedUser) {
+                return `/application/${property?._id}`
+            } else {
+                return "/login/confirm"
+            }
+        } else {
+            return ""
+        }
+    }
+
+    const showOrHideButton = () => {
+        return (property?.payment_type === "rent" || property?.payment_type === "installment")
+    }
+
+    const handleInstallmentButtonClick = async () => {
+
+        if (property.payment_type === "installment") {
+            let body = {
+                "property": property?._id
+            }
+            try {
+                let response = await axios.post("/installments", body, {
+                    headers: {
+                        "auth-token": `Bearer ${session?.user?.accessToken}`
+                    }
+                })
+                console.log(response)
+                if (response.status === 200) {
+                    toast.success("Installment requested successfully, pending owner confirmtaion.")
+                }
+            } catch (e) {
+                toast.error(prettifyError(e.response.data.errors[0].msg))
+            }
+        }
+    }
+
     return (
         <>
-            <ScheduleTour id={property?.owner?._id} visible={visible} setVisible={setVisible} />
+            <ScheduleTour id={property?.owner?._id} propertyId={property?._id} visible={visible} setVisible={setVisible} />
             <div className='border-[1.5px] border-gray-200 rounded-md p-6 '>
                 <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" && "Rent"} Price</Typography>
                 <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">
-                    ${property && getPropertyPrice(property)}
+                    KWD {property && getPropertyPrice(property)}
                     {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary">{property && getPropertyPeriod(property)}</Typography></sub>}
                 </Typography>
-                <Button
+                {showOrHideButton() && <Button
                     variant='primary'
                     className="stroke-white hover:stroke-main-600 my-6 flex justify-center items-center leading-6 w-full"
-                    to={`/application/${property?._id}`}
+                    to={decideSubmitButtonLinkHref()}
+                    onClick={handleInstallmentButtonClick}
                 >
                     <DocumentOutline className='stroke-inherit mr-1 w-5 h-5' />
                     <Typography variant='body-md-bold' as="span">{property && getSubmitButtonText()}</Typography>
-                </Button>
+                </Button>}
                 <Line />
                 <Typography variant='body-lg-bold' as="p" className="my-6">Request a home tour</Typography>
 

@@ -1,5 +1,5 @@
-import Button from '@/app/components/Shared/Button';
-import React, { useState, useRef } from 'react';
+
+import React, { useRef } from 'react';
 
 const OTPInput = ({ length, onComplete, otp, setOTP }) => {
 

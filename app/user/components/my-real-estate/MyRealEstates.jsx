@@ -15,9 +15,6 @@ const values = [
   { name: "installments", icon: "Installment", id: 2 },
 ];
 
-// TODO: Add my real estates from /rents and /installments
-// invoices from /invoices?property={propertyId} 
-
 const MyRealEstates = () => {
   const [showRequest, setShowRequest] = useState(false);
   const [selectedId, setSelectedId] = useState("")
@@ -48,14 +45,13 @@ const MyRealEstates = () => {
         <>
           <div className="mb-6 flex items-center justify-between">
             <Typography variant="body-xl-bold" as="h2" className="text-black">
-              My real-estates {(data?.itemsCount) || 0}
+              My real-estates {`(${data?.itemsCount})` || 0}
             </Typography>
             <Select
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={values}
               selected={selectedValue}
               setSelected={e => setSelectedValue(e.name)}
-            // onTriggerChange={() => setShowRequest(true)}
             />
           </div>
           <div className="flex flex-col gap-4">

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Button from "@/app/components/Shared/Button";
 import Input from "@/app/components/Shared/Form/Input";
+import { fixRefundUrl } from "@/app/utils/utils";
 
 const AgreementTerms = ({ property, onContinue }) => {
   const [termsAndConditions, setTermsAndConditions] = useState(false);
@@ -10,6 +11,7 @@ const AgreementTerms = ({ property, onContinue }) => {
   const [contract, setContract] = useState(false);
   const [ownerRules, setOwnerRules] = useState(false);
   const [selectAll, setSelectAll] = useState(false);
+  const [showOwnerRules, setShowOwnerRules] = useState(false)
 
   useEffect(() => {
     setSelectAll(
@@ -31,7 +33,7 @@ const AgreementTerms = ({ property, onContinue }) => {
   };
 
   return (
-    <div className="flex flex-col items-start mt-8 p-6 border border-gray-200 rounded-lg">
+    <div className="flex flex-col items-start mt-8 p-6 border space-y-2 border-gray-200 rounded-lg">
       <div className="flex items-center space-x-2 ">
         <input
           type="checkbox"
@@ -70,7 +72,7 @@ const AgreementTerms = ({ property, onContinue }) => {
           onChange={() => setRefundPolicy(!refundPolicy)}
         />
         <label htmlFor="refundPolicy">
-          <Link href={"/"} legacyBehavior passHref>
+          <Link href={property?.refund_policy ? fixRefundUrl(property?.refund_policy[0]?.content) : "/"} legacyBehavior passHref>
             <a target="_blank" rel="noopener noreferrer">
               Refund Policy
             </a>
@@ -100,9 +102,9 @@ const AgreementTerms = ({ property, onContinue }) => {
             checked={ownerRules}
             onChange={() => setOwnerRules(!ownerRules)}
           />
-          <label htmlFor="ownerRules">Owner Rules</label>
+          <label htmlFor="ownerRules" onClick={() => setShowOwnerRules(!showOwnerRules)}>Owner Rules</label>
         </div>
-        <Input as="textarea" className="my-2 text-black font-medium">{property?.rules}</Input>
+        {showOwnerRules && <Input as="textarea" value={property?.rules || ""} readOnly className="mt-2 mb-5 text-black font-medium" />}
       </div>
       <div className="flex items-center space-x-2">
         <input

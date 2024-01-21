@@ -1,3 +1,4 @@
+'use client'
 import React from "react";
 import Header from "../components/Shared/Header/Header"
 import Footer from "../components/Shared/Footer/Footer"
@@ -6,14 +7,53 @@ import Typography from "../components/Shared/Typography"
 import Input from "../components/Shared/Form/Input"
 import Label from "../components/Shared/Form/Label"
 import Link from "next/link"
+import { useForm } from "react-hook-form";
+import { axiosClient as axios } from "@/app/services/axiosClient"
+import { toast } from "react-toastify"
 
 const ForgetPassword = () => {
-    
+  const {
+    register,
+    handleSubmit,
+    setError,
+    clearErrors,
+    formState: { errors, isValid },
+  } = useForm();
+
+  const handleResetPassword = async (data) => {
+    try {
+      let res = await axios.post("/forget_password", { "email": data.email })
+      console.log(res)
+      if (res.status === 200) {
+        toast.success(res.data.message)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  const forgetPasswordSchema = {
+    email: {
+      id: "email",
+      label: "Email",
+      placeholder: "hi@example.com",
+      register: {
+        ...register("email", {
+          required: "Email is required",
+          pattern: {
+            value: /^[a-zA-Z0-9_\-.]+@[a-zA-Z-.]+.[a-zA-Z-.]+$/,
+            message: "Please enter a valid email",
+          },
+        }),
+      },
+      error: errors.email,
+    }
+  }
   return (
     <>
       <Header />
       <div className="container py-20">
-        <form className="mx-auto md:w-1/2">
+        <form onSubmit={handleSubmit(handleResetPassword)} className="mx-auto md:w-1/2">
           <Typography
             variant="body-xl-bold"
             as="h2"
@@ -26,12 +66,7 @@ const ForgetPassword = () => {
               <Label htmlFor="forgetPass" className="">
                 Enter mail address
               </Label>
-              <Input
-                id="forgetPass"
-                className=""
-                placeholder="Type your mail address"
-                register="forgetPass"
-              />
+              <Input {...forgetPasswordSchema.email} error={errors.email} />
             </div>
             <div className="mt-6 flex items-center justify-start space-x-4">
               <Button type="submit" variant="primary" className="mr-4">
@@ -41,10 +76,9 @@ const ForgetPassword = () => {
                 type="button"
                 variant="primary-outline"
                 className="text-main"
+                to="/login"
               >
-                <Link href="/login">
-                  Cancel
-                </Link>
+                Cancel
               </Button>
             </div>
           </div>

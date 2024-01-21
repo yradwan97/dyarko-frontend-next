@@ -16,7 +16,7 @@ function FeatureComponent({ property }) {
                 <div className='md:w-1/2'>
                     <ul className='space-y-2 sm:space-y-5'>
                         <FeatureItem firstText="Listed on " secondText={`${weeksDiff} ${weeksDiff === 1 ? "week" : "weeks"} `} companyName={true} />
-                        <FeatureItem className='text-right' firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(property?.available_date, "dd/MM/yyyy")}`} />
+                        <FeatureItem firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(property?.available_date, "dd/MM/yyyy")}`} />
                         <FeatureItem firstText="Year Built" secondText={getYear(new Date(property?.createdAt))} />
                         <FeatureItem firstText="Type" secondText={capitalizeFirst(property.type)} />
 

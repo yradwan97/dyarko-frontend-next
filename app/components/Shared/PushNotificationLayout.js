@@ -2,13 +2,18 @@
 import React, { useEffect } from "react";
 import * as firebase from "firebase/app";
 import "firebase/messaging";
-import { firebaseCloudMessaging } from "../../lib/firebase/firebase";
+import { firebaseCloudMessaging, onMessageListener } from "../../lib/firebase/firebase";
 import { ToastContainer, toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { onMessage } from "firebase/messaging";
 
 function PushNotificationLayout({ children }) {
   const router = useRouter();
+
+  onMessageListener().then((payload) => {
+    console.log("payload", payload)
+  }).catch((err) => console.log('failed: ', err))
+
   useEffect(() => {
     setToken();
 
@@ -44,6 +49,7 @@ function PushNotificationLayout({ children }) {
     
     if (messaging) {
         const unsubscribe = onMessage(messaging, (message) => {
+          console.log(message)
           toast(
             <div onClick={() => handleClickPushNotification(message?.data?.url)}>
               <h5>{message?.notification?.title}</h5>

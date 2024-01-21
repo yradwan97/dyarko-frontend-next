@@ -5,26 +5,29 @@ import { useEffect, useState } from 'react'
 import { axiosClient as axios } from "../../services/axiosClient"
 import { useSession } from 'next-auth/react'
 import { useIsPropertySaved } from '@/app/property-listing/propertiesApis'
+import { ToastContainer, toast } from "react-toastify"
 
 function AddWishlist({ location, id }) {
 
   const isLiked = useIsPropertySaved(id)
-  const [pressed, setPressed] = useState(isLiked || location === "savedProperties")
+  const [pressed, setPressed] = useState(isLiked)
   const { data: session } = useSession()
 
   useEffect(() => {
-    if (location !== "savedProperties") {
     setPressed(isLiked)
-    }
   }, [isLiked])
 
   const handleLikePressed = async (method) => {
-    let response =
-      method === "post" ?
-        await axios.post(`/save_properties/${id}`) :
-        await axios.delete(`/save_properties/${id}`)
+    try {
+      let response =
+        method === "post" ?
+          await axios.post(`/save_properties/${id}`) :
+          await axios.delete(`/save_properties/${id}`)
 
-    return response
+      return response
+    } catch (e) {
+      console.error(e)
+    }
   }
   return (
 
@@ -32,12 +35,22 @@ function AddWishlist({ location, id }) {
       onClick={async () => {
         let response
         if (pressed) {
-          response = handleLikePressed("delete")
+          response = await handleLikePressed("delete")
         } else {
-          response = handleLikePressed("post")
+          response = await handleLikePressed("post")
         }
 
-        response.status === 200 && setPressed(!pressed)
+        if (response.status === 200) {
+          setPressed(!pressed)
+          if (pressed) {
+            toast.warn("Property unsaved.")
+          } else {
+            toast.success("Property saved!")
+          }
+        } else {
+          toast.error("Something went wrong")
+        }
+
       }}>
       {
         pressed ?
@@ -45,6 +58,7 @@ function AddWishlist({ location, id }) {
           :
           <HeartOutline className='stroke-main-600 w-4 h-4' />
       }
+      <ToastContainer />
     </div>
 
 

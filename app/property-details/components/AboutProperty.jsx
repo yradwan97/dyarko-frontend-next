@@ -62,8 +62,7 @@ function AboutProperty({ property }) {
             <div className='mt-12 flex flex-col space-y-4'>
                <Typography variant='h4' as='h4' className>About this {capitalizeFirst(property.title)}</Typography>
                <Typography variant='body-md-medium' as='p' className='text-gray-500 line-clamp-3 md:line-clamp-none overflow-hidden'>
-                  Check out {capitalizeFirst(property.title)}! A {property.area && `${property.area} square meters,`} {property.bedrooms && `${property.bedrooms} Bedrooms,`} {property.bathrooms && `${property.bathrooms} Bathrooms`} {capitalizeFirst(property?.type)} located at {getPropertyAddress(property)}. {property.description && `${property.description}`}
-                  {/* Well cared for with tons of upgrades! Newer stainless steel appliances will stay with the unit, including dishwasher, fridge, stove, microwave, and washer and dryer. Tenant pays electricity and gas bills. Water, Sewer, and Trash are covered by Landlord. Minimum one year lease. */}
+                  Check out {capitalizeFirst(property.title)}! A {property.area && `${property.area} square meters,`} {property.bedrooms && `${property.bedrooms} Bedrooms,`} {property.bathrooms && `${property.bathrooms} Bathrooms`} {capitalizeFirst(property?.type)} {(property?.category && property?.category === "caravan") && property?.category} located at {getPropertyAddress(property)}. {property.description && `${property.description}`}
                </Typography>
             </div>
             <div className='mt-4 hidden sm:flex space-x-4 items-center'>

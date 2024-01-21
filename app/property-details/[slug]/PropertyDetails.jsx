@@ -4,18 +4,14 @@ import Footer from "../../components/Shared/Footer/Footer";
 import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
 import BackButton from "../components/BackButton";
-import DocumentOutline from "../../components/UI/icons/DocumentOutline";
 import HeartOutline from "../../components/UI/icons/HeartOutline"
 import HeartSolid from "../../components/UI/icons/HeartSolid"
 import LinkIcon from "../../components/UI/icons/LinkIcon";
-import SearchOutline from "../../components/UI/icons/SearchOutline"
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import AboutProperty from "../components/AboutProperty";
-import ScheduleTour from "../components/ScheduleTour";
 import PropertySlider from "../components/PropertySlider/PropertySlider";
 import Loader from "@/app/components/Shared/Loader";
-import { getPropertyAddress, getPropertyPeriod, getPropertyPrice } from "@/app/utils/utils";
+import { getPropertyAddress } from "@/app/utils/utils";
 import { useQuery } from "react-query";
 import { capitalizeFirst } from '@/app/utils/utils';
 import { axiosClient as axios } from "@/app/services/axiosClient"
@@ -123,7 +119,6 @@ const PropertyDetails = ({ slug }) => {
       </div>}
 
       <Footer />
-      {/* {ownerId && <ScheduleTour id={ownerId} visible={visible} setVisible={setVisible} />} */}
     </>
   );
 }

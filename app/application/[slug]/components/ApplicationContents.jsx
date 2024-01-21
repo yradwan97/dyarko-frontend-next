@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState, useEffect } from 'react';
 import Typography from '@/app/components/Shared/Typography';
 import { ChevronLeftIcon } from '@heroicons/react/20/solid';
 import Process from './Process';
@@ -13,16 +12,26 @@ import OTP from './OTP';
 import { axiosClient as axios } from '../../../services/axiosClient';
 import PaymentMethod from './PaymentMethod';
 import { toast, ToastContainer } from 'react-toastify';
-import Invoice from './Invoice';
+import PaymentInvoice from './PaymentInvoice';
 
 
 const ApplicationContents = ({ id }) => {
   const [step, setStep] = useState(1);
   const [selectedMethod, setSelectedMethod] = useState();
   const [rentingInfo, setRentingInfo] = useState();
+  const [response, setResponse] = useState(null);
+  const [property, setProperty] = useState()
   const { data } = useGetSingleProperty(id);
   const router = useRouter();
-  const [response, setResponse] = useState(null);
+
+  useEffect(() => {
+    if (data && data?.data) {
+      setProperty(data?.data)
+      if (data.data.payment_type === "cash") {
+        setStep(2)
+      }
+    }
+  }, [data])
 
   const onComplete = async (otp) => {
     console.log(otp);
@@ -33,6 +42,8 @@ const ApplicationContents = ({ id }) => {
     !response?.data?.success && toast('Incorrect OTP! Please confirm and try again');
     return;
   };
+
+
 
   const onCheckOut = async () => {
     let rentObject = { ...rentingInfo, payment_method: selectedMethod.key };
@@ -46,10 +57,12 @@ const ApplicationContents = ({ id }) => {
     setStep(step => step + 1)
   };
 
+  useEffect(() => {
+
+  }, property)
   const handleInvoiceComplete = async () => {
     router.push("/")
   }
-
 
   return (
     <div className="container py-20">
@@ -80,9 +93,7 @@ const ApplicationContents = ({ id }) => {
         ) : step === 4 ? (
           <PaymentMethod onChange={(value) => setSelectedMethod(value)} onCheckOut={onCheckOut} />
         ) : step === 5 ? (
-          <div className='flex items-center justify-center'>
-            <Invoice onEnd={handleInvoiceComplete} paymentDetails={response} />
-          </div>
+          <PaymentInvoice property={property} onEnd={handleInvoiceComplete} paymentDetails={response} />
         ) : null}
       </div>
 

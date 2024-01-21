@@ -2,38 +2,78 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
 import map from "../../../public/assets/map.png";
-
 import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
-
 import ChevronRight from "../../components/UI/icons/ChevronRight";
 import GridSolid from "../../components/UI/icons/GridSolid"
 import ListSolid from "../../components/UI/icons/ListSolid"
 import Paginator from "../../components/Shared/pagination/Pagination"
 import FilterSection from "./FilterSection";
 import SearchSection from "./SearchSection";
-import { useGetProperties } from "../../property-listing/propertiesApis";
+import { useGetProperties, useGetPropertyTypes } from "../../property-listing/propertiesApis";
 import SingleProperty from "@/app/landingPage/properties/SingleProperty";
 import { useSearchParams } from "next/navigation";
 import { useUrlSearchParams } from "@/app/utils/utils";
+import { useSession } from "next-auth/react";
 
 const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
 
+const governerates = [
+  { id: "al ahmadi", icon: "Al Ahmadi" },
+  { id: "al asimah", icon: "Al-Asimah" },
+  { id: "al farwaniyah", icon: "Farwaniya" },
+  { id: "hawalli", icon: "Hawalli" },
+  { id: "al jahra", icon: "Jahra" },
+  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
+  { id: "kuwait city", icon: "Kuwait City" }
+]
+
 function SearchPageContent() {
   const searchParams = useSearchParams()
+  const [selectedGov, setSelectedGov] = useState(governerates[0].id)
   const urlSearchParams = useUrlSearchParams(searchParams)
   const [type, setType] = useState("grid");
   const [finalSearchParams, setFinalSearchParams] = useState(urlSearchParams || '')
   const [page, setPage] = useState(1)
+  const { data: session } = useSession()
+  const { data: propertyTypes } = useGetPropertyTypes(session?.user?.accessToken)
+  let finalTypes = propertyTypes?.map((type, index) => {
+    return {
+      id: type.value,
+      icon: type.name
+    }
+  })
+  const [selectedPropertyType, setSelectedPropertyType] = useState(finalTypes?.length > 0 ? finalTypes[0].value : "")
 
-  const { data: properties, totalCount, refetch } = useGetProperties(`${baseUrl}/properties`, `?${finalSearchParams}&page=${page}`)
+  useEffect(() => {
+    if (searchParams.get("location") !== "") {
+      setSelectedGov(governerates.find(g => g.id === searchParams.get("location")))
+    }
+    if (searchParams.get("type") !== "") {
+      setSelectedPropertyType(finalTypes?.find(t => t.id === searchParams.get("type")))
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    console.log({ selectedGov, selectedPropertyType })
+  }, [selectedGov, selectedPropertyType])
+  const { data: properties, totalCount, refetch } = useGetProperties(`${finalSearchParams.toString()}&page=${page}`)
 
   const handleSearchParamsChange = (newSearchParams) => {
+    const seenKeys = new Set();
     const filteredSearchParams = Object.fromEntries(
-      Object.entries(newSearchParams).filter(([key, value]) => value !== null && value !== "")
+      Object.entries(newSearchParams).filter(([key, value]) => {
+        // Check for null or empty values and also for duplicate keys
+        if (value !== null && value !== "" && !seenKeys.has(key)) {
+          seenKeys.add(key); // Add the key to the set to mark it as seen
+          return true;
+        }
+        return false;
+      })
     );
+
+    console.log(filteredSearchParams['type'])
     let filteredString = new URLSearchParams(filteredSearchParams).toString()
     let final = [urlSearchParams, filteredString].join("&")
     console.log(final)
@@ -82,7 +122,7 @@ function SearchPageContent() {
           {totalCount} properties available to rent
         </Typography>
         <div className="mt-5 flex items-center">
-          <FilterSection />
+          <FilterSection governerates={governerates} selectedGov={selectedGov} setSelectedGov={setSelectedGov} />
         </div>
         <div className="mt-6 flex flex-col items-right md:space-x-8">
 
@@ -111,7 +151,7 @@ function SearchPageContent() {
             </Button>
           </div>
           <div className="lg:w-11/12">
-            <SearchSection onSearchParamsChange={handleSearchParamsChange} />
+            <SearchSection onSearchParamsChange={handleSearchParamsChange} finalTypes={finalTypes} selectedPropertyType={selectedPropertyType} setSelectedPropertyType={setSelectedPropertyType} />
           </div>
         </div>
         <div className="mt-4 block h-[350px] lg:hidden">
