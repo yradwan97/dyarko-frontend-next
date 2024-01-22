@@ -40,7 +40,7 @@ const childrenMap = [
 const AccountSettings = () => {
   const { data: session } = useSession()
 
-  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/my-real-states");
+  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/profile");
 
   const defaultLinkClass =
     `block border-0 md:border-l-3 border-l-white 

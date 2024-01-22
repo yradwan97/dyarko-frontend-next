@@ -40,7 +40,9 @@ function PushNotificationLayout({ children }) {
 
   // Handles the click function on the toast showing push notification
   const handleClickPushNotification = (url) => {
-    router.push(url);
+    if (url) {
+      router.push(url);
+    } else {return}
   };
 
   // Get the push notification message and triggers a toast to display it
