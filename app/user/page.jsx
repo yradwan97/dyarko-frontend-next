@@ -1,10 +1,10 @@
 'use client'
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link"
 import Typography from "../components/Shared/Typography"
 import Header from "../components/Shared/Header/Header"
 import LogoutSolid from "../components/UI/icons/LogoutSolid"
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { logout } from "../services/api/auth";
 import Button from "../components/Shared/Button"
 import Profile from "./components/Profile"
@@ -14,7 +14,8 @@ import MyRequests from './components/my-requests/MyRequests'
 import MyRealEstates from "./components/my-real-estate/MyRealEstates"
 import Transactions from "./components/Transactions/Transactions"
 import ChangePassword from "./components/change-password/ChangePassword"
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import localforage from "localforage";
 
 
 const navLinks = [
@@ -27,21 +28,28 @@ const navLinks = [
   { to: "/user/change-password", text: "change password" },
 ];
 
-const childrenMap = [
-  { endpoint: "/user/profile", child: <Profile /> },
-  { endpoint: "/user/wallet", child: <Wallet /> },
-  { endpoint: "/user/saved", child: <SavedProperties /> },
-  { endpoint: "/user/your-requests", child: <MyRequests /> },
-  { endpoint: "/user/my-real-states", child: <MyRealEstates /> },
-  { endpoint: "/user/transactions", child: <Transactions /> },
-  { endpoint: "/user/change-password", child: <ChangePassword /> }
-]
+
 
 const AccountSettings = () => {
   const { data: session } = useSession()
+  const searchParams = useSearchParams()
+
+  const childrenMap = [
+    { endpoint: "/user/profile", child: <Profile /> },
+    { endpoint: "/user/wallet", child: <Wallet /> },
+    { endpoint: "/user/saved", child: <SavedProperties /> },
+    { endpoint: "/user/your-requests", child: <MyRequests installmentRequest={searchParams.get("installment")} /> },
+    { endpoint: "/user/my-real-states", child: <MyRealEstates /> },
+    { endpoint: "/user/transactions", child: <Transactions /> },
+    { endpoint: "/user/change-password", child: <ChangePassword /> }
+  ]
 
   const [selectedEndpoint, setSelectedEndpoint] = useState("/user/profile");
-
+  useEffect(() => {
+    if (searchParams.get("installment")) {
+      setSelectedEndpoint("/user/your-requests")
+    }
+  }, [searchParams])
   const defaultLinkClass =
     `block border-0 md:border-l-3 border-l-white 
       border-b border-b-main-100 p-3 px-4 
@@ -59,6 +67,10 @@ const AccountSettings = () => {
     let response;
     if (refreshToken) {
       response = await logout(refreshToken)
+      if (response.msg === "messages.user_logout") {
+        await localforage.removeItem("fcm_token")
+        await signOut({ callbackUrl: "http://localhost:3000" })
+      }
       return response
     }
   };

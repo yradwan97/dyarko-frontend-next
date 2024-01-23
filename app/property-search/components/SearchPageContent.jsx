@@ -44,7 +44,7 @@ function SearchPageContent() {
       icon: type.name
     }
   })
-  const [selectedPropertyType, setSelectedPropertyType] = useState(finalTypes?.length > 0 ? finalTypes[0].value : "")
+  const [selectedPropertyType, setSelectedPropertyType] = useState(finalTypes?.length > 0 ? finalTypes[0] : undefined)
 
   useEffect(() => {
     if (searchParams.get("location") !== "") {

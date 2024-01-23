@@ -8,17 +8,16 @@ import Loader from "@/app/components/Shared/Loader";
 import Paginator from '@/app/components/Shared/pagination/Pagination'
 
 
-const MyRequests = () => {
-
+const MyRequests = ({ installmentRequest }) => {
+  console.log("inst", installmentRequest)
   const [activeTab, setActiveTab] = useState(1);
   const { data: session } = useSession()
   const [page, setPage] = useState(1)
+  const [requests, setRequests] = useState([])
 
   let endpoint = activeTab === 1 ? `/tours?user=${session?.user?._id}&page=${page}` : `/installments?page=${page}`
 
-  const { data, refetch, isLoading } = useGetRequests(session?.user?.accessToken, endpoint)
-  // TODO: remove this filtration when deploying. all requests should have properties
-  let filtered = data?.data?.filter(r => r.property !== null) || []
+  const { data, refetch, isLoading } = useGetRequests(endpoint)
 
   useEffect(() => {
     setPage(1)
@@ -28,6 +27,21 @@ const MyRequests = () => {
     refetch()
   }, [activeTab, page])
 
+  useEffect(() => {
+    if (data && data?.data) {
+      setRequests(data?.data)
+    }
+  }, [data])
+
+  useEffect(() => {
+    if (installmentRequest) {
+      setActiveTab(2)
+    }
+  }, [installmentRequest])
+  useEffect(() => {
+
+    console.log(requests)
+  }, [requests])
 
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);
@@ -56,12 +70,18 @@ const MyRequests = () => {
           </div>
         </div>
         <div className="flex flex-col gap-4">
-          {filtered.map((d) => {
-            return <RequestProperty key={d?._id} badge={d?.status} property={d?.property} />
-          })}
+          {requests.length > 0 ? requests.map((r) => {
+            return <RequestProperty key={r?._id} badge={r?.status} request={r} />
+          })
+            :
+            (
+              <Typography variant="body-lg-medium" as="h3" className="my-8 text-center text-black">
+                No Requests Here Yet!
+              </Typography>
+            )}
         </div>
       </div>
-      <Paginator page={page} lastPage={data?.pages || 1} onChange={e => setPage(e)} />
+      {data?.pages > 0 && <Paginator page={page} lastPage={data?.pages || 1} onChange={e => setPage(e)} />}
     </>
   );
 };

@@ -19,9 +19,6 @@ function SearchSection({ onSearchParamsChange, finalTypes, selectedPropertyType,
   const [priceTo, setPriceTo] = useState("")
   const [bedrooms, setBedrooms] = useState("")
 
-
-
-
   const handleSearchParamsChange = () => {
     console.log(selectedPropertyType)
     const searchParams = {
@@ -91,6 +88,7 @@ function SearchSection({ onSearchParamsChange, finalTypes, selectedPropertyType,
             iconStyle="!right-4"
             containerClass="py-3 px-5 w-full outline-main-600 outline rounded-md !justify-between"
             values={finalTypes || []}
+            selected={selectedPropertyType}
             setSelected={e => setSelectedPropertyType(e)}
           />
         </div>}

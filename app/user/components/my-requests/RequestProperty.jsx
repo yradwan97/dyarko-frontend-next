@@ -9,14 +9,48 @@ import Price from "../../../landingPage/properties/Price";
 import TopBadge from "../../../landingPage/properties/TopBadge";
 import Link from "next/link";
 import RequestBadge from "./RequestBadge";
-import { capitalizeFirst, getPropertyPeriod, getPropertyPrice } from "@/app/utils/utils";
+import Button from "../../../components/Shared/Button"
+import { capitalizeFirst, format, getPropertyPeriod, getPropertyPrice, prettifyError } from "../../../utils/utils";
+import { useState } from "react";
+import Modal from "../../../components/Shared/Modal"
+import { format as formatDate } from "date-fns"
+import { axiosClient as axios } from "../../../services/axiosClient"
+import { toast } from "react-toastify"
 
-function RequestProperty({ badge, property }) {
+function RequestProperty({ badge, request }) {
+  let { property, owner_status, user_status } = request
+  const [showInstallmentPlanModal, setShowInstallmentPlanModal] = useState(false)
+
+  const showInstallmentButton = () => {
+    // Check the conditions for showing the button
+    return (
+      property?.payment_type === "installment" &&
+      property?.max_installment_period &&
+      property?.down_payment &&
+      // owner_status === "approved" &&
+      user_status === "pending"
+    );
+  };
+
+  const handleUserAction = async (e) => {
+
+    let body = {
+      "status": e.target.textContent === "Accept" ? "approved" : "rejected"
+    }
+    try {
+      let res = await axios.put(`/installments/${request?._id}/user`, body)
+      console.log(res)
+    } catch (e) {
+      toast.error(prettifyError(e.response.data.errors[0].msg))
+    }
+  }
+  let remaining = property?.price - property?.down_payment
+  let periods = property?.installment_type === "yearly" ? 1 : property?.installment_type === "monthly" ? 12 : property?.installment_type === "quarterly" ? 4 : 12
+  let startingDate = property?.start_date ? new Date(property?.start_date) : new Date()
+  let amount = property?.amount ? property?.amount : remaining / (property?.max_installment_period * periods)
 
   return (
-    <div
-      className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}
-    >
+    <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
       {badge === "pending" ? (
         <RequestBadge text="pending" bgColor="bg-main-orange-600" />
       ) : badge === "approved" ? (
@@ -40,6 +74,14 @@ function RequestProperty({ badge, property }) {
         <div className="flex items-center justify-between">
           <Price paymentType={property?.payment_type} price={getPropertyPrice(property)} period={getPropertyPeriod(property)} />
           <AddWishlist property={property} id={property?._id} />
+          {showInstallmentButton() && (
+            <Button
+              variant="primary"
+              onClick={() => setShowInstallmentPlanModal(true)}
+            >
+              Review Installment Plan
+            </Button>
+          )}
         </div>
         <Typography variant="h4" as="h4" className="mt-1">
           {capitalizeFirst(property?.title)}
@@ -84,6 +126,45 @@ function RequestProperty({ badge, property }) {
           </div>
         </div>
       </div>
+      <Modal isOpen={showInstallmentPlanModal} onClose={() => setShowInstallmentPlanModal(false)}>
+        <Typography as="h2" variant="body-lg-bold">
+          Your approved installment details:
+        </Typography>
+        <div className="flex flex-col mt-3 space-y-2">
+          <div className="flex flex-row justify-between">
+            <label htmlFor="downPayment">Down Payment: </label>
+            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="downPayment" value={format(property?.down_payment)} />
+          </div>
+          <div className="flex flex-row justify-between">
+            <label htmlFor="maxPeriod">Maximum Installment Period: </label>
+            <input className="w-1/3 bg-white" type="text" disabled id="maxPeriod" value={`${property?.max_installment_period} years`} />
+          </div>
+          <div className="flex flex-row justify-between">
+            <label htmlFor="installmentType">Payment Frequency: </label>
+            <input className="w-1/3 bg-white capitalize" type="text" disabled id="installmentType" value={property?.installment_type || "monthly"} />
+          </div>
+          <div className="flex flex-row justify-between">
+            <label htmlFor="startDate">Start Date: </label>
+            <input className="w-1/3 bg-white" type="text" disabled id="startDate" value={formatDate(startingDate, "dd/MM/yyyy")} />
+          </div>
+          <div className="flex flex-row justify-between">
+            <label htmlFor="amount">Amount: </label>
+            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="amount" value={format(amount)} />
+          </div>
+          <div className="flex flex-row justify-between">
+            <label htmlFor="price">Total Price: </label>
+            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="price" value={format(property?.price)} />
+          </div>
+          <div className="flex flex-row pt-4 justify-evenly">
+            <Button variant="primary" onClick={handleUserAction}>
+              Accept
+            </Button>
+            <Button variant="primary-outline" onClick={handleUserAction}>
+              Reject
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

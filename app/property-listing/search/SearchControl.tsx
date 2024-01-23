@@ -9,6 +9,7 @@ import { format as formatCurrency } from "../../utils/utils";
 import { useSession } from "next-auth/react";
 import { useGetPropertyTypes } from "../propertiesApis";
 import Select from "@/app/components/Shared/Form/Select";
+import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
 
 const PRICES = [
   {
@@ -41,6 +42,12 @@ export interface SearchControlProps {
   slug?: string;
   onReset: () => void
   onSearch: (filters: any) => void;
+  // searchParams? : ReadonlyURLSearchParams
+}
+
+type Governerate = {
+  id: string;
+  icon: string;
 }
 
 type PropertyType = {
@@ -48,7 +55,7 @@ type PropertyType = {
   value: string
 }
 
-const governerates = [
+const governerates: Governerate[] = [
   { id: "al ahmadi", icon: "Al Ahmadi" },
   { id: "al asimah", icon: "Al-Asimah" },
   { id: "al farwaniyah", icon: "Farwaniya" },
@@ -58,43 +65,65 @@ const governerates = [
   { id: "kuwait city", icon: "Kuwait City" }
 ]
 
-function SearchControl({ slug = "", onSearch, onReset }: SearchControlProps) {
+function SearchControl({ slug, onSearch, onReset }: SearchControlProps) {
   const [date, setDate] = useState<Date | null>(null);
-  const [selectedGov, setSelectedGov] = useState(governerates[0].id)
-
-  const [types, setTypes] = useState<PropertyType[]>([])
+  const [selectedGov, setSelectedGov] = useState<Governerate>(governerates[0])
   const [priceRange, setPriceRange] = useState(PRICES[0]);
-  
+
   const {data: session} = useSession()
   // @ts-ignore
   const {data: propertyTypes, isSuccess} = useGetPropertyTypes(session?.user?.accessToken)
   const [propertyType, setPropertyType] = useState<PropertyType | undefined>(propertyTypes ? propertyTypes[0] : undefined)
+  const searchParameters = useSearchParams();
+  
+  useEffect(() => {
+  if (searchParameters.get("city") !== null) {
+    let city = searchParameters!.get("city")
+    let gov = governerates.find((gov: Governerate) => gov.id === city)
+    setSelectedGov(gov!)
+  }
+}, [searchParameters])
 
+useEffect(() => {
+  if (searchParameters.get("category") !== null) {
+    setPropertyType(propertyTypes?.find((type: PropertyType) => type.value === searchParameters!.get("category")))
+  }
+}, [searchParameters, propertyTypes])
+
+useEffect(() => {
+  console.log(selectedGov)
+}, [selectedGov])
+
+  const getTitleText = () => {
+    switch (slug) {
+      case "rent":
+        return "rent";
+      case "installment": 
+        return `buy (${slug})`
+      case "cash": 
+        return "buy"
+      case "shared": 
+        return "share"
+      case "replacement": 
+        return "replace"
+      
+    }
+  }
   const handleResetFilters = () => {
     setDate(null)
-    setSelectedGov(governerates[0].id)
+    setSelectedGov(governerates[0])
     setPriceRange(PRICES[0])
     setPropertyType(propertyTypes ? propertyTypes[0] : undefined)
 
     onReset()
   }
 
-  const handleSearch = () => {
-    
-    onSearch({
-      available_date: date,
-      city: selectedGov,
-      property_type: propertyType?.value,
-      price_to: priceRange.priceTo,
-      price_from: priceRange.priceFrom,
-    });
-  };
 
   return (
     <>
       <div className="flex flex-col items-center justify-between space-y-6 lg:flex-row lg:space-y-0">
         <Typography variant="h2" as="h2" className="text-black">
-          Search properties to {slug}
+          Search properties to {getTitleText()}
         </Typography>
       </div>
       <div className="mt-8  flex flex-wrap items-center justify-between space-y-6 rounded-lg bg-white py-6 lg:flex lg:space-y-0">
@@ -110,7 +139,7 @@ function SearchControl({ slug = "", onSearch, onReset }: SearchControlProps) {
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={governerates}
               selected={selectedGov}
-              setSelected={(e) => setSelectedGov(e.id)}
+              setSelected={(e) => setSelectedGov(e)}
             />
         </div>
         <div className="relative flex w-full flex-col gap-y-1 border-main-200 pl-6 pr-4 sm:w-1/2 md:border-r lg:w-1/2 ">
@@ -159,10 +188,12 @@ function SearchControl({ slug = "", onSearch, onReset }: SearchControlProps) {
             Property Type
           </Typography>
           <div className="relative w-full">
-            <DropDownSelect
-              list={propertyTypes && propertyTypes.map((type: any) => type.name)}
-              onSelect={(indx) => setPropertyType(propertyTypes[indx])}
-            />
+          <DropDownSelect
+            list={propertyTypes && propertyTypes.map((type: any) => type.name)}
+            onSelect={(indx) => setPropertyType(propertyTypes[indx])}
+            selectedValue={propertyTypes.indexOf(propertyType)} // Pass the initially selected index as a prop
+          />
+
           </div>
           </>
         }
@@ -171,7 +202,13 @@ function SearchControl({ slug = "", onSearch, onReset }: SearchControlProps) {
           <Button
             variant="primary"
             className="!px-9 text-base font-medium"
-            onClick={handleSearch}
+            onClick={() => onSearch({
+              available_date: date,
+              city: selectedGov.id,
+              property_type: propertyType?.value,
+              price_to: priceRange.priceTo,
+              price_from: priceRange.priceFrom,
+            })}
           >
             Search
           </Button>

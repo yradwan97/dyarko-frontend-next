@@ -72,18 +72,9 @@ const LoginForm = () => {
         return
       } else if (response.ok) {
         await update()
-        
-        
-        // if (!user.data.is_confirmed) {
-        //   router.push("/login/confirm")
-        //   return
-        // }
-          
-        if (!session?.user?.device_token) {
-          const token = await firebaseCloudMessaging.init();
-          if (token) {
-            axios.put("/users/device_token", { device_token: token })
-          }
+        const token = await firebaseCloudMessaging.init();
+        if (token) {
+          axios.put("/users/device_token", { device_token: token })
         }
         if (callBack) {
           router.push(callBack)

@@ -1,4 +1,5 @@
-import React from "react";
+'use client'
+import React, { useEffect, useState } from "react";
 import logo2 from "../../../../public/assets/logo2.png";
 import FacebookSolid from "../../../components/UI/icons/FacebookSolid";
 import InstagramOutline from "../../../components/UI/icons/InstagramOutline";
@@ -7,20 +8,30 @@ import TwitterSolid from "../../../components/UI/icons/TwitterSolid";
 import Typography from "../../../components/Shared/Typography";
 import Link from "next/link";
 import Image from "next/image";
+import { axiosClient as axios } from "@/app/services/axiosClient"
 
 function Footer() {
+  const [links, setLinks] = useState()
+  const getLinks = async () => {
+    let res = await axios.get("/settings/info")
+    setLinks(res.data.data)
+  }
+  useEffect(() => {
+    getLinks()
+  }, [])
+
   return (
     <div>
       <div className="container mx-auto py-20">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <Image src={logo2} loading="lazy" alt=""/>
+            <Image src={logo2} loading="lazy" alt="" />
           </div>
           <div>
             <Typography variant="h5" as="h5" className="mb-3">
               Services
             </Typography>
-            <Typography 
+            <Typography
               variant="body-sm-medium"
               as="p"
               className="mb-3 text-gray-600"
@@ -92,28 +103,28 @@ function Footer() {
               as="p"
               className="mb-3 text-gray-600"
             >
-              <Link href="/">Instagram</Link>
+              <Link href={links?.instagram ? links?.instagram : "/"}>Instagram</Link>
             </Typography>
             <Typography
               variant="body-sm-medium"
               as="p"
               className="mb-3 text-gray-600"
             >
-              <Link href="/">Facebook</Link>
+              <Link href={links?.facebook ? links?.facebook : "/"}>Facebook</Link>
             </Typography>
             <Typography
               variant="body-sm-medium"
               as="p"
               className="mb-3 text-gray-600"
             >
-              <Link href="/">LinkedIn</Link>
+              <Link href={links?.linkedin ? links?.linkedin : "/"}>LinkedIn</Link>
             </Typography>
             <Typography
               variant="body-sm-medium"
               as="p"
               className="mb-3 text-gray-600"
             >
-              <Link href="/">Twitter</Link>
+              <Link href={links?.twitter ? links?.twitter : "/"}>Twitter</Link>
             </Typography>
           </div>
         </div>
@@ -129,16 +140,16 @@ function Footer() {
               ©2023 Dyarko. All rights reserved
             </Typography>
             <div className="flex justify-center md:justify-end">
-              <Link href="/">
+              <Link href={links?.facebook ? links?.facebook : "/"}>
                 <FacebookSolid className="mr-12 fill-gray-400" />
               </Link>
-              <Link href="/">
+              <Link href={links?.instagram ? links?.instagram : "/"}>
                 <InstagramOutline className="mr-12 fill-gray-400" />
               </Link>
-              <Link href="/">
+              <Link href={links?.twitter ? links?.twitter : "/"}>
                 <TwitterSolid className="mr-12 fill-gray-400" />
               </Link>
-              <Link href="/">
+              <Link href={links?.linkedin ? links?.linkedin : "/"}>
                 <LinkedInSolid className="fill-gray-400" />
               </Link>
             </div>

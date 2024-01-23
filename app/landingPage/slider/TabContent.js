@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
 import CalenderOutline from "../../components/UI/icons/CalenderOutline"
@@ -22,16 +22,21 @@ const governerates = [
  function TabContent({tab, session}) {
    const {data: propertyTypes} = useGetPropertyTypes(session?.user?.accessToken)
   const [date, setDate] = useState("");
-  const [location, setLocation] = useState("")
-  const [selectedGov, setSelectedGov] = useState(governerates[0].id)
-  const [selectedPropertyType, setSelectedPropertyType] = useState(propertyTypes?.length > 0 ? propertyTypes[0] : "")
+  const [selectedGov, setSelectedGov] = useState(governerates[0])
+  const [selectedPropertyType, setSelectedPropertyType] = useState(propertyTypes ? propertyTypes[0] : undefined)
 
+  useEffect(() => {
+    if (propertyTypes) {
+      setSelectedPropertyType(propertyTypes[0])
+    }
+  }, [propertyTypes])
+  
   let queryParams = () => {
     let str = []
     let final = ``
     if (date !== "") str.push(`date=${date}`)
-    if (selectedGov !== "") str.push(`location=${selectedGov}`)
-    if (selectedPropertyType !== "") str.push(`type=${selectedPropertyType.value}`)
+    if (selectedGov) str.push(`location=${selectedGov.id}`)
+    if (selectedPropertyType) str.push(`type=${selectedPropertyType?.value}`)
     
     switch (str.length) {
       case 0:
@@ -63,7 +68,7 @@ const governerates = [
               containerClass="py-2 px-6 w-full rounded-lg !justify-between"
               values={governerates}
               selected={selectedGov}
-              setSelected={(e) => setSelectedGov(e.id)}
+              setSelected={(e) => setSelectedGov(e)}
             />
 
           </div>
@@ -89,8 +94,8 @@ const governerates = [
           </Typography>
           <DropDownSelect
             list={propertyTypes?.map((type) => type.name) || []}
-            selectedValue={selectedPropertyType.name}
-            onSelect={(indx) => setSelectedPropertyType(propertyTypes[indx].value)}
+            selectedValue={propertyTypes?.indexOf(selectedPropertyType)}
+            onSelect={(indx) => setSelectedPropertyType(propertyTypes[indx])}
           />
         </div>}
         <Button

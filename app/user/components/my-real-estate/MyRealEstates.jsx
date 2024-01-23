@@ -1,12 +1,10 @@
 'use client'
 import React, { useEffect, useState } from "react";
-import Button from "../../../components/Shared/Button"
 import Typography from "../../../components/Shared/Typography"
 import RealEstateProperty from "./RealEstateProperty";
 import Requests from "./Requests";
 import Select from "@/app/components/Shared/Form/Select";
 import { useGetRealEstates } from "../../userApi";
-import { useSession } from "next-auth/react";
 import Paginator from "@/app/components/Shared/pagination/Pagination"
 import Loader from "@/app/components/Shared/Loader";
 
@@ -18,10 +16,10 @@ const values = [
 const MyRealEstates = () => {
   const [showRequest, setShowRequest] = useState(false);
   const [selectedId, setSelectedId] = useState("")
-  const [selectedValue, setSelectedValue] = useState(values[0].name)
+  const [selectedValue, setSelectedValue] = useState(values[0])
   const [page, setPage] = useState(1)
 
-  const { data, isLoading, refetch } = useGetRealEstates(`/${selectedValue}?page=${page}`)
+  const { data, isLoading, refetch } = useGetRealEstates(`/${selectedValue.name}?page=${page}`)
   useEffect(() => {
     refetch()
   }, [page, selectedValue])
@@ -51,7 +49,7 @@ const MyRealEstates = () => {
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={values}
               selected={selectedValue}
-              setSelected={e => setSelectedValue(e.name)}
+              setSelected={e => setSelectedValue(e)}
             />
           </div>
           <div className="flex flex-col gap-4">

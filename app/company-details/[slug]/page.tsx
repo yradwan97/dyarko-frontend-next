@@ -5,7 +5,6 @@ import { useParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import Banner from "../components/Banner"
 import { Tab } from '@headlessui/react'
-import { useQuery, useQueryClient } from 'react-query'
 import Typography from '@/app/components/Shared/Typography'
 import BuildingSolid from '@/app/components/UI/icons/BuildingSolid'
 import PropertiesSection from '@/app/landingPage/properties/PropertiesSection'

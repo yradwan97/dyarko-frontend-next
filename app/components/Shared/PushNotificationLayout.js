@@ -53,7 +53,7 @@ function PushNotificationLayout({ children }) {
         const unsubscribe = onMessage(messaging, (message) => {
           console.log(message)
           toast(
-            <div onClick={() => handleClickPushNotification(message?.data?.url)}>
+            <div className={message?.data?.url ? `cursor-pointer` : "cursor-default"} onClick={() => handleClickPushNotification(message?.data?.url)}>
               <h5>{message?.notification?.title}</h5>
               <h6>{message?.notification?.body}</h6>
             </div>,

@@ -18,7 +18,7 @@ const values = [
   { name: "unpaid", icon: "Unpaid" }
 ];
 function Requests({ setShowRequest, id }) {
-  const [selected, setSelected] = useState(values[0].name);
+  const [selected, setSelected] = useState(values[0]);
   const [page, setPage] = useState(1)
   const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
   const [showReason, setShowReason] = useState(false)
@@ -27,7 +27,7 @@ function Requests({ setShowRequest, id }) {
   const [selectedInvoice, setSelectedInvoice] = useState()
   console.log(id)
 
-  const handleInvoiceSelection = (e, invoiceId) => {
+  const handleInvoiceSelection = (invoiceId) => {
     setSelectedInvoice((prevSelectedInvoice) => {
       const selectedInvoice = invoices.data?.find((invoice) => invoice._id === invoiceId);
 
@@ -109,7 +109,7 @@ function Requests({ setShowRequest, id }) {
             containerClass="py-3 px-5 w-full rounded-lg !justify-between"
             values={values}
             selected={selected}
-            setSelected={e => setSelected(e).name}
+            setSelected={e => setSelected(e)}
           />
         </div>
       </div>
@@ -117,7 +117,7 @@ function Requests({ setShowRequest, id }) {
         <thead>
           <tr className="flex justify-between">
             <th className="text-md flex-1 text-left font-bold text-black">
-              {selected === "paid" ? "Paid On" : "Due on"}
+              {selected.name === "paid" ? "Paid On" : "Due on"}
             </th>
             <th className="text-md flex-1 text-center font-bold text-black">
               Purpose
@@ -128,7 +128,7 @@ function Requests({ setShowRequest, id }) {
           </tr>
         </thead>
         <tbody>
-          {invoices.data.filter(i => i.status === selected.toUpperCase()).map((invoice, index) => (
+          {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
             <tr key={index} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100"
               onClick={(e) => handleInvoiceSelection(e, invoice._id)}>
               <td className="flex-1 text-left text-sm font-medium text-gray-500">

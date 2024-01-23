@@ -14,15 +14,72 @@ import NotificationOutline from "@/app/components/UI/icons/NotificationOutline"
 import NotificationDropdown from "./NotificationDropdown"
 import Typography from "../Typography"
 import Avatar from "../Avatar"
-import { ToastContainer, toast } from "react-toastify"
+import { ToastContainer } from "react-toastify"
+import { axiosClient as axios } from "@/app/services/axiosClient"
 
 
-
-const Header = () => {
+const Header = ({ refetch = false }) => {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
+  const [notifications, setNotifications] = useState([]);
   const { data: session } = useSession()
+  const [user, setUser] = useState({})
+  const [notificationCount, setNotificationCount] = useState(0)
 
+  const getNotifications = async () => {
+    try {
+      if (session) {
+        const response = await axios.get("/notifications", {
+          headers: {
+            "auth-token": `Bearer ${session?.user.accessToken}`,
+            "Accept": "*/*",
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (response?.data.message === "success") {
+          let unreadNotifications = response.data.data.filter(n => !n.is_read)
+          setNotifications(unreadNotifications);
+          setNotificationCount(unreadNotifications?.length || 0)
+        }
+      }
+    } catch (error) {
+      // Handle errors if necessary
+      console.error("Error fetching notifications:", error);
+    }
+  };
+
+  const getLoggedInUser = async () => {
+    try {
+      let res = await axios.get("/users", {
+        headers: {
+          "auth-token": `Bearer ${session?.user?.accessToken}`
+        }
+      })
+      if (res.data.message === "success") {
+        setUser(res.data.data)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
+  useEffect(() => {
+    getNotifications();
+
+    if (session && session?.user) {
+      getLoggedInUser()
+    } else {
+      setUser({})
+    }
+
+  }, [session])
+
+  useEffect(() => {
+    if (refetch) {
+      getNotifications()
+    }
+  }, [refetch])
 
   return (
     <>
@@ -36,15 +93,17 @@ const Header = () => {
           <nav className=" mx-16 border-separate space-x-11 items-center lg:flex lg:space-x-8 hidden">
             <Navbar pathname={pathname} />
           </nav>
-          {/* implement alternate div when user is logged in */}
-          {session ? <div className="relative ml-auto flex items-center space-x-4">
+          {(session && user) ? <div className="relative ml-auto flex items-center space-x-4">
             {/* show notification dropdown at large screens */}
-            <Menu as="div" className="hidden lg:block">
-              <Menu.Button className="flex h-8 w-8 items-center justify-center rounded-lg bg-main-200">
-                <NotificationOutline className="h-5 w-5" />
+            <Menu as="div" className="hidden lg:block relative">
+              <Menu.Button className="flex relative h-9 w-9 items-center justify-center rounded-lg bg-main-200">
+                <NotificationOutline className="h-7 w-7 relative z-10" />
+                {notificationCount > 0 && (
+                  <span className="absolute -bottom-[0.65px] -right-[0.65px] bg-red text-white text-sm rounded-full px-1 py-1 z-20" />
+                )}
               </Menu.Button>
 
-              <NotificationDropdown />
+              <NotificationDropdown notifications={notifications} />
             </Menu>
             <Link className="flex items-center space-x-2" href="/user">
               <Typography
@@ -52,13 +111,13 @@ const Header = () => {
                 as="span"
                 className="capitalize"
               >
-                {session.user.name}
+                {user.name}
               </Typography>
               <Avatar
                 className="ml-auto hidden items-center space-x-4 md:flex"
-                userName={session.user.name}
-                userImg={session.user.image}
-                isVerified={session.user.isVerified || false}
+                userName={user.name}
+                userImg={user.image}
+                isVerified={user.is_confirmed || false}
               />
             </Link>
           </div>

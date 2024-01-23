@@ -25,7 +25,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <ApplicationProvider>
           {children}
-          <ToastContainer/>
+          <ToastContainer />
         </ApplicationProvider>
       </body>
     </html>

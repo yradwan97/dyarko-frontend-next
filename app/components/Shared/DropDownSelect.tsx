@@ -1,17 +1,23 @@
 import FormControl from "@mui/material/FormControl";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DropDownSelectProps {
   list: string[];
-  selectedValue?: string
   onSelect: (selectedIndx: number) => void;
+  selectedValue?: number; // New prop for the selected value
 }
+
 function DropDownSelect({ list, onSelect, selectedValue }: DropDownSelectProps) {
-  let idx = list.indexOf(selectedValue!) || -1
-  console.log(idx)
-  const [selected, setSelected] = useState(selectedValue ? list[idx] : "0");
+  const [selected, setSelected] = useState(selectedValue !== undefined ? String(selectedValue) : "0");
+
+  useEffect(() => {
+    // Update selected value when the prop changes
+    if (selectedValue !== undefined) {
+      setSelected(String(selectedValue));
+    }
+  }, [selectedValue]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelected(event.target.value);

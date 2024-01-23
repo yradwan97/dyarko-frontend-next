@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react'
 
 const SavedProperties = () => {
   const { data: session } = useSession()
-  const { data, isSuccess } = useGetSavedProperties(session?.user?.accessToken)
+  const { data, isSuccess } = useGetSavedProperties()
 
   return (
     <div>

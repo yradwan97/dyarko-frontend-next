@@ -6,7 +6,7 @@ import HomeSolid from "../../components/UI/icons/HomeSolid";
 const SingleNotification = ({ notification, onReadNotification }) => {
 
     return (
-        <div onClick={() => onReadNotification(notification._id)} className={`flex space-x-4 hover:bg-main-100 ${!notification?.is_read ? `bg-main-200` : ""} border-b rounded-md mx-1 border-gray-300 px-5 py-3 last:border-b-0`}>
+        <div onClick={() => onReadNotification(notification._id)} className={`flex space-x-4 hover:bg-main-100 ${!notification?.is_read ? `bg-main-200 cursor-pointer` : ""} border-b rounded-md mx-1 border-gray-300 px-5 py-3 last:border-b-0`}>
             <div>
                 <span
                     className={`h-6 w-6 rounded-full ${"bg-red"} flex items-center justify-center`}

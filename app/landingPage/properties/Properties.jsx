@@ -19,7 +19,7 @@ const governerates = [
 
 function Properties() {
   const [activeTab, setActiveTab] = useState("rent");
-  const [selectedGov, setSelectedGov] = useState(governerates[0].id)
+  const [selectedGov, setSelectedGov] = useState(governerates[0])
   const tabstyle =
     "flex items-center py-2.5 px-3 sm:px-5 cursor-pointer text-sm md:text-lg";
 
@@ -63,7 +63,7 @@ function Properties() {
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={governerates}
               selected={selectedGov}
-              setSelected={(e) => setSelectedGov(e.id)}
+              setSelected={(e) => setSelectedGov(e)}
             />
 
           </div>
@@ -71,7 +71,7 @@ function Properties() {
         <PropertiesSection />
         <Button
           variant="primary"
-          to={`/property-listing/${activeTab}?city=${selectedGov}`}
+          to={`/property-listing/${activeTab}?city=${selectedGov.id}`}
           className="mx-auto mt-10 block w-fit"
         >
           Browse more properties

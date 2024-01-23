@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { Menu, MenuItem } from '@mui/material';
 import Button from '../Button';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
 import ChevronDown from '../../UI/icons/ChevronDown';
 
 const Navbar = (props: any) => {

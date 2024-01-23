@@ -1,6 +1,5 @@
 import { useQuery } from "react-query"
 import {axiosClient as axios} from "../services/axiosClient"
-import { useGetProperties } from "../property-listing/propertiesApis"
 
 export const useGetWalletData = (accessToken, page = 1) => {
     const {data, isLoading, isError, isSuccess, refetch} = useQuery(
@@ -22,7 +21,7 @@ export const useGetSavedProperties = (filterFlag = true) => {
         "saved-properties",
         async () => await axios.get(`/save_properties`).then(response => {
             if (filterFlag) {
-            return response?.data?.data?.filter(d => d.property !== null)
+                return response?.data?.data?.filter(d => d.property !== null)
             } else {
                 return response?.data?.data
             }
@@ -46,7 +45,7 @@ export const useGetTransactions = (accessToken, page = 1) => {
         return {data: isSuccess ? data?.data : null, isLoading, isSuccess, refetch}
 }
 
-export const useGetRequests = (accessToken, endpoint) => {
+export const useGetRequests = (endpoint) => {
     const {data, isSuccess, isLoading, refetch} = useQuery(
         ["requests", endpoint],
         async () => await axios.get(endpoint)

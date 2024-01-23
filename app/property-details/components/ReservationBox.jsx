@@ -9,12 +9,15 @@ import { getPropertyPeriod, getPropertyPrice, prettifyError } from '@/app/utils/
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { useSession } from 'next-auth/react'
 import { toast } from "react-toastify"
+import Modal from "@/app/components/Shared/Modal"
+
 
 
 function ReservationBox({ property }) {
     const [visible, setVisible] = useState(false)
     const { data: session } = useSession()
     const [confirmedUser, setConfirmedUser] = useState(false)
+    const [isContactOwnerOpen, setIsContactOwnerOpen] = useState(false)
 
     const isUserConfirmed = async () => {
         try {
@@ -47,7 +50,7 @@ function ReservationBox({ property }) {
                 text = "Request Installment";
                 break;
             default:
-                text = "Select"
+                text = "Contact Owner"
                 break
         }
 
@@ -55,10 +58,14 @@ function ReservationBox({ property }) {
     }
 
     const decideSubmitButtonLinkHref = () => {
-        if (property?.payment_type === "rent" || property?.payment_type === "cash") {
+        if (property?.payment_type === "rent") {
             if (confirmedUser) {
                 return `/application/${property?._id}`
             } else {
+                return "/login/confirm"
+            }
+        } else if (property?.payment_type === "installment") {
+            if (!confirmedUser) {
                 return "/login/confirm"
             }
         } else {
@@ -66,13 +73,10 @@ function ReservationBox({ property }) {
         }
     }
 
-    const showOrHideButton = () => {
-        return (property?.payment_type === "rent" || property?.payment_type === "installment")
-    }
-
-    const handleInstallmentButtonClick = async () => {
+    const handleMainSubmitButtonClick = async () => {
 
         if (property.payment_type === "installment") {
+            // this button is he request installment button
             let body = {
                 "property": property?._id
             }
@@ -89,6 +93,12 @@ function ReservationBox({ property }) {
             } catch (e) {
                 toast.error(prettifyError(e.response.data.errors[0].msg))
             }
+        } else if (property.payment_type === "rent") {
+            // if property is rent, it has a link to the renting application so no need to handle click.
+            return
+        } else {
+            // if anything other that installment and rent, show contact owner modal.
+            setIsContactOwnerOpen(true)
         }
     }
 
@@ -101,15 +111,15 @@ function ReservationBox({ property }) {
                     KWD {property && getPropertyPrice(property)}
                     {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary">{property && getPropertyPeriod(property)}</Typography></sub>}
                 </Typography>
-                {showOrHideButton() && <Button
+                <Button
                     variant='primary'
                     className="stroke-white hover:stroke-main-600 my-6 flex justify-center items-center leading-6 w-full"
                     to={decideSubmitButtonLinkHref()}
-                    onClick={handleInstallmentButtonClick}
+                    onClick={handleMainSubmitButtonClick}
                 >
                     <DocumentOutline className='stroke-inherit mr-1 w-5 h-5' />
                     <Typography variant='body-md-bold' as="span">{property && getSubmitButtonText()}</Typography>
-                </Button>}
+                </Button>
                 <Line />
                 <Typography variant='body-lg-bold' as="p" className="my-6">Request a home tour</Typography>
 
@@ -119,6 +129,10 @@ function ReservationBox({ property }) {
                 </Button>
                 <Typography variant='body-xs' as='span' className="text-gray-500">It’s free, with no obligation － cancel anytime.</Typography>
             </div>
+            <Modal isOpen={isContactOwnerOpen} onClose={() => setIsContactOwnerOpen(false)}>
+                <Typography variant='body-lg-bold' as="p" className="">Owner Contact Details</Typography>
+                {console.log(property?.owner)}
+            </Modal>
         </>
     )
 }

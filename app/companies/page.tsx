@@ -15,7 +15,7 @@ const Companies = () => {
     
     const size = "10"
     const [page, setPage] = useState(1)
-    const { isLoading, isFetching, data, refetch } = useGetCompanies(page.toString(), size)
+    const { isFetching, data, refetch } = useGetCompanies(page.toString(), size)
     
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const Companies = () => {
         }, 10)
     }, [page])
 
-    if (isLoading || isFetching) return <Loader/>
+    if (isFetching) return <Loader/>
     return (
         <>
             <Header />

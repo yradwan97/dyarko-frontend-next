@@ -41,7 +41,6 @@ const logout = async (refreshToken) => {
   if (res.status === 200) {
     cookieClient.eraseCookie("access_token");
     cookieClient.eraseCookie("refresh_token");
-    await signOut({callbackUrl: "http://localhost:3000"})
   }
   return res.data;
 };
