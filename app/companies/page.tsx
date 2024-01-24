@@ -15,7 +15,7 @@ const Companies = () => {
     
     const size = "10"
     const [page, setPage] = useState(1)
-    const { isFetching, data, refetch } = useGetCompanies(page.toString(), size)
+    const { isLoading, data, refetch } = useGetCompanies(page.toString(), size)
     
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const Companies = () => {
         }, 10)
     }, [page])
 
-    if (isFetching) return <Loader/>
+    if (isLoading) return <Loader/>
     return (
         <>
             <Header />
@@ -42,8 +42,8 @@ const Companies = () => {
                 </Typography>
                 
                 <div className="flex flex-col gap-6">
-                    {data?.data?.map((owner: owner, index:number) => (
-                        <SingleCompany key={index.toString()} owner={owner}/>
+                    {data?.data?.map((owner: owner, index: number) => (
+                        <SingleCompany key={index} owner={owner}/>
                     ))}
                     <Paginator
                         lastPage={data?.pages}

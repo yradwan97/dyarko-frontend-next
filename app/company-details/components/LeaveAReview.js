@@ -5,7 +5,7 @@ import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
 import CloseOutline from "../../components/UI/icons/CloseOutline";
 import Input from "../../components/Shared/Form/Input";
-import {useAddReview} from "../ownersApis"
+import {useAddReview} from "../../companies/ownersApis"
 
 function LeaveAReview(props) {
     const [rate, setRate] = useState(0);

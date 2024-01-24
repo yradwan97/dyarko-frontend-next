@@ -15,12 +15,6 @@ const LoginForm = () => {
   const router = useRouter()  
   const searchParams = useSearchParams().toString()
   let callBack = decodeURIComponent(searchParams.substring(searchParams.indexOf("=") + 1))
-
-  const getLoggedInUser = async () => {
-    let res = await axios.get("/users")
-    console.log(res.data)
-    return res.data
-  }
   
   const {data:session, update} = useSession()
   const {

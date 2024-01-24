@@ -7,14 +7,17 @@ import Typography from "../components/Shared/Typography"
 import BuildingSolid from "../components/UI/icons/BuildingSolid"
 import { Rating } from "@mui/material";
 import Image from "next/image";
-import React from "react";
-import { sendFollowRequest } from "./ownersApi";
+import React, { useEffect, useState } from "react";
+import { getSingleOwner, isFollowed, sendFollowRequest } from "./ownersApi";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 const SingleCompany = ({owner}) => {
+    // console.log({owner})
     const {data: session} = useSession()
     const router = useRouter()
+    let ownerFollowed = isFollowed(owner?.followers, session?.user?.accessToken)
+    const [followed, setFollowed] = useState(ownerFollowed)
     const handleFollow = () => {
         if (!session) {
             router.push("/login")
@@ -22,7 +25,10 @@ const SingleCompany = ({owner}) => {
         }
         sendFollowRequest(owner._id, session && session?.user?.accessToken)
     }
-
+    useEffect(() => {
+        setFollowed(ownerFollowed)
+    }, [ownerFollowed])
+    
     return (
         <div
             className={`relative grid grid-cols-1 gap-y-4 rounded-lg bg-main-100 p-1 sm:grid-cols-2 sm:gap-8 sm:p-6 lg:grid-cols-4`}
@@ -83,7 +89,7 @@ const SingleCompany = ({owner}) => {
             <div className="relative col-span-1 hidden text-end sm:col-span-2 sm:block md:col-span-1">
                 <Button variant="primary" className="!px-5 !py-2 font-bold" 
                     onClick={handleFollow}>
-                    Follow
+                    {followed ? "Follow" : "Unfollow"}
                 </Button>
             </div>
         </div>

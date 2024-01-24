@@ -6,7 +6,7 @@ import Typography from "@/app/components/Shared/Typography";
 import ChevronDown from "@/app/components/UI/icons/ChevronDown";
 import PlusOutline from "@/app/components/UI/icons/PlusOutline"
 
-import {useGetReviews} from "../ownersApis"
+import {useGetReviews} from "../../companies/ownersApis"
 import LeaveAReview from "./LeaveAReview";
 import SingleReview from "./SingleReview";
 import { useQuery } from "react-query";

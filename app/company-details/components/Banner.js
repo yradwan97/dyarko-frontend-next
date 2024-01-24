@@ -8,19 +8,18 @@ import { useQuery } from "react-query";
 import Image from "next/image";
 import { useEffect } from "react";
 import {sendFollowRequest} from "../../utils/utils"
+import { getSingleOwner } from "@/app/companies/ownersApi";
 
 const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
 
 function Banner({id}) {
 
-    const { data, isFetching, isRefetching, refetch } = useQuery("owner", 
-        async () => await fetch(`${baseUrl}/owners/${id}`).then(res => res.json())
-    )
+    const {data, isFetching, refetch} = getSingleOwner(id)
     
     useEffect(() => {
         refetch()
     }, [id])
-    return (isFetching || isRefetching) ? (
+    return (isFetching) ? (
         <Loader />
     ) : (
         <div className="relative">
