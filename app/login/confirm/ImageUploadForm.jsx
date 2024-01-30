@@ -1,26 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from "@/app/components/Shared/Button";
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { useSession } from 'next-auth/react';
 import { toast } from "react-toastify"
 import { useRouter } from 'next/navigation';
+import { prettifyError } from '@/app/utils/utils';
 
 const ImageUploadForm = () => {
     const [formData, setFormData] = useState(new FormData());
     const [isMarried, setIsMarried] = useState(false)
+    const [submitDisabled, setSubmitDisabled] = useState(true)
     const { data: session } = useSession()
     const router = useRouter()
+
+    const canUserSubmit = () => {
+        const isSubmitDisabled =
+            !formData.get("id_image_front") ||
+            !formData.get("id_image_back") ||
+            !formData.get("image") ||
+            (isMarried && !formData.get("mariage_document"));
+        console.log(isSubmitDisabled)
+        return isSubmitDisabled
+    }
 
     const handleFileChange = (event, fieldName) => {
         const files = event.target.files;
 
         // Update FormData with the new file(s)
         formData.set(fieldName, files[0]);
+        const isSubmitDisabled = canUserSubmit()
+        setSubmitDisabled(isSubmitDisabled);
 
         // Log the FormData object to see the selected files
         console.log([...formData.entries()]);
     };
+    useEffect(() => {
+        console.log(submitDisabled)
+    }, [submitDisabled])
 
     const handleSubmit = async () => {
         // Create a new FormData object to include additional form fields if needed
@@ -42,6 +59,7 @@ const ImageUploadForm = () => {
             setTimeout(() => router.push("/"), 3000)
         } catch (error) {
             console.error("Error submitting the form:", error);
+            toast.error(prettifyError(error.response.data.errors[0].msg))
         }
     };
 
@@ -109,7 +127,10 @@ const ImageUploadForm = () => {
                             id="marriedYes"
                             name="marriedStatus"
                             checked={isMarried === true}
-                            onChange={() => setIsMarried(true)}
+                            onChange={() => {
+                                setIsMarried(true)
+                                canUserSubmit()
+                            }}
                             className="rounded border-gray-300 text-main-secondary focus:border-main-yellow-600 focus-visible:ring-main-yellow-600"
                         />
                         <label htmlFor="marriedYes" className="text-sm font-medium text-main-secondary">
@@ -121,7 +142,10 @@ const ImageUploadForm = () => {
                             id="marriedNo"
                             name="marriedStatus"
                             checked={isMarried === false}
-                            onChange={() => setIsMarried(false)}
+                            onChange={() => {
+                                setIsMarried(true)
+                                canUserSubmit()
+                            }}
                             className="rounded border-gray-300 text-main-secondary focus:border-main-yellow-600 focus-visible:ring-main-yellow-600"
                         />
                         <label htmlFor="marriedNo" className="text-sm font-medium text-main-secondary">
@@ -130,7 +154,7 @@ const ImageUploadForm = () => {
                     </div>
                 </div>
 
-                <Button variant="primary" onClick={handleSubmit} className="w-full" >
+                <Button variant="primary" onClick={handleSubmit} disabled={submitDisabled} className="w-full" >
                     Submit
                 </Button>
             </div>

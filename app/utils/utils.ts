@@ -1,6 +1,4 @@
-
-
-import type { Property } from "../types/types";
+import type { Property, PropertyType } from "../types/types";
 import { useEffect, useState } from "react";
 import { ReadonlyURLSearchParams } from "next/navigation";
 
@@ -129,5 +127,40 @@ export const fixRefundUrl = (src: string) => {
     let baseUrl = "https://api.dyarko.com/refund_policy/files"
     if (!src.includes(baseUrl)) {
         return src[0] === "/" ? `${baseUrl}${src}` : `${baseUrl}/${src}`
+    }
+}
+
+export const filterPropertyTypes = (category: string, propertyTypes: PropertyType[] | undefined) => {
+    switch (category) {
+        case "house":
+            return propertyTypes?.filter((type: PropertyType) => {
+                if (["stand_alone", "duplex", "twin_house", "town_house", "floor", "house", "palace", "under_construction", "villa", "studio", "penthouse"].indexOf(type.value) > -1) {
+                    return type
+                }
+            }) || []
+        case "chalet":
+            return propertyTypes?.filter((type: PropertyType) => {
+                if (["upper_chalet", "ground_chalet"].indexOf(type.value) > -1) {
+                    return type
+                }
+            }) || []
+        case "caravan": 
+            return propertyTypes?.filter((type: PropertyType) => {
+                if (["fixed", "movable"].indexOf(type.value) > -1) {
+                    return type
+                }
+            }) || []
+        case "tent_single": 
+            return propertyTypes?.filter((type: PropertyType) => {
+                if (["tent_single"].indexOf(type.value) > -1) {
+                    return type
+                }
+            }) || []
+        case "tent_group": 
+            return propertyTypes?.filter((type: PropertyType) => {
+                if (["tent_group"].indexOf(type.value) > -1) {
+                    return type
+                }
+            }) || []
     }
 }

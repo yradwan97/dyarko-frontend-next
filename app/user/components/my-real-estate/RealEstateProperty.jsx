@@ -19,7 +19,7 @@ import Button from "../../../components/Shared/Button"
 import Line from "@/app/property-search/components/Line";
 
 function RealEstateProperty({ property, onShowInvoices, }) {
-
+  // console.log(property)
   const [anchorEl, setAnchorEl] = useState(null);
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)
@@ -83,7 +83,8 @@ function RealEstateProperty({ property, onShowInvoices, }) {
           toast.success("Request created successfully. Pending owner confirmation.")
         }
       } catch (e) {
-        toast.error(prettifyError(e.response.data.errors[0].msg))
+        console.error(e)
+        toast.error(prettifyError(e?.response?.data?.errors[0]?.msg))
       }
 
     } else if (event.target.textContent === "Services") {
@@ -91,7 +92,7 @@ function RealEstateProperty({ property, onShowInvoices, }) {
     } else if (event.target.textContent === "Terminate Contract") {
       setShowReason(true)
     } else if (event.target.textContent === "Invoices") {
-      onShowInvoices(property?._id)
+      onShowInvoices(property?._id, property?.payment_type)
     }
     handleClose()
   };
@@ -119,7 +120,7 @@ function RealEstateProperty({ property, onShowInvoices, }) {
   return (
 
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
-      <StatusButton />
+      {/* <StatusButton /> */}
       <div className="relative">
         {property?.payment_type === "rent" && <TopBadge />}
         <Link href={`/property-details/${property?._id}`}>
@@ -144,17 +145,17 @@ function RealEstateProperty({ property, onShowInvoices, }) {
           </div>
           <div className="flex items-center">
             <AddWishlist id={property?._id} />
-            {property?.payment_type === "rent" && <div className="cursor-pointer ml-2" onClick={handleClick}>
+            {<div className="cursor-pointer ml-2" onClick={handleClick}>
               <Image src={menuImage} alt="menu" width={30} height={30} />
             </div>}
           </div>
         </div>
 
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-          <MenuItem onClick={(e) => handleMenuItemClick(e)}>Financial Discharge</MenuItem>
+          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>Financial Discharge</MenuItem>}
           <MenuItem onClick={(e) => handleMenuItemClick(e)}>Invoices</MenuItem>
-          <MenuItem onClick={(e) => handleMenuItemClick(e)}>Services</MenuItem>
-          <MenuItem onClick={(e) => handleMenuItemClick(e)}>Terminate Contract</MenuItem>
+          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>Services</MenuItem>}
+          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>Terminate Contract</MenuItem>}
         </Menu>
         <Typography variant="h4" as="h4" className="mt-1">
           {capitalizeFirst(property?.title)}

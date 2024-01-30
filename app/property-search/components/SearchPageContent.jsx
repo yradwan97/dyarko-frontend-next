@@ -17,8 +17,6 @@ import { useSearchParams } from "next/navigation";
 import { useUrlSearchParams } from "@/app/utils/utils";
 import { useSession } from "next-auth/react";
 
-const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
-
 const governerates = [
   { id: "al ahmadi", icon: "Al Ahmadi" },
   { id: "al asimah", icon: "Al-Asimah" },
@@ -31,33 +29,50 @@ const governerates = [
 
 function SearchPageContent() {
   const searchParams = useSearchParams()
-  const [selectedGov, setSelectedGov] = useState(governerates[0].id)
-  const urlSearchParams = useUrlSearchParams(searchParams)
+  const [selectedGov, setSelectedGov] = useState(governerates[0])
   const [type, setType] = useState("grid");
-  const [finalSearchParams, setFinalSearchParams] = useState(urlSearchParams || '')
+  const [finalSearchParams, setFinalSearchParams] = useState(searchParams.toString() || '')
   const [page, setPage] = useState(1)
+  const [finalTypes, setFinalTypes] = useState([])
   const { data: session } = useSession()
   const { data: propertyTypes } = useGetPropertyTypes(session?.user?.accessToken)
-  let finalTypes = propertyTypes?.map((type, index) => {
-    return {
-      id: type.value,
-      icon: type.name
-    }
-  })
   const [selectedPropertyType, setSelectedPropertyType] = useState(finalTypes?.length > 0 ? finalTypes[0] : undefined)
 
-  useEffect(() => {
-    if (searchParams.get("location") !== "") {
-      setSelectedGov(governerates.find(g => g.id === searchParams.get("location")))
-    }
-    if (searchParams.get("type") !== "") {
-      setSelectedPropertyType(finalTypes?.find(t => t.id === searchParams.get("type")))
-    }
-  }, [searchParams])
+  let mapTypes = () => {
+    let final = propertyTypes?.map((type, index) => {
+      return {
+        id: type.value,
+        icon: type.name
+      }
+    })
+    setFinalTypes(final)
+  }
 
   useEffect(() => {
-    console.log({ selectedGov, selectedPropertyType })
-  }, [selectedGov, selectedPropertyType])
+    if (propertyTypes?.length > 0) {
+      mapTypes()
+    }
+  }, [propertyTypes])
+
+  useEffect(() => {
+    setSelectedPropertyType(finalTypes[0])
+  }, [finalTypes])
+
+  useEffect(() => {
+    if (searchParams.toString() !== "") {
+      if (searchParams.get("city")) {
+        setSelectedGov(governerates.find(g => g.id === searchParams.get("city")))
+      }
+      if (searchParams.get("type")) {
+        let selectedType = finalTypes?.find(t => t.id === searchParams.get("type"))
+        console.log("yes", selectedType, searchParams.get("type"), finalTypes)
+        if (selectedType) {
+          setSelectedPropertyType(finalTypes?.find(t => t.id === searchParams.get("type")))
+        }
+      }
+    }
+  }, [searchParams, finalTypes])
+
   const { data: properties, totalCount, refetch } = useGetProperties(`${finalSearchParams.toString()}&page=${page}`)
 
   const handleSearchParamsChange = (newSearchParams) => {
@@ -75,7 +90,7 @@ function SearchPageContent() {
 
     console.log(filteredSearchParams['type'])
     let filteredString = new URLSearchParams(filteredSearchParams).toString()
-    let final = [urlSearchParams, filteredString].join("&")
+    let final = [filteredString].join("&")
     console.log(final)
     setFinalSearchParams(final)
   };
@@ -151,7 +166,12 @@ function SearchPageContent() {
             </Button>
           </div>
           <div className="lg:w-11/12">
-            <SearchSection onSearchParamsChange={handleSearchParamsChange} finalTypes={finalTypes} selectedPropertyType={selectedPropertyType} setSelectedPropertyType={setSelectedPropertyType} />
+            <SearchSection
+              onSearchParamsChange={handleSearchParamsChange}
+              finalTypes={finalTypes}
+              selectedPropertyType={selectedPropertyType}
+              setSelectedPropertyType={setSelectedPropertyType}
+            />
           </div>
         </div>
         <div className="mt-4 block h-[350px] lg:hidden">

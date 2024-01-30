@@ -16,11 +16,15 @@ function LikesAndComments({comment}) {
             className={`${
               liked ? "stroke-main-yellow-600" : "stroke-black"
             }  h-5 w-5 cursor-pointer`}
-            onClick={() => {
-              
-              !liked && setLikes(likes => likes + 1)
-              setLiked(!liked)
-            }}
+            onClick={ 
+              async () => {
+                console.log(comment.like.status)
+                let res = await likeVideoComment(comment?._id, liked)
+                console.log(res)
+                
+                // console.log(comment._id, "comment")
+              }
+            }
           />
           <Typography
             variant="body-xs-bold"

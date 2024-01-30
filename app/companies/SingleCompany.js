@@ -1,39 +1,49 @@
 import Link from "next/link";
 import company from "../../public/assets/company.png"
-
 import Button from "../components/Shared/Button"
 import Typography from "../components/Shared/Typography"
-
 import BuildingSolid from "../components/UI/icons/BuildingSolid"
 import { Rating } from "@mui/material";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { getSingleOwner, isFollowed, sendFollowRequest } from "./ownersApi";
+import { isFollowed, sendFollowRequest } from "./ownersApi";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Loader from "../components/Shared/Loader";
 
 const SingleCompany = ({owner}) => {
-    // console.log({owner})
     const {data: session} = useSession()
+    
     const router = useRouter()
-    let ownerFollowed = isFollowed(owner?.followers, session?.user?.accessToken)
-    const [followed, setFollowed] = useState(ownerFollowed)
-    const handleFollow = () => {
+    const [followed, setFollowed] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const handleFollow = async () => {
         if (!session) {
             router.push("/login")
             return
         }
-        sendFollowRequest(owner._id, session && session?.user?.accessToken)
+        let res = await sendFollowRequest(owner._id)
+        console.log(res)
     }
-    useEffect(() => {
+
+    const checkFollow = async () => {
+        let ownerFollowed = await isFollowed(owner._id, session?.user?.accessToken)
         setFollowed(ownerFollowed)
-    }, [ownerFollowed])
-    
+    }
+
+    useEffect(() => {
+        checkFollow()
+    }, [session, owner])
+    useEffect(() => {
+        console.log(followed)
+    }, [followed])
+    if (isLoading) return <Loader/>
     return (
         <div
             className={`relative grid grid-cols-1 gap-y-4 rounded-lg bg-main-100 p-1 sm:grid-cols-2 sm:gap-8 sm:p-6 lg:grid-cols-4`}
         >
             <div className="relative col-span-1">
+            <Link href={`/company-details/${owner._id}`} >
                 <Image
                     src={owner.image || company}
                     width={200}
@@ -43,6 +53,7 @@ const SingleCompany = ({owner}) => {
                     className="h-[240px] w-full rounded-lg sm:w-[240px]"
                     crossOrigin="anonymous"
                 />
+            </Link>
                 {/* commented as per Fahiem's request*/}
                 <Button className="absolute top-2 right-2 rounded-md bg-white/30 py-1 px-2 transition-all duration-500 hover:bg-white sm:hidden">
                     <Typography variant="body-xs-medium" as="p" >
@@ -75,8 +86,10 @@ const SingleCompany = ({owner}) => {
                     {owner.about
                         ? owner.about
                         :
-                        //  "We offer our customers property protection of liability coverage and insurance for their better life."
-                        "We provide comprehensive property protection and liability coverage to ensure our customers enjoy a secure and worry-free life. Our insurance solutions are designed to safeguard your assets and enhance your peace of mind, offering you a better and more secure future."
+                        `We provide comprehensive property protection and liability coverage
+                         to ensure our customers enjoy a secure and worry-free life. 
+                         Our insurance solutions are designed to safeguard your assets and enhance your peace of mind, 
+                         offering you a better and more secure future.`
                          }
                 </Typography>   
                 {/* <Link
@@ -87,9 +100,9 @@ const SingleCompany = ({owner}) => {
                 </Link> */}
             </div>
             <div className="relative col-span-1 hidden text-end sm:col-span-2 sm:block md:col-span-1">
-                <Button variant="primary" className="!px-5 !py-2 font-bold" 
+                <Button variant={!followed ? "primary" : "primary-outline"} disabled={followed} className="!px-5 !py-2 font-bold" 
                     onClick={handleFollow}>
-                    {followed ? "Follow" : "Unfollow"}
+                    {followed ? "Unfollow" : "Follow"}
                 </Button>
             </div>
         </div>

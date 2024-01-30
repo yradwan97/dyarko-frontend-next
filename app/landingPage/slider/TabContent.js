@@ -35,7 +35,7 @@ const governerates = [
     let str = []
     let final = ``
     if (date !== "") str.push(`date=${date}`)
-    if (selectedGov) str.push(`location=${selectedGov.id}`)
+    if (selectedGov) str.push(`city=${selectedGov.id}`)
     if (selectedPropertyType) str.push(`type=${selectedPropertyType?.value}`)
     
     switch (str.length) {

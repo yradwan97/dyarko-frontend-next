@@ -15,6 +15,33 @@ export const useGetCompanies = (page = "1", size = "10") => {
     }
 }
 
+export const useGetOwnerProperties = ({ owner, payment_type, page, size }) => {
+    const queryParams = new URLSearchParams();
+    queryParams.append('owner', owner);
+    if (payment_type) queryParams.append('payment_type', payment_type);
+    queryParams.append('page', page.toString());
+    queryParams.append('size', size.toString());
+  
+    const { isFetching, data, refetch, isSuccess } = useQuery(
+      ['ownerProperties', queryParams.toString()],
+      async () => {
+        const response = await axios.get(`/properties?${queryParams.toString()}`);
+        return response.data;
+      }, {
+        refetchOnWindowFocus: false
+      }
+    );
+  
+    return {
+      properties: isSuccess ? data.data : null,
+      isSuccess,
+      totalCount: isSuccess ? data.itemsCount : 0,
+      pages: data?.pages || 1,
+      isFetching,
+      refetch,
+    };
+  };
+
 export const sendFollowRequest = async (id, accessToken) => {
     let followRequestBody = {
         "owner": id
@@ -23,41 +50,36 @@ export const sendFollowRequest = async (id, accessToken) => {
     try {
         const response = await axios.post(`/follow`, followRequestBody)
         console.log(response)
+        return response
     } catch (e) {
         console.log(e)
     }
 }
 
-export const getLoggedInUser = async (accessToken) => {
-    let res = await axios.get("/users", {
-        headers: {
-            "auth-token" : `Bearer ${accessToken}`
+export const isFollowed = async (ownerId, accessToken) => {
+    if (ownerId && accessToken) {
+        let following = await axios.get("/follow", {
+            headers: {
+                "auth-token": `Bearer ${accessToken}`
+            }
+        })
+        if (following?.data?.data.length > 0) {
+            following = following.data.data
         }
-    })
-    console.log(res.data)
-    return res.data
-}
-
-export const isFollowed = async (followers, accessToken) => {
-    let user = await getLoggedInUser(accessToken)
-    if (user) {
-        let match = followers.length === 0 ? false : followers.indexOf(user.data._id) > -1
-        return match
+        return following.length === 0 ? false : following.indexOf(following.find(f => f._id === ownerId)) > -1
     }
     return false
 }
 
 export const addReview = async (review) => {
     try {
-        const data = await fetch(`${baseUrl}/owners/reviews`, {
-            method: "POST",
-            body: JSON.stringify(review)
-        }).then(res => res.json());
+        const data = await axios.post(`/owners/reviews`, review)
         return {
             success: data.success,
             data,
         };
     } catch (error) {
+        console.error(error)
         return {
             success: false,
             data: null,
@@ -77,24 +99,35 @@ export const useAddReview = () => {
 };
 
 export const getAllReviews = async (id) => {
-    const response = await fetch(`https://api.dyarko.com/owners/${id}/reviews`).then(res => res.json());
-    return {
-        reviews: response.data,
-        pages: response.pages,
-        itemsCount: response.itemsCount,
-    };
-};
-
-export const useGetReviews = (id) => {
-    const { isSuccess, data, isLoading, isError } = useQuery(["owner-review"], 
-    () => getAllReviews(id)
+    try {
+      const response = await axios.get(`/owners/${id}/reviews`);
+      return {
+        reviews: response.data.data,
+        pages: response.data.pages,
+        itemsCount: response.data.itemsCount,
+      };
+    } catch (error) {
+      throw new Error('Failed to fetch reviews');
+    }
+  };
+  
+  export const useGetReviews = (id) => {
+    const { isSuccess, data, isFetching, isError, refetch } = useQuery(
+      ['owner-reviews', id], // Unique key for the query including owner's ID
+      () => getAllReviews(id),
+      {
+        refetchOnWindowFocus: false
+      }
     );
+  
     return {
-        data: isSuccess === true ? data : undefined,
-        isLoading,
-        isError,
+      data: isSuccess ? data : undefined,
+      isFetching,
+      refetch,
+      isError,
     };
-};
+  };
+  
 
 export const getSingleOwner = (id, accessToken) => {
     const { data, isSuccess, isFetching, isLoading, refetch } = useQuery("owner", 
@@ -109,6 +142,21 @@ export const getSingleOwner = (id, accessToken) => {
         data: isSuccess ? data?.data : null,
         isSuccess,
         isLoading,
+        isFetching,
+        refetch
+    }
+}
+
+export const getOwnerVideos = (ownerId) => {
+  const { data, isSuccess, isFetching, refetch } = useQuery(
+    ["owner-videos", ownerId], 
+        async () => await axios.get(`/videos/users/${ownerId}`)
+    )
+    return {
+        data: isSuccess ? data?.data.data : null,
+        isSuccess,
+        pages: isSuccess ? data?.data.pages : 1,
+        itemsCount: isSuccess ? data?.data.itemsCount : 0,
         isFetching,
         refetch
     }

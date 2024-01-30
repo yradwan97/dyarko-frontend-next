@@ -7,11 +7,15 @@ import { fixRefundUrl } from "@/app/utils/utils";
 const AgreementTerms = ({ property, onContinue }) => {
   const [termsAndConditions, setTermsAndConditions] = useState(false);
   const [privacyPolicy, setPrivacyPolicy] = useState(false);
-  const [refundPolicy, setRefundPolicy] = useState(false);
   const [contract, setContract] = useState(false);
+
+  const [refundPolicy, setRefundPolicy] = useState(false);
+  const [showRefundPolicy, setShowRefundPolicy] = useState(false)
+
   const [ownerRules, setOwnerRules] = useState(false);
-  const [selectAll, setSelectAll] = useState(false);
   const [showOwnerRules, setShowOwnerRules] = useState(false)
+
+  const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
     setSelectAll(
@@ -22,6 +26,10 @@ const AgreementTerms = ({ property, onContinue }) => {
       ownerRules
     );
   }, [termsAndConditions, privacyPolicy, refundPolicy, contract, ownerRules]);
+
+  useEffect(() => {
+    setShowRefundPolicy(property && property?.refund_policy !== null)
+  }, [property])
 
   const handleSelectAll = () => {
     const newState = !selectAll;
@@ -64,7 +72,7 @@ const AgreementTerms = ({ property, onContinue }) => {
           </Link>
         </label>
       </div>
-      <div className="flex items-center space-x-2">
+      {showRefundPolicy && <div className="flex items-center space-x-2">
         <input
           type="checkbox"
           id="refundPolicy"
@@ -78,7 +86,7 @@ const AgreementTerms = ({ property, onContinue }) => {
             </a>
           </Link>
         </label>
-      </div>
+      </div>}
       <div className="flex items-center space-x-2">
         <input
           type="checkbox"

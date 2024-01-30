@@ -40,19 +40,19 @@ const NotificationsContent = ({ onTriggerChange }) => {
             console.log("installment", notification.property._id)
             router.push(`/user?installment=${notification.property._id}`)
         }
-        // let body = {
-        //     "is_read": true
-        // }
-        // let response = await axios.put(`/notifications/${id}`, body, {
-        //     headers: {
-        //         "auth-token": `Bearer ${session?.user?.accessToken}`
-        //     }
-        // })
+        let body = {
+            "is_read": true
+        }
+        let response = await axios.put(`/notifications/${id}`, body, {
+            headers: {
+                "auth-token": `Bearer ${session?.user?.accessToken}`
+            }
+        })
 
-        // if (response.data.success) {
-        //     getNotifications()
-        //     onTriggerChange()
-        // }
+        if (response.data.success) {
+            getNotifications()
+            onTriggerChange()
+        }
 
     }
 

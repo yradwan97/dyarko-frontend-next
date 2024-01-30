@@ -9,7 +9,9 @@ import { format as formatCurrency } from "../../utils/utils";
 import { useSession } from "next-auth/react";
 import { useGetPropertyTypes } from "../propertiesApis";
 import Select from "@/app/components/Shared/Form/Select";
-import { ReadonlyURLSearchParams, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import type { PropertyType } from "@/app/types/types";
+import { filterPropertyTypes } from "../../utils/utils";
 
 const PRICES = [
   {
@@ -50,10 +52,7 @@ type Governerate = {
   icon: string;
 }
 
-type PropertyType = {
-  name: string;
-  value: string
-}
+
 
 const governerates: Governerate[] = [
   { id: "al ahmadi", icon: "Al Ahmadi" },
@@ -73,8 +72,9 @@ function SearchControl({ slug, onSearch, onReset }: SearchControlProps) {
   const {data: session} = useSession()
   // @ts-ignore
   const {data: propertyTypes, isSuccess} = useGetPropertyTypes(session?.user?.accessToken)
-  const [propertyType, setPropertyType] = useState<PropertyType | undefined>(propertyTypes ? propertyTypes[0] : undefined)
+  const [propertyType, setPropertyType] = useState<PropertyType>()
   const searchParameters = useSearchParams();
+  const [filteredTypes, setFilteredTypes] = useState<PropertyType[] | undefined>([])
   
   useEffect(() => {
   if (searchParameters.get("city") !== null) {
@@ -85,14 +85,20 @@ function SearchControl({ slug, onSearch, onReset }: SearchControlProps) {
 }, [searchParameters])
 
 useEffect(() => {
-  if (searchParameters.get("category") !== null) {
-    setPropertyType(propertyTypes?.find((type: PropertyType) => type.value === searchParameters!.get("category")))
+  if (filteredTypes!) {
+    setPropertyType(filteredTypes![0])
   }
-}, [searchParameters, propertyTypes])
+}, [filteredTypes])
 
 useEffect(() => {
-  console.log(selectedGov)
-}, [selectedGov])
+  if (searchParameters.get("category") !== null) {
+    let final = filterPropertyTypes(searchParameters.get("category")!, propertyTypes)
+    setFilteredTypes(final)
+  } else if (searchParameters.get("category") === null && propertyTypes) {
+    setFilteredTypes(propertyTypes)
+    setPropertyType(propertyTypes[0]!)
+  }
+}, [searchParameters, propertyTypes])
 
   const getTitleText = () => {
     switch (slug) {
@@ -113,7 +119,7 @@ useEffect(() => {
     setDate(null)
     setSelectedGov(governerates[0])
     setPriceRange(PRICES[0])
-    setPropertyType(propertyTypes ? propertyTypes[0] : undefined)
+    setPropertyType(filteredTypes![0])
 
     onReset()
   }
@@ -189,9 +195,9 @@ useEffect(() => {
           </Typography>
           <div className="relative w-full">
           <DropDownSelect
-            list={propertyTypes && propertyTypes.map((type: any) => type.name)}
-            onSelect={(indx) => setPropertyType(propertyTypes[indx])}
-            selectedValue={propertyTypes.indexOf(propertyType)} // Pass the initially selected index as a prop
+            list={filteredTypes ? filteredTypes.map((type: PropertyType) => type.name) : []}
+            onSelect={(indx) => setPropertyType(filteredTypes![indx])}
+            selectedValue={filteredTypes ? filteredTypes!.indexOf(propertyType!) : 0} // Pass the initially selected index as a prop
           />
 
           </div>

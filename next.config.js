@@ -6,6 +6,10 @@ const nextConfig = {
             {
                 protocol: 'https',
                 hostname: "api.dyarko.com"
+            },
+            {
+                protocol: "http",
+                hostname: "**"
             }
         ]
     }

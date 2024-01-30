@@ -7,6 +7,7 @@ export const config = {
         '/user', 
         '/videos/:path*', 
         '/application/:path*', 
-        '/property-details/:path*'
+        '/property-details/:path*',
+        '/login/confirm'
     ]
 }

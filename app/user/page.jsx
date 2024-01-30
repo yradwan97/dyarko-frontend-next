@@ -7,7 +7,7 @@ import LogoutSolid from "../components/UI/icons/LogoutSolid"
 import { signOut, useSession } from "next-auth/react";
 import { logout } from "../services/api/auth";
 import Button from "../components/Shared/Button"
-import Profile from "./components/Profile"
+import Profile from "./components/profile/Profile"
 import Wallet from "./components/wallet/Wallet"
 import SavedProperties from "./components/saved/SavedProperties"
 import MyRequests from './components/my-requests/MyRequests'
@@ -23,7 +23,7 @@ const navLinks = [
   { to: "/user/wallet", text: "wallet" },
   { to: "/user/saved", text: "saved properties" },
   { to: "/user/your-requests", text: "my requests" },
-  { to: "/user/my-real-states", text: "my real estate" },
+  { to: "/user/my-real-estates", text: "my real estate" },
   { to: "/user/transactions", text: "transactions" },
   { to: "/user/change-password", text: "change password" },
 ];
@@ -39,12 +39,12 @@ const AccountSettings = () => {
     { endpoint: "/user/wallet", child: <Wallet /> },
     { endpoint: "/user/saved", child: <SavedProperties /> },
     { endpoint: "/user/your-requests", child: <MyRequests installmentRequest={searchParams.get("installment")} /> },
-    { endpoint: "/user/my-real-states", child: <MyRealEstates /> },
+    { endpoint: "/user/my-real-estates", child: <MyRealEstates /> },
     { endpoint: "/user/transactions", child: <Transactions /> },
     { endpoint: "/user/change-password", child: <ChangePassword /> }
   ]
 
-  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/profile");
+  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/my-real-estates");
   useEffect(() => {
     if (searchParams.get("installment")) {
       setSelectedEndpoint("/user/your-requests")

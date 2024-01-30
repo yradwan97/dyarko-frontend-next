@@ -24,6 +24,11 @@ const ApplicationContents = ({ id }) => {
   const { data } = useGetSingleProperty(id);
   const router = useRouter();
 
+  // useEffect(() => {
+  //   router.refresh()
+  // }, [])
+
+
   useEffect(() => {
     if (data && data?.data) {
       setProperty(data?.data)

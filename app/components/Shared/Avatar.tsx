@@ -22,13 +22,13 @@ const Avatar = ({ userName, userImg, isVerified, className }: AvatarProps) => {
   };
   return (
     <div
-      className={`relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-main-600 p-2 ${
+      className={`relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-main-600 ${
         className || ""
       }`.trimEnd()}
     >
       {userImg ? (
         <Image
-          className="h-full w-full object-cover"
+          className="rounded-full"
           src={userImg}
           alt={userName}
           width={100}

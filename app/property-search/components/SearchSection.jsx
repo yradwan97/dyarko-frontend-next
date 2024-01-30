@@ -1,6 +1,6 @@
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import React, { useState } from "react";
-import Select from "@/app/components/Shared/Form/Select";
+import Select from "../../components/Shared/Form/Select";
 import Typography from "../../components/Shared/Typography"
 import { useGetPropertyTypes } from "@/app/property-listing/propertiesApis";
 import { useSession } from "next-auth/react";
@@ -20,7 +20,7 @@ function SearchSection({ onSearchParamsChange, finalTypes, selectedPropertyType,
   const [bedrooms, setBedrooms] = useState("")
 
   const handleSearchParamsChange = () => {
-    console.log(selectedPropertyType)
+
     const searchParams = {
       bedrooms: bedrooms,
       price_from: priceTo ? 0 : null,
@@ -104,7 +104,7 @@ function SearchSection({ onSearchParamsChange, finalTypes, selectedPropertyType,
             iconStyle="!right-4"
             containerClass="py-3 px-5 w-full outline-main-600 outline rounded-md !justify-between"
             values={sortingValues}
-            selected={selectedSort.name}
+            selected={selectedSort}
             setSelected={setSelectedSort}
           />
         </div>

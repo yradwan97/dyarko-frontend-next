@@ -128,7 +128,7 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
 
     return (
         <>
-            <div className="flex flex-row rounded-lg border my-2 border-main-300">
+            <div className="flex flex-col md:flex-row rounded-lg border my-2 border-main-300">
                 <div className='flex flex-col w-[50%] p-2 '>
                     <div className="relative flex w-full flex-row  pl-6 pr-4 ">
                         <label>From Date:</label>
@@ -142,7 +142,8 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
                             font-regular text-gray-500 text-center focus:border-main-400 focus-visible:outline-1"
                             selected={fromDate}
                             open={fromDateVisible}
-                            onFocus={() => setFromDateVisible(true)}
+                            onFocus={() => setFromDateVisible(!fromDateVisible)}
+                            onBlur={() => setFromDateVisible(false)}
                             filterDate={filterPastAndRentedDatesFrom}
                             onChange={handleFromDateChange}
                             dateFormat="dd/MM/yyyy"
@@ -162,7 +163,8 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
                             font-regular text-gray-500 text-center focus:border-main-400 focus-visible:outline-1"
                             selected={toDate}
                             open={toDateVisible}
-                            onFocus={() => setToDateVisible(true)}
+                            onFocus={() => setToDateVisible(!toDateVisible)}
+                            onBlur={() => setToDateVisible(false)}
                             filterDate={filterPastAndRentedDatesTo}
                             onChange={handleToDateChange}
                             dateFormat="dd/MM/yyyy"

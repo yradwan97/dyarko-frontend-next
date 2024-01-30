@@ -7,6 +7,8 @@ import { useSession } from "next-auth/react";
 import { useMutation } from "react-query"
 import { axiosClient as axios } from "../../../services/axiosClient"
 import PasswordChangedSuccessfully from "./PasswordChangedSuccessfully"
+import { toast } from "react-toastify"
+import { prettifyError } from "@/app/utils/utils";
 
 const ChangePassword = () => {
 
@@ -15,15 +17,22 @@ const ChangePassword = () => {
 
   const mutation = useMutation({
     mutationFn: async (params) => {
-      const { current_password, new_password, accessToken } = params;
+      const { current_password, new_password } = params;
       const body = {
         current_password,
         new_password
       }
+      try {
+        let response = await axios.put("/users/change_password", body)
+        if (response.status === 200) {
+          return response
+        }
 
-      let response = await axios.put("/users/change_password", body)
+      } catch (e) {
+        console.error(e)
+        toast.error(prettifyError(e.response.data.errors[0].msg))
+      }
 
-      return response
     }
   })
 
@@ -53,7 +62,7 @@ const ChangePassword = () => {
       clearErrors('confirmPassword')
     }
     let { oldPassword, newPassword } = data
-    mutation.mutate({ "current_password": oldPassword, "new_password": newPassword, "accessToken": session?.user?.accessToken })
+    mutation.mutate({ "current_password": oldPassword, "new_password": newPassword })
 
   }
 

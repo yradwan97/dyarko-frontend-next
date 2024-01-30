@@ -8,21 +8,17 @@ import { axiosClient as axios } from "@/app/services/axiosClient"
 import { format } from "date-fns"
 import Paginator from "@/app/components/Shared/pagination/Pagination"
 import { capitalizeFirst } from "@/app/utils/utils";
-import Input from "../../../components/Shared/Form/Input"
 import { toast } from "react-toastify"
-import Modal from "../../../components/Shared/Modal"
-import DetailedInvoice from "./DetailedInvoice"
+import PDFViewer from "./PDFViewer";
 
 const values = [
   { name: "paid", icon: "Paid" },
   { name: "unpaid", icon: "Unpaid" }
 ];
-function Requests({ setShowRequest, id }) {
-  const [selected, setSelected] = useState(values[0]);
+function Requests({ setShowRequest, id, type }) {
+  const [selected, setSelected] = useState(type && type === "installment" ? values[1] : values[0]);
   const [page, setPage] = useState(1)
   const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
-  const [showReason, setShowReason] = useState(false)
-  const [reason, setReason] = useState("")
   const [showInvoice, setShowInvoice] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState()
   console.log(id)
@@ -39,31 +35,10 @@ function Requests({ setShowRequest, id }) {
     });
   };
 
-
-  const handleTerminateContract = async () => {
-
-    let body = {
-      "causes": reason,
-      "property": id
-    }
-    try {
-      let response = await axios.post("/end_contract", body)
-
-      if (response.data.success) {
-        toast.success("Contract termination request submitted. Pending owner confirmation.")
-        setShowRequest(false)
-      }
-    } catch (e) {
-      console.error(e)
-      toast.error(`Something went wrong: ${e}`)
-    } finally {
-      setShowReason(false)
-    }
-  }
-
   const getInvoices = async () => {
+    let endpoint = type === "rent" ? `/invoices?property=${id}&page=${page}` : `/installments_invoices?page=${page}`
     try {
-      let response = await axios.get(`/invoices?property=${id}&page=${page}`)
+      let response = await axios.get(endpoint)
 
       if (response.status === 200) {
         setInvoices(response.data)
@@ -77,8 +52,13 @@ function Requests({ setShowRequest, id }) {
     getInvoices()
   }, [id, page])
 
+  useEffect(() => {
+    console.log(invoices)
+  }, [invoices])
+
   if (showInvoice) {
-    return <DetailedInvoice invoice={selectedInvoice} setShowInvoice={setShowInvoice} />
+    return <PDFViewer setShowInvoice={setShowInvoice} pdfUrl={selectedInvoice?.pdf} invoiceID={selectedInvoice?.ID} />
+    // return <DetailedInvoice invoice={selectedInvoice} setShowInvoice={setShowInvoice} />
   }
 
   return (
@@ -98,13 +78,7 @@ function Requests({ setShowRequest, id }) {
           Transactions
         </Typography>
         <div className="hidden items-center justify-end space-x-4 md:flex">
-          <Button
-            variant="primary"
-            onClick={() => setShowReason(true)}
-            className="!border-main-orange-500 !bg-main-orange-500 hover:!border-main-orange-600 hover:!bg-main-orange-600 hover:!text-white "
-          >
-            Terminate Contract
-          </Button>
+
           <Select
             containerClass="py-3 px-5 w-full rounded-lg !justify-between"
             values={values}
@@ -115,33 +89,68 @@ function Requests({ setShowRequest, id }) {
       </div>
       {invoices.data.length > 0 ? <table className="w-full table-auto text-center">
         <thead>
-          <tr className="flex justify-between">
-            <th className="text-md flex-1 text-left font-bold text-black">
-              {selected.name === "paid" ? "Paid On" : "Due on"}
-            </th>
-            <th className="text-md flex-1 text-center font-bold text-black">
-              Purpose
-            </th>
-            <th className="text-md flex-1 text-right font-bold text-black">
-              Amount
-            </th>
-          </tr>
+          {type === "installment" ? (
+            <tr className="flex justify-between">
+              <th className="text-md flex-1 text-center font-bold text-black">
+                Invoice No:
+              </th>
+              <th className="text-md flex-1 text-center font-bold text-black">
+                Created At
+              </th>
+              <th className="text-md flex-1 text-right font-bold text-black">
+                Amount
+              </th>
+            </tr>
+          ) : (
+            <tr className="flex justify-between">
+              <th className="text-md flex-1 text-left font-bold text-black">
+                {selected.name === "paid" ? "Paid On" : "Due on"}
+              </th>
+              <th className="text-md flex-1 text-center font-bold text-black">
+                Purpose
+              </th>
+              <th className="text-md flex-1 text-right font-bold text-black">
+                Amount
+              </th>
+            </tr>
+          )}
         </thead>
         <tbody>
-          {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
-            <tr key={index} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100"
-              onClick={(e) => handleInvoiceSelection(e, invoice._id)}>
-              <td className="flex-1 text-left text-sm font-medium text-gray-500">
-                {format(new Date(invoice?.paid_at), "dd/MM/yyyy HH:mm")}
-              </td>
-              <td className="flex-1 capitalize text-center text-sm font-medium text-black">
-                {invoice?.title} - {capitalizeFirst(invoice?.property[0]?.type)}
-              </td>
-              <td className="flex-1 text-right text-sm font-medium text-black">
-                {Math.abs(invoice?.amount)}
-              </td>
-            </tr>
-          ))}
+          {type === "installment" ? (
+            <>
+              {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
+                <tr key={index} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100"
+                  onClick={() => handleInvoiceSelection(invoice._id)}>
+                  <td className="flex-1 capitalize text-center text-sm font-medium text-black">
+                    {index}
+                  </td>
+                  <td className="flex-1 capitalize text-center text-sm font-medium text-black">
+                    {format(new Date(invoice?.createdAt), "dd/MM/yyyy")}
+                  </td>
+                  <td className="flex-1 text-right text-sm font-medium text-main-yellow-500">
+                    KWD {Math.abs(invoice?.amount)}
+                  </td>
+                </tr>
+              ))}
+            </>
+          ) : (
+            <>
+              {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
+                <tr key={index} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100"
+                  onClick={() => handleInvoiceSelection(invoice._id)}>
+                  <td className="flex-1 text-left text-sm font-medium text-black">
+                    {format(new Date(invoice?.paid_at), "dd/MM/yyyy")}
+                  </td>
+                  <td className="flex-1 capitalize text-center text-sm font-medium text-black">
+                    {invoice?.title} - {capitalizeFirst(invoice?.property[0]?.type)}
+                  </td>
+                  <td className="flex-1 text-right text-sm font-medium text-main-yellow-500">
+                    KWD {Math.abs(invoice?.amount)}
+                  </td>
+                </tr>
+              ))}
+            </>
+          )}
 
         </tbody>
       </table>
@@ -159,22 +168,7 @@ function Requests({ setShowRequest, id }) {
           onChange={(e) => setPage(e)}
         />
       </div>
-      <Button
-        variant="primary"
-        onClick={() => setShowReason(true)}
-        className="mx-auto mt-4 block !border-main-orange-500 !bg-main-orange-500 hover:!border-main-orange-600 hover:!bg-main-orange-600 hover:!text-white md:hidden"
-      >
-        Terminate Contract
-      </Button>
-      <Modal isOpen={showReason} onClose={() => setShowReason(false)}>
-        <div className="flex flex-col space-y-3 items-center justify-center">
-          <Input type="text" className="text-black" placeholder="Enter Termination Reason." value={reason} onChange={e => setReason(e.target.value)} />
-          <div className="flex space-x-2 flex-row">
-            <Button variant="primary" onClick={handleTerminateContract}>Submit</Button>
-            <Button variant="primary" onClick={() => setShowReason(false)}>Cancel</Button>
-          </div>
-        </div>
-      </Modal>
+
     </div>
   );
 }

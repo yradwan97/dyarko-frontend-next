@@ -9,6 +9,8 @@ import SignUpForm from "./SignUpForm";
 import PoweredBy from "../components/Login/PoweredBy";
 import { signup } from "../services/api/auth";
 import SignUpSuccessful from "./SignUpSuccessful";
+import { prettifyError } from "../utils/utils";
+import { toast } from "react-toastify";
 
 
 const SignUp = () => {
@@ -16,10 +18,15 @@ const SignUp = () => {
   
     const signUpSubmitHandler = async (data: any) => {
       console.log(data)
-      const response = await signup(data)
+      try {
+        const response = await signup(data)
       if (response.status === 200) {
         setIsSuccess(true)
       }
+    } catch (e: any) {
+      console.error(e)
+      toast.error(prettifyError(e.response.data.errors[0].msg))
+    }
     };
   
     if (isSuccess) {

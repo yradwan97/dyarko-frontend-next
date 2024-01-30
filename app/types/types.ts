@@ -81,7 +81,11 @@ export type Video = {
     user: User;
     thumbnail: string;
     comments: number;
-    like: VideoLike[];
+    like: any;
     views: number;
 };
-  
+
+export type PropertyType = {
+    name: string;
+    value: string
+  }

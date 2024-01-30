@@ -6,21 +6,20 @@ import SearchOutline from "../../components/UI/icons/SearchOutline"
 import SortOutline from "../../components/UI/icons/SortOutline"
 import PlusOutline from "../../components/UI/icons/PlusOutline"
 import FilterSide from "./FilterSide";
-import Select from "@/app/components/Shared/Form/Select";
+import Select from "../../components/Shared/Form/Select";
 
 
 
 function FilterSection({ selectedGov, setSelectedGov, governerates }) {
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <div className="relative mr-4 flex-grow">
         <Select
-          containerClass="py-3 px-5 w-full rounded-lg !justify-between"
+          containerClass="py-2 px-6 w-full rounded-lg !justify-between"
           values={governerates}
-          selected={selectedGov.id}
-          setSelected={(e) => setSelectedGov(e.id)}
+          selected={selectedGov}
+          setSelected={(e) => setSelectedGov(e)}
         />
 
       </div>

@@ -11,7 +11,7 @@ import PhoneInput from "../../components/Shared/Form/PhoneInput";
 import CloseOutline from "../../components/UI/icons/CloseOutline";
 import CalendarComponent from "./Calendar/Calendar";
 import { useSession } from "next-auth/react";
-import { toast } from "react-toastify"
+import { toast, Bounce } from "react-toastify"
 import { format } from "date-fns"
 
 
@@ -48,22 +48,31 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
   };
 
   useEffect(() => {
-    const fetchAvailableTimeSlots = async () => {
-      try {
-        const response = await axios.get(`/Schedules/${id}`, {
-          headers: {
-            "auth-token": `Bearer ${session?.user?.accessToken}`
+    if (visible) {
+      const fetchAvailableTimeSlots = async () => {
+        try {
+          const response = await axios.get(`/Schedules/${id}`, {
+            headers: {
+              "auth-token": `Bearer ${session?.user?.accessToken}`
+            }
+          });
+          if (response.data.data.length === 0) {
+            setVisible(false)
+            setTimeout(() => {
+              toast.warn("No available time slots for tour, try again later!")
+            }, 500)
+            return
           }
-        });
+          console.log("schedule", response.data.data)
+          setAvailableTimeSlots(response.data.data);
+        } catch (error) {
+          console.error("Error fetching unavailable time slots:", error);
+        }
+      };
+      fetchAvailableTimeSlots();
+    }
 
-        setAvailableTimeSlots(response.data.data);
-      } catch (error) {
-        console.error("Error fetching unavailable time slots:", error);
-      }
-    };
-
-    fetchAvailableTimeSlots();
-  }, [id, session]);
+  }, [id, session, visible]);
 
   const handleTabClick = (period) => {
     setSelectedPeriod(period);

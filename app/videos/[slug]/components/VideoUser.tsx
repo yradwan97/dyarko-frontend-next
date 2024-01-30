@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect } from "react";
+import React, { use, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import HeartOutline from "../../../components/UI/icons/HeartOutline";
 import ChatOutline from "../../../components/UI/icons/ChatOutline"
@@ -8,20 +8,32 @@ import Avatar from "@/app/components/Shared/Avatar"
 import { Video } from "../../../types/types";
 import { likeVideo } from "../../videoService";
 import { useSession } from "next-auth/react";
+import HeartSolid from "@/app/components/UI/icons/HeartSolid";
 
 type VideoUserProps = {
   videoData: Video;
+  onTriggerRefetch: () => void
 };
 
-const VideoUser = (props: VideoUserProps) => {
-  const { videoData } = props;
+const VideoUser = ({videoData, onTriggerRefetch}: VideoUserProps) => {
+  
   const {data: session} = useSession()
+  const [liked, setLiked] = useState(videoData.like.status)
+  const [likes, setLikes] = useState(videoData.like.count)
+  // console.log(videoData)
+
+  useEffect(() => {
+    if (videoData) {
+      setLiked(videoData.like.status)
+      setLikes(videoData.like.count)
+    }
+  }, [videoData])
   
   const likeVideoHandler = async () => {
-    // @ts-ignore
-    if (session?.user?.accessToken) {
-      // @ts-ignore
-      await likeVideo(videoData._id, session?.user?.accessToken)
+    let res = await likeVideo(videoData._id, liked)
+    console.log(res)
+    if (res!.status === 200) {
+      onTriggerRefetch()
     }
   };
 
@@ -42,9 +54,13 @@ const VideoUser = (props: VideoUserProps) => {
             onClick={likeVideoHandler}
             className="flex flex-col items-center space-y-2"
           >
-            <HeartOutline className="h-5 w-5 stroke-black" />
+            {liked ? 
+              <HeartSolid className='fill-red stroke-red w-4 h-4' />
+              : 
+              <HeartOutline className="h-5 w-5 stroke-black" />
+            }
             <Typography variant="body-xs-bold" as="span" className="text-black">
-              {videoData?.like?.length || 0}
+              {likes || 0}
             </Typography>
           </button>
           <div className="flex flex-col items-center space-y-2">

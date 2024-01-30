@@ -18,8 +18,8 @@ const Map = ({ latitude, longitude, isSelectable, onSelect }) => {
 
     const handleMarkerDragEnd = (event) => {
         const { latLng } = event;
-        const lat = parseFloat(latLng.lat().toFixed(5));
-        const lng = parseFloat(latLng.lng().toFixed(5))
+        const lat = latLng.lat().toFixed(5);
+        const lng = latLng.lng().toFixed(5)
         setSelectedPosition({ lat, lng });
         onSelect({ lat, lng });
     };

@@ -32,9 +32,12 @@ const VideoDetailsContent = () => {
     comments
   } = useGetVideo(slug)
 
-  console.log(currentVideo)
-
   const [comment, setComment] = useState("")
+
+  const onTriggerRefetch = () => {
+    refetchComments()
+    refetchSingleVideo()
+  }
 
   useEffect(() => {
     refetchSingleVideo()
@@ -60,8 +63,7 @@ const VideoDetailsContent = () => {
           </div>
           <div className="flex w-full flex-col overflow-hidden rounded-lg border border-main-200 md:w-1/2">
             <div className="bg-main-100 p-10">
-              <VideoUser videoData={currentVideo}
-              />
+              <VideoUser videoData={currentVideo} onTriggerRefetch={onTriggerRefetch} />
             </div>
             <div>
               <div className="p-5">
@@ -83,6 +85,7 @@ const VideoDetailsContent = () => {
                     if (session?.user?.accessToken) {
                       await addComment(comment, slug, session?.user?.accessToken)
                       refetchComments()
+                      refetchSingleVideo()
                       setComment("")
                     } else {
                       redirect("/login")

@@ -1,9 +1,28 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Map from '../../../components/UI/Map';
+
 
 const CaravanLocation = ({ isSelectable, onChange }) => {
     const [selectedLocation, setSelectedLocation] = useState("");
+    const [displayLocation, setDisplayLocation] = useState("")
 
+    useEffect(() => {
+        if (window.google && window.google.maps) {
+            const geocoder = new window.google.maps.Geocoder();
+            const latLng = new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng);
+
+            geocoder.geocode({ location: latLng }, (results, status) => {
+                if (status === 'OK') {
+                    const address = results[0].formatted_address;
+                    console.log(`Address: ${address}`);
+                    setDisplayLocation(address)
+                } else {
+                    console.error('Reverse geocode was not successful for the following reason:', status);
+                    setDisplayLocation("")
+                }
+            });
+        }
+    }, [selectedLocation]);
 
     const handleSelect = (location) => {
         setSelectedLocation(location);
@@ -23,7 +42,7 @@ const CaravanLocation = ({ isSelectable, onChange }) => {
                 <label>
                     Location:
                     <input className='relative block w-full rounded-lg border border-gray-200 py-3 px-5 text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600'
-                        type="text" value={`${lat !== undefined ? `${selectedLocation?.lat},` : ""} ${lng !== undefined ? selectedLocation?.lng : ""}`} disabled />
+                        type="text" value={displayLocation === "" ? selectedLocation : displayLocation} disabled />
                 </label>
             </div>
         </div>

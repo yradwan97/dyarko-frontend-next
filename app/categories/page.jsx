@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import Header from '../components/Shared/Header/Header'
 import Typography from "../components/Shared/Typography"
 import { useQuery } from 'react-query'
-import { useGetCompanies } from '../companies/ownersApi'
 import { axiosClient as axios } from "../services/axiosClient"
 import { useSession } from 'next-auth/react'
 import SingleCategory from "./SingleCategory"
@@ -37,9 +36,15 @@ const Categories = () => {
                         Property Categories
                     </Typography>
                     <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 md:gap-8 lg:grid-cols-3">
-                        {categories.length > 0 && categories.map(category => {
+                        {categories.length > 0 ? categories.map(category => {
                             return <SingleCategory category={category} />
-                        })}
+                        })
+                            :
+                            (
+                                <Typography variant='body-lg-bold' as='h1' className="text-black mr-auto">
+                                    No data yet!
+                                </Typography>
+                            )}
                     </div>
                 </div>
             </div>

@@ -27,7 +27,7 @@ function ReservationBox({ property }) {
                 }
             })
 
-            if (res.data.success && res.data.status !== "has_pending_request") {
+            if (res.data.success && res.data.status !== "has_pending_request" && res.data.status !== null) {
                 setConfirmedUser(true)
             }
         } catch (e) {
@@ -64,6 +64,7 @@ function ReservationBox({ property }) {
             } else {
                 return "/login/confirm"
             }
+
         } else if (property?.payment_type === "installment") {
             if (!confirmedUser) {
                 return "/login/confirm"
@@ -86,7 +87,7 @@ function ReservationBox({ property }) {
                         "auth-token": `Bearer ${session?.user?.accessToken}`
                     }
                 })
-                console.log(response)
+
                 if (response.status === 200) {
                     toast.success("Installment requested successfully, pending owner confirmtaion.")
                 }
@@ -99,6 +100,7 @@ function ReservationBox({ property }) {
         } else {
             // if anything other that installment and rent, show contact owner modal.
             setIsContactOwnerOpen(true)
+
         }
     }
 
@@ -131,7 +133,15 @@ function ReservationBox({ property }) {
             </div>
             <Modal isOpen={isContactOwnerOpen} onClose={() => setIsContactOwnerOpen(false)}>
                 <Typography variant='body-lg-bold' as="p" className="">Owner Contact Details</Typography>
-                {console.log(property?.owner)}
+                <Line />
+                <div className='flex flex-row justify-between mt-4'>
+                    <p>Email Address: </p>
+                    <p>{property?.owner?.email}</p>
+                </div>
+                <div className='flex flex-row justify-between mt-2'>
+                    <p>Mobile Number: </p>
+                    <p>{property?.owner?.mobile || "01032315996"}</p>
+                </div>
             </Modal>
         </>
     )

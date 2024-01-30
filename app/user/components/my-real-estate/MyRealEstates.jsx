@@ -18,16 +18,16 @@ const MyRealEstates = () => {
   const [selectedId, setSelectedId] = useState("")
   const [selectedValue, setSelectedValue] = useState(values[0])
   const [page, setPage] = useState(1)
+  const [propertyType, setPropertyType] = useState()
 
   const { data, isLoading, refetch } = useGetRealEstates(`/${selectedValue.name}?page=${page}`)
   useEffect(() => {
     refetch()
   }, [page, selectedValue])
 
-  let filtered = data?.data.filter(d => d?.property !== null)
-
-  const onShowInvoices = (id) => {
+  const onShowInvoices = (id, type) => {
     setSelectedId(id)
+    setPropertyType(type)
     setTimeout(() => {
       setShowRequest(true)
     }, 500)
@@ -38,12 +38,12 @@ const MyRealEstates = () => {
     <>
       {isLoading && <Loader />}
       {showRequest ? (
-        <Requests setShowRequest={setShowRequest} id={selectedId} />
+        <Requests setShowRequest={setShowRequest} type={propertyType} id={selectedId} />
       ) : (
         <>
           <div className="mb-6 flex items-center justify-between">
             <Typography variant="body-xl-bold" as="h2" className="text-black">
-              My real-estates {`(${data?.itemsCount})` || 0}
+              My real-estates {`(${data?.itemsCount !== undefined ? data?.itemsCount : 0})`}
             </Typography>
             <Select
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
@@ -53,7 +53,7 @@ const MyRealEstates = () => {
             />
           </div>
           <div className="flex flex-col gap-4">
-            {filtered?.map((f, i) => {
+            {data?.data?.map((f, i) => {
               return <RealEstateProperty onShowInvoices={onShowInvoices} key={i} property={f.property} />
             })}
           </div>
