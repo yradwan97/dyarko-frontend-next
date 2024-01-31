@@ -1,8 +1,6 @@
 import { useQuery } from "react-query";
 import {axiosClient as axios} from "../services/axiosClient"
 
-const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
-
 export const useGetVideos = (page = 1, searchParams = "size=9") => {
     
     const {data, isLoading, isFetching, refetch, isRefetching} = useQuery("videos", 
@@ -26,7 +24,7 @@ export const useGetVideos = (page = 1, searchParams = "size=9") => {
 export const useGetVideo = (id) => {
     const {
         data, 
-        isLoading, 
+        isFetching, 
         isSuccess, 
         refetch
     } = useQuery("video-details", 
@@ -36,25 +34,31 @@ export const useGetVideo = (id) => {
         }
     )
 
+    
+
+    return {
+        video: isSuccess ? data?.data.data : null,
+        refetch,
+        isFetching
+    }
+}
+export const useGetVideoComments = (id) => {
     const {
-        data: comments, 
-        isSuccess: isCommentsSuccess,
-        isLoading: isCommentsLoading, 
-        refetch: refetchComments
+        data, 
+        isSuccess,
+        isFetching,
+        refetch,
     } = useQuery("video-comments", 
         async () => await axios.get(`/videos/${id}/comments`),
         {
             refetchOnWindowFocus: false
         }
     )
-
+    console.log(data?.data?.data)
     return {
-        video: isSuccess ? data?.data.data : null,
-        refetch,
-        isLoading,
-        comments: isCommentsSuccess ? comments?.data.data : null,
-        isCommentsLoading,
-        refetchComments
+        comments: isSuccess ? data?.data?.data : null,
+        isFetching,
+        refetch
     }
 }
 
@@ -75,8 +79,7 @@ export const likeVideo = async (id, isLiked) => {
     }
 }
 
-export const addComment = async (comment, id, accessToken) => {
-    console.log("from add comment", {comment, id, accessToken})
+export const addComment = async (comment, id) => {
     const body = {
         "comment": comment
     }  
@@ -87,23 +90,20 @@ export const addComment = async (comment, id, accessToken) => {
 }
 
 export const likeVideoComment = async (id, isLiked) => {
+    //TODO: confirm after backend is done.
     console.log(isLiked)
-    if (isLiked) {
-        try {
-            let res = await axios.dlete(`/videos/comments/${id}/likes`)
-            console.log("unliked", res)
-        } catch (e) {
-            console.error(e)
+    try {
+        let res;
+        if (isLiked) {
+            res = await axios.delete(`/videos/comments/${id}/likes`)
+            console.log("unliked", res.data.data)
+        } else {
+            res = await axios.post(`/videos/comments/${id}/likes`)
+            console.log("liked", res.data.data)  
         }
         return res  
-    } else {
-        try {
-            let res = await axios.post(`/videos/comments/${id}/likes`)
-            console.log("liked", res)
-        } catch (e) {
-            console.error(e)
-        }
-
-        return res  
+    } catch (e) {
+        console.error(e)
+        return 
     }
 }

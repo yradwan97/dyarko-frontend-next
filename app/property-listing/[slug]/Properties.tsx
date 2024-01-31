@@ -26,15 +26,16 @@ const createApiUrl = (page: number, slug: string, pageSize: number, filters: { p
   searchParams.append('size', pageSize.toString());
   if (filters.price_from) searchParams.append('price_from', filters.price_from)
   if (filters.price_to) searchParams.append('price_to', filters.price_to)
-  if (filters.city) searchParams.append('city', filters.city)
+  if (filters.city) {
+    searchParams.append('city', filters.city)
+  } else if (searchParameters.get("city") !== null) {
+    searchParams.append("city", searchParameters.get("city") as string)
+  }
   if (filters.property_type) searchParams.append('type', filters.property_type)
   if (filters.available_date) searchParams.append('available_date', filters.available_date) 
 
   if (searchParameters.get("category") !== null) {
     searchParams.append("category", searchParameters.get("category") as string)
-  }
-  if (searchParameters.get("city") !== null) {
-    searchParams.append("city", searchParameters.get("city") as string)
   }
 
   return searchParams.toString();
@@ -65,6 +66,7 @@ const Properties = ({ slug }: any) => {
   };
 
   const handleSearch = (newFilters: any) => {
+    console.log("should be empty",searchParameters.toString())
     setFilters(newFilters);
     setPage(1); // Reset page to 1 when performing a new search
   };

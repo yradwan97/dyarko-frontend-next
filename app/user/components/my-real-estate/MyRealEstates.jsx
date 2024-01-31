@@ -25,6 +25,8 @@ const MyRealEstates = () => {
     refetch()
   }, [page, selectedValue])
 
+
+
   const onShowInvoices = (id, type) => {
     setSelectedId(id)
     setPropertyType(type)

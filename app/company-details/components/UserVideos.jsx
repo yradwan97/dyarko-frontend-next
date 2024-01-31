@@ -1,12 +1,10 @@
-import { getOwnerVideos } from '@/app/companies/ownersApi'
 import React, { useState } from 'react'
 import Typography from '@/app/components/Shared/Typography';
 import VideoItem from '@/app/videos/VideoItem';
 import Paginator from '@/app/components/Shared/pagination/Pagination';
 
-const UserVideos = ({ id }) => {
+const UserVideos = ({ videos, isFetching, itemsCount, pages, refetch }) => {
     const [currentPage, setCurrentPage] = useState(1)
-    const { data: videos, isFetching, itemsCount, pages, refetch } = getOwnerVideos(id)
 
     return (
         <div className="container">

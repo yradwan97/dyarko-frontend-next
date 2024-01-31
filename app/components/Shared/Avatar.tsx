@@ -5,13 +5,13 @@ import Image from "next/image";
 
 type AvatarProps = {
   userName: string;
-  link: string;
+  link?: string;
   userImg?: string;
   className?: string;
   isVerified?: boolean;
 };
 
-const Avatar = ({ userName, userImg, isVerified, className }: AvatarProps) => {
+const Avatar = ({ userName, userImg, isVerified = false, className }: AvatarProps) => {
   
   const generateProfileImg = (name: string): string => {
     const names = name?.split(" ")?.slice(0, 2);

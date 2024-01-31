@@ -7,7 +7,7 @@ import CloseOutline from "../../components/UI/icons/CloseOutline";
 import Input from "../../components/Shared/Form/Input";
 import { useAddReview } from "../../companies/ownersApi";
 
-function LeaveAReview({ visible, setVisible, ownerId }) {
+function LeaveAReview({ visible, setVisible, ownerId, onTriggerRefetch }) {
   const [rate, setRate] = useState(0);
   const [comment, setComment] = useState("");
 
@@ -15,10 +15,13 @@ function LeaveAReview({ visible, setVisible, ownerId }) {
 
   const handleAddReview = async (event) => {
     event.preventDefault();
-    await addReview({ owner: ownerId, rate, comment });
+    addReview({ owner: ownerId, rate, comment });
     setRate(0);
     setComment("");
-    setTimeout(() => reset(), 5000);
+    onTriggerRefetch()
+    setTimeout(() => {
+      reset()
+    }, 5000);
   };
 
   return (

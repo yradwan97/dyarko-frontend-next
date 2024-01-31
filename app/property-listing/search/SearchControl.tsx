@@ -15,6 +15,10 @@ import { filterPropertyTypes } from "../../utils/utils";
 
 const PRICES = [
   {
+    priceFrom: 0,
+    priceTo: 0
+  },
+  {
     priceFrom: 500,
     priceTo: 2500,
   },
@@ -33,6 +37,9 @@ const PRICES = [
 ];
 
 const getDisplayablePriceRange = (priceRange: typeof PRICES[0]): string => {
+  if (priceRange.priceFrom === 0 && priceRange.priceTo === 0) {
+    return "Any price"
+  }
   return (
     formatCurrency(priceRange.priceFrom) +
     " - " +

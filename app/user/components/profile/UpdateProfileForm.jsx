@@ -54,14 +54,14 @@ const UpdateProfileForm = ({ defaultValues, onFormSubmit }) => {
                 error={errors.email}
             />
 
-            <InputGroup
+            {/* <InputGroup
                 label="Address"
                 type="text"
                 id="address"
                 placeholder="123 Kuwait City, Kuwait"
                 register={register("address", { required: "Address is required" })}
                 error={errors.address}
-            />
+            /> */}
 
             <Button type="submit" variant="primary" className="mr-4 h-auto">
                 Save Changes

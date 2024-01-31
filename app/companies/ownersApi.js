@@ -58,15 +58,19 @@ export const sendFollowRequest = async (id, accessToken) => {
 
 export const isFollowed = async (ownerId, accessToken) => {
     if (ownerId && accessToken) {
-        let following = await axios.get("/follow", {
-            headers: {
-                "auth-token": `Bearer ${accessToken}`
+        try {
+            let following = await axios.get("/follow", {
+                headers: {
+                    "auth-token": `Bearer ${accessToken}`
+                }
+            })
+            if (following?.data?.data.length > 0) {
+                following = following.data.data
             }
-        })
-        if (following?.data?.data.length > 0) {
-            following = following.data.data
+            return following.length === 0 ? false : following.indexOf(following.find(f => f._id === ownerId)) > -1
+        } catch (e) {
+            console.error(e)
         }
-        return following.length === 0 ? false : following.indexOf(following.find(f => f._id === ownerId)) > -1
     }
     return false
 }

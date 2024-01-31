@@ -61,17 +61,18 @@ export const useGetRealEstates = (endpoint) => {
             
             if (res.status == 200) {
                 res.data.data = res.data.data.sort((a, b) => {
-                    const dateA = new Date(a.start_date);
-                    const dateB = new Date(b.start_date);
+                    const dateA = new Date(a.createdAt);
+                    const dateB = new Date(b.createdAt);
                   
                     // Compare the dates in descending order
                     return dateB - dateA;
                 });
             }
+
             return res
         }),
         {
-            refetchOnWindowFocus: true
+            refetchOnWindowFocus: false
         }
     )
 

@@ -27,7 +27,7 @@ function RequestProperty({ badge, request }) {
       property?.payment_type === "installment" &&
       property?.max_installment_period &&
       property?.down_payment &&
-      // owner_status === "approved" &&
+      owner_status === "approved" &&
       user_status === "pending"
     );
   };
@@ -40,6 +40,10 @@ function RequestProperty({ badge, request }) {
     try {
       let res = await axios.put(`/installments/${request?._id}/user`, body)
       console.log(res)
+      if (res.data.success) {
+        setShowInstallmentPlanModal(false)
+        toast.success(`Installment plan ${e.target.textContent === "Accept" ? "accepted" : "rejected"} successfully.`)
+      }
     } catch (e) {
       toast.error(prettifyError(e.response.data.errors[0].msg))
     }
@@ -47,7 +51,7 @@ function RequestProperty({ badge, request }) {
   let remaining = property?.price - property?.down_payment
   let periods = property?.installment_type === "yearly" ? 1 : property?.installment_type === "monthly" ? 12 : property?.installment_type === "quarterly" ? 4 : 12
   let startingDate = property?.start_date ? new Date(property?.start_date) : new Date()
-  let amount = property?.amount ? property?.amount : remaining / (property?.max_installment_period * periods)
+  let amount = request?.amount ? request?.amount : remaining / (property?.max_installment_period * periods)
 
   return (
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>

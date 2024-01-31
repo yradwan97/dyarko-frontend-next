@@ -5,7 +5,7 @@ import { calculateDifference, capitalizeFirst, squareMetersToSquareFeet } from '
 import { getYear, format } from "date-fns"
 
 function FeatureComponent({ property }) {
-
+    console.log({ property })
     const weeksDiff = calculateDifference(new Date(property?.createdAt), true)
     const isAvailable = calculateDifference(property?.available_date, false) >= 0
 
@@ -16,7 +16,7 @@ function FeatureComponent({ property }) {
                 <div className='md:w-1/2'>
                     <ul className='space-y-2 sm:space-y-5'>
                         <FeatureItem firstText="Listed on " secondText={`${weeksDiff} ${weeksDiff === 1 ? "week" : "weeks"} `} companyName={true} />
-                        <FeatureItem firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(property?.available_date, "dd/MM/yyyy")}`} />
+                        <FeatureItem firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(new Date(property?.available_date), "dd/MM/yyyy")}`} />
                         <FeatureItem firstText="Year Built" secondText={getYear(new Date(property?.createdAt))} />
                         <FeatureItem firstText="Type" secondText={capitalizeFirst(property.type)} />
 

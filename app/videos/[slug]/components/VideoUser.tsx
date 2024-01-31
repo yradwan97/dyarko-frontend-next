@@ -42,7 +42,7 @@ const VideoUser = ({videoData, onTriggerRefetch}: VideoUserProps) => {
     <>
       <div className="mt-5 flex w-full items-center">
         <div className="relative flex items-center justify-center rounded-full bg-main-yellow-600">
-          <Avatar userName={videoData?.user?.name} link="" />
+          <Avatar userName={videoData?.user?.name} />
         </div>
         <Typography variant="h5" as="h5" className="ml-2 text-lg font-bold">
           {videoData?.user?.name}

@@ -8,9 +8,11 @@ function AmenetiesComponent({ amenities }) {
             <Typography variant='h4' as="h4" className="mb-8">Rental features</Typography>
             <div className='flex space-x-20'>
                 <div className='flex-1'>
-                    <ul className='space-y-2 sm:space-y-5'>
+                    <ul className='space-y-2 list-disc sm:space-y-5'>
                         {amenities.map((a, i) => (
-                            <FeatureItem className="text-black font-medium" key={i} firstText={a.name} />
+                            <li className='ml-4' key={i}>
+                                <FeatureItem className="text-black capitalize font-medium" key={i} firstText={a.name} />
+                            </li>
                         ))}
                     </ul>
                 </div>

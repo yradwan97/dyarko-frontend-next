@@ -88,13 +88,13 @@ function NotificationDropdown({notifications}) {
           </div>
           
           
-          {notifications.length > 0 && <Button
+          <Button
             to="/notifications"
             className="block text-center text-sm font-bold text-main-600"
             onClick={goToNotifications}
           >
             See All
-          </Button>}
+          </Button>
         </div>
       </Menu.Items>
     </Transition>

@@ -41,8 +41,7 @@ const Profile = () => {
       const defaultValues = {
         name: userProfile.name,
         phone: userProfile.phone,
-        email: userProfile.email,
-        address: userProfile.address || ""
+        email: userProfile.email
       }
       setFormDefaultValues(defaultValues)
       if (userProfile?.image) {

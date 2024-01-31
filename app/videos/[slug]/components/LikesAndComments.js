@@ -4,7 +4,7 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { likeVideoComment } from "../../videoService";
 
 function LikesAndComments({comment}) {
-  console.log(comment)
+  // console.log({comment})
   const [liked, setLiked] = useState(comment?.like.status);
   const [likes, setLikes] = useState(comment?.like.count)
   // TODO: finalize liking video comment
@@ -21,6 +21,10 @@ function LikesAndComments({comment}) {
                 console.log(comment.like.status)
                 let res = await likeVideoComment(comment?._id, liked)
                 console.log(res)
+                if (res.status === 200) {
+                  liked ? setLikes(likes => likes - 1) : setLikes(likes => likes + 1)
+                  setLiked(!liked)
+                }
                 
                 // console.log(comment._id, "comment")
               }

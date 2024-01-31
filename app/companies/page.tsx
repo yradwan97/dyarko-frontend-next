@@ -43,7 +43,7 @@ const Companies = () => {
                 
                 <div className="flex flex-col gap-6">
                     {data?.data?.map((owner: owner, index: number) => (
-                        <SingleCompany key={index} owner={owner}/>
+                        <SingleCompany key={index} owner={owner} onTriggerRefetch={() => refetch()}/>
                     ))}
                     <Paginator
                         lastPage={data?.pages}

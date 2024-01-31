@@ -9,7 +9,7 @@ import Paginator from '@/app/components/Shared/pagination/Pagination'
 
 
 const MyRequests = ({ installmentRequest }) => {
-  console.log("inst", installmentRequest)
+
   const [activeTab, setActiveTab] = useState(1);
   const { data: session } = useSession()
   const [page, setPage] = useState(1)

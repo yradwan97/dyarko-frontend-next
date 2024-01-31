@@ -35,5 +35,6 @@
     font-size: medium;
     font-family: sans-serif;
     padding-top: 12px;
-    text-align: left;
+    text-align: center;
+    margin-top: 12px;
 }

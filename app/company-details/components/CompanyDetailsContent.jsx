@@ -1,8 +1,9 @@
 'use client'
 import { Tab } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { getOwnerVideos } from '@/app/companies/ownersApi'
 import Banner from './Banner';
+import OwnerProperties from "./OwnerProperties"
 import Typography from '@/app/components/Shared/Typography';
 import BuildingSolid from '@/app/components/UI/icons/BuildingSolid';
 import PropertiesSection from '@/app/landingPage/properties/PropertiesSection';
@@ -13,15 +14,20 @@ import ClientReview from './ClientReview';
 import { useGetOwnerProperties } from '@/app/companies/ownersApi';
 import BackButton from '@/app/components/Shared/BackButton';
 import UserVideos from "./UserVideos"
+import PropertyTypeTabs from "./PropertyTypeTabs"
 
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
 
 function CompanyDetailsContent({ slug }) {
 
     const [activeTab, setActiveTab] = useState('all');
     const [page, setPage] = useState(1);
+    const {
+        data: videos,
+        isFetching: isVideosFetching,
+        itemsCount: videosCount,
+        pages: videosPages,
+        refetch: refetchVideos
+    } = getOwnerVideos(slug)
 
     const { properties, pages, totalCount, isFetching, refetch } = useGetOwnerProperties({
         owner: slug,
@@ -42,48 +48,30 @@ function CompanyDetailsContent({ slug }) {
             </div>
             <Banner id={slug} />
             <div className="container">
-                <Tab.Group>
-                    <Tab.List className="mt-8 flex w-[150px] justify-between md:mt-0">
-                        {['All', 'Rent', 'Buy'].map((tab) => (
-                            <Tab
-                                key={tab}
-                                className={classNames(
-                                    'text-md transition-ease border-b-3 pb-3 outline-0 duration-300',
-                                    activeTab === tab.toLowerCase()
-                                        ? ' border-main-600 font-bold text-main-600'
-                                        : 'border-white font-regular text-black'
-                                )}
-                                onClick={() => setActiveTab(tab.toLowerCase())}
-                            >
-                                {tab}
-                            </Tab>
-                        ))}
-                    </Tab.List>
-                </Tab.Group>
-
-                {properties.length > 0 ? (
+                <PropertyTypeTabs activeTab={activeTab} setActiveTab={setActiveTab} />
+                {properties.length > 0 ?
                     <>
-                        <div className="mt-9 flex items-center justify-between">
-                            <Typography variant="h2" as="h2" className="text-black">
-                                All properties
-                            </Typography>
-                            <div className="hidden items-end sm:flex">
-                                <BuildingSolid className="mr-3 h-5 w-5 fill-main-500" />
-                                <Typography variant="body-sm" as="p" className="text-black/75">
-                                    {`${totalCount} ${totalCount === 1 ? 'Property' : 'Properties'}`}
-                                </Typography>
-                            </div>
-                        </div>
-                        <PropertiesSection properties={properties} />
-                        <Paginator lastPage={pages} page={page} onChange={(e) => setPage(e)} />
+                        <OwnerProperties
+                            page={page}
+                            pages={pages}
+                            properties={properties}
+                            setPage={setPage}
+                            totalCount={totalCount}
+                        />
                     </>
-                ) : (
-                    <Typography variant="body-md" as="h2" className="mt-10 text-gray-400">
-                        No properties here!
-                    </Typography>
-                )}
+                    :
+                    <Typography as='h3' variant='h3'>No properties yet!</Typography>
+                }
                 <ClientReview id={slug} />
-                <UserVideos id={slug} />
+                {videosCount > 0 &&
+                    <UserVideos
+                        isFetching={isVideosFetching}
+                        itemsCount={videosCount}
+                        pages={videosPages}
+                        refetch={refetchVideos}
+                        videos={videos}
+                    />
+                }
             </div>
             <Footer />
         </>

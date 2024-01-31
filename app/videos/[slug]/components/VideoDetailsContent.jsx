@@ -9,28 +9,31 @@ import SendSolid from "@/app/components/UI/icons/SendSolid"
 import VideoUser from './VideoUser'
 import Comment from './Comment'
 import VideoItem from '../../VideoItem'
-import { addComment, useGetVideo, useGetVideos } from '../../videoService'
+import { addComment, useGetVideo, useGetVideoComments, useGetVideos } from '../../videoService'
 import Loader from '@/app/components/Shared/Loader'
 import { useSession } from 'next-auth/react'
 import Link from "next/link"
+import { getOwnerVideos } from '@/app/companies/ownersApi'
 
 const VideoDetailsContent = () => {
   const { slug } = useParams()
-  const { videos,
-    isLoading,
-    isFetching,
-    isRefetching
-  } = useGetVideos(1, "size=3&sort=createdAt")
 
   const { data: session } = useSession()
 
   const { video: currentVideo,
     refetch: refetchSingleVideo,
-    isLoading: isSingleVideoLoading,
-    isCommentsLoading,
-    refetchComments,
-    comments
+    isFetching: isSingleVideoFetching,
   } = useGetVideo(slug)
+
+  const {
+    data: videos,
+    isFetching,
+  } = getOwnerVideos(currentVideo?.user)
+
+  const {
+    comments,
+    refetch: refetchComments
+  } = useGetVideoComments(slug)
 
   const [comment, setComment] = useState("")
 
@@ -42,11 +45,21 @@ const VideoDetailsContent = () => {
   useEffect(() => {
     refetchSingleVideo()
   }, [slug])
-  if (isLoading || isFetching || isRefetching || isSingleVideoLoading) return <Loader />
 
+
+  useEffect(() => {
+    console.log(currentVideo)
+  }, [currentVideo])
+
+  let relatedVideos = videos?.filter(video => video._id !== slug) || []
+
+  if (isFetching || isSingleVideoFetching) return <Loader />
 
   return (
     <div className="container py-20">
+      <Typography as='h2' variant='h2' className='mb-3'>
+        {currentVideo?.title}
+      </Typography>
       {currentVideo && (
         <div className="flex flex-col md:flex-row">
           <div className="relative h-[300px] w-full bg-cover bg-center md:h-auto md:w-1/2">
@@ -68,7 +81,7 @@ const VideoDetailsContent = () => {
             <div>
               <div className="p-5">
                 {comments?.length > 0 ? comments?.map((comment, index) => {
-                  return <Comment key={index} comment={comment}>Child</Comment>
+                  return <Comment key={index} comment={comment} />
                 }) : (
                   <p>No comments</p>
                 )}
@@ -83,7 +96,7 @@ const VideoDetailsContent = () => {
                 <Button className="flex h-12 w-12 items-center justify-center rounded-2xl bg-main-600"
                   onClick={async () => {
                     if (session?.user?.accessToken) {
-                      await addComment(comment, slug, session?.user?.accessToken)
+                      await addComment(comment, slug)
                       refetchComments()
                       refetchSingleVideo()
                       setComment("")
@@ -99,22 +112,26 @@ const VideoDetailsContent = () => {
         </div>
       )}
       <div>
-        <Typography
-          variant="h2"
-          as="h2"
-          className="my-12 text-2xl font-bold leading-[44px] text-black sm:text-4xl sm:leading-[56px]"
-        >
-          Related videos
-        </Typography>
-        <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 lg:grid-cols-3">
-          {videos?.length > 0 && videos?.filter(video => video._id !== slug).map((video, index) => (
-            <VideoItem
-              key={index}
-              className="!bg-main-100 !p-3"
-              videoData={video}
-            />
-          ))}
-        </div>
+        {relatedVideos.length > 0 &&
+          <>
+            <Typography
+              variant="h2"
+              as="h2"
+              className="my-12 text-2xl font-bold leading-[44px] text-black sm:text-4xl sm:leading-[56px]"
+            >
+              Related videos
+            </Typography>
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 lg:grid-cols-3">
+              {relatedVideos.map((video, index) => (
+                <VideoItem
+                  key={index}
+                  className="!bg-main-100 !p-3"
+                  videoData={video}
+                />
+              ))}
+            </div>
+          </>
+        }
       </div>
     </div>
 

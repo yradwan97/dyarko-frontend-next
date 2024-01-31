@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '@/app/components/Shared/Button';
 import Typography from '@/app/components/Shared/Typography';
 import ChevronDown from '@/app/components/UI/icons/ChevronDown';
@@ -12,24 +12,20 @@ import { useSession } from 'next-auth/react';
 function ClientReview({ id }) {
   const [visible, setVisible] = useState(false);
   const { data, isFetching, isError, refetch } = useGetReviews(id);
-  const {data: session} = useSession()
-  
-  const onDeleteReview = async (id) => {
-    console.log("in clientreview", id)
-    try {
-        let res = await axios.delete(`/owners/reviews/${id}`, {
-            headers: {
-                "auth-token": session?.user?.accessToken
-            }
-        })
-        console.log(res)
-        if (res.status === 200) {
-            refetch()
-        }
-    } catch (e) {
-        console.error(e)
+  const [limit, setLimit] = useState(3)
+  const [visibleReviews, setVisibleReviews] = useState([])
+
+  useEffect(() => {
+    const getLimitedReviews = () => {
+      if (data && limit <= data.reviews.length) {
+        setVisibleReviews(data?.reviews.filter((review, index) => index < limit))
+      } else {
+        setVisibleReviews(data?.reviews)
+      }
     }
-  }
+
+    getLimitedReviews()
+  }, [data, limit])
 
   return (
     <>
@@ -61,11 +57,12 @@ function ClientReview({ id }) {
             <>
               {data?.reviews?.length > 0 ? (
                 <>
-                  {data.reviews.map((review) => (
-                    <SingleReview key={review.id} review={review} onDeleteReview={onDeleteReview}/>
+                  {visibleReviews?.map((review) => (
+                    <SingleReview key={review.id} review={review} />
                   ))}
                   <Button
                     variant="button"
+                    onClick={() => setLimit(limit => limit + 3)}
                     className="transition-color group mt-12 hidden items-center space-x-2 rounded-lg border border-black p-4 outline-0 duration-500 ease-in-out hover:bg-black hover:text-white group-hover:bg-black md:flex"
                   >
                     <Typography
@@ -97,7 +94,7 @@ function ClientReview({ id }) {
         </div>
       </div>
 
-      <LeaveAReview visible={visible} setVisible={setVisible} ownerId={id} />
+      <LeaveAReview visible={visible} setVisible={setVisible} ownerId={id} onTriggerRefetch={() => refetch()} />
     </>
   );
 }

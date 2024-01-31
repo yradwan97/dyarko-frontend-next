@@ -11,9 +11,10 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loader from "../components/Shared/Loader";
 
-const SingleCompany = ({owner}) => {
-    const {data: session} = useSession()
-    
+const SingleCompany = ({ owner, onTriggerRefetch }) => {
+
+    const { data: session } = useSession()
+
     const router = useRouter()
     const [followed, setFollowed] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
@@ -24,6 +25,10 @@ const SingleCompany = ({owner}) => {
         }
         let res = await sendFollowRequest(owner._id)
         console.log(res)
+        if (res.data.success) {
+            setFollowed(!followed)
+            onTriggerRefetch()
+        }
     }
 
     const checkFollow = async () => {
@@ -34,26 +39,24 @@ const SingleCompany = ({owner}) => {
     useEffect(() => {
         checkFollow()
     }, [session, owner])
-    useEffect(() => {
-        console.log(followed)
-    }, [followed])
-    if (isLoading) return <Loader/>
+
+    if (isLoading) return <Loader />
     return (
         <div
             className={`relative grid grid-cols-1 gap-y-4 rounded-lg bg-main-100 p-1 sm:grid-cols-2 sm:gap-8 sm:p-6 lg:grid-cols-4`}
         >
             <div className="relative col-span-1">
-            <Link href={`/company-details/${owner._id}`} >
-                <Image
-                    src={owner.image || company}
-                    width={200}
-                    height={200}
-                    priority={true}
-                    alt="property"
-                    className="h-[240px] w-full rounded-lg sm:w-[240px]"
-                    crossOrigin="anonymous"
-                />
-            </Link>
+                <Link href={`/company-details/${owner._id}`} >
+                    <Image
+                        src={owner.image || company}
+                        width={200}
+                        height={200}
+                        priority={true}
+                        alt="property"
+                        className="h-[240px] w-full rounded-lg sm:w-[240px]"
+                        crossOrigin="anonymous"
+                    />
+                </Link>
                 {/* commented as per Fahiem's request*/}
                 <Button className="absolute top-2 right-2 rounded-md bg-white/30 py-1 px-2 transition-all duration-500 hover:bg-white sm:hidden">
                     <Typography variant="body-xs-medium" as="p" >
@@ -70,7 +73,7 @@ const SingleCompany = ({owner}) => {
                     </Link>
                     <div className="flex items-center justify-center space-x-1">
                         <Typography variant="body-xl-bold" as="p" className="text-[#423E5B]">
-                            {owner.average_rating === 0 ? "" : owner.average_rating}
+                            {owner.average_rating > 0 ? parseFloat(owner.average_rating).toFixed(1) : "No reviews"}
                         </Typography>
                         <Rating name="simple-controlled" value={owner.average_rating} readOnly />
                     </div>
@@ -90,8 +93,8 @@ const SingleCompany = ({owner}) => {
                          to ensure our customers enjoy a secure and worry-free life. 
                          Our insurance solutions are designed to safeguard your assets and enhance your peace of mind, 
                          offering you a better and more secure future.`
-                         }
-                </Typography>   
+                    }
+                </Typography>
                 {/* <Link
                     href={`/company-details/${owner._id}`}
                     className="text-md font-bold text-main-500"
@@ -100,7 +103,7 @@ const SingleCompany = ({owner}) => {
                 </Link> */}
             </div>
             <div className="relative col-span-1 hidden text-end sm:col-span-2 sm:block md:col-span-1">
-                <Button variant={!followed ? "primary" : "primary-outline"} disabled={followed} className="!px-5 !py-2 font-bold" 
+                <Button variant={!followed ? "primary" : "primary-outline"} className="!px-5 !py-2 font-bold"
                     onClick={handleFollow}>
                     {followed ? "Unfollow" : "Follow"}
                 </Button>

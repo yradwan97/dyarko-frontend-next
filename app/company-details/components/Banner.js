@@ -7,9 +7,10 @@ import { Rating } from "@mui/material";
 import Image from "next/image";
 import { sendFollowRequest, getSingleOwner, isFollowed } from "@/app/companies/ownersApi";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 function Banner({id}) {
-
+    const router = useRouter()
     const {data, isFetching, refetch} = getSingleOwner(id)
     const {data: session} = useSession()
     const [followed, setFollowed] = useState(false)
@@ -19,8 +20,9 @@ function Banner({id}) {
             router.push("/login")
             return
         }
-        let res = await sendFollowRequest(owner._id)
+        let res = await sendFollowRequest(id)
         console.log(res)
+        res.data?.success && refetch()
     }
 
     useEffect(() => {
@@ -29,7 +31,8 @@ function Banner({id}) {
             setFollowed(ownerFollowed)
         }
         checkFollow()
-    }, [session, id])
+        console.log(data?.data.average_rating)
+    }, [session, id, data])
     
     useEffect(() => {
         refetch()
@@ -57,7 +60,7 @@ function Banner({id}) {
               }}
             />
             <Typography variant="body-sm-medium" as="span" className="text-black">
-              {data?.data.average_rating}
+              {parseFloat(data?.data.average_rating).toFixed(1)}
             </Typography>
           </div>
         </div>

@@ -23,6 +23,10 @@ function Requests({ setShowRequest, id, type }) {
   const [selectedInvoice, setSelectedInvoice] = useState()
   console.log(id)
 
+  useEffect(() => {
+    console.log(selectedInvoice)
+  }, [selectedInvoice])
+
   const handleInvoiceSelection = (invoiceId) => {
     setSelectedInvoice((prevSelectedInvoice) => {
       const selectedInvoice = invoices.data?.find((invoice) => invoice._id === invoiceId);
@@ -52,12 +56,8 @@ function Requests({ setShowRequest, id, type }) {
     getInvoices()
   }, [id, page])
 
-  useEffect(() => {
-    console.log(invoices)
-  }, [invoices])
-
   if (showInvoice) {
-    return <PDFViewer setShowInvoice={setShowInvoice} pdfUrl={selectedInvoice?.pdf} invoiceID={selectedInvoice?.ID} />
+    return <PDFViewer setShowInvoice={setShowInvoice} invoice={selectedInvoice} />
     // return <DetailedInvoice invoice={selectedInvoice} setShowInvoice={setShowInvoice} />
   }
 
@@ -91,7 +91,7 @@ function Requests({ setShowRequest, id, type }) {
         <thead>
           {type === "installment" ? (
             <tr className="flex justify-between">
-              <th className="text-md flex-1 text-center font-bold text-black">
+              <th className="text-md flex-1 text-left font-bold text-black">
                 Invoice No:
               </th>
               <th className="text-md flex-1 text-center font-bold text-black">
@@ -119,10 +119,10 @@ function Requests({ setShowRequest, id, type }) {
           {type === "installment" ? (
             <>
               {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
-                <tr key={index} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100"
+                <tr key={index} className={`flex ${invoice.pdf ? "cursor-pointer" : "cursor-default"} justify-between border-b border-main-100 px-2 py-7 hover:bg-main-100`}
                   onClick={() => handleInvoiceSelection(invoice._id)}>
-                  <td className="flex-1 capitalize text-center text-sm font-medium text-black">
-                    {index}
+                  <td className="flex-1 capitalize text-left text-sm font-medium text-black">
+                    {invoice?.invoice_no}
                   </td>
                   <td className="flex-1 capitalize text-center text-sm font-medium text-black">
                     {format(new Date(invoice?.createdAt), "dd/MM/yyyy")}
@@ -136,7 +136,7 @@ function Requests({ setShowRequest, id, type }) {
           ) : (
             <>
               {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
-                <tr key={index} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100"
+                <tr key={index} className={`flex ${invoice.pdf ? "cursor-pointer" : "cursor-default"} justify-between border-b border-main-100 px-2 py-7 hover:bg-main-100`}
                   onClick={() => handleInvoiceSelection(invoice._id)}>
                   <td className="flex-1 text-left text-sm font-medium text-black">
                     {format(new Date(invoice?.paid_at), "dd/MM/yyyy")}

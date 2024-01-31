@@ -11,7 +11,7 @@ import Select from "../../components/Shared/Form/Select";
 
 
 function FilterSection({ selectedGov, setSelectedGov, governerates }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   return (
     <>
       <div className="relative mr-4 flex-grow">
