@@ -9,7 +9,7 @@ import { useGetSingleProperty } from '@/app/property-listing/propertiesApis';
 import { useRouter } from 'next/navigation';
 import AgreementTerms from './AgreementTerms';
 import OTP from './OTP';
-import { axiosClient as axios } from '../../../services/axiosClient';
+import { axiosClient as axios } from '../../services/axiosClient';
 import PaymentMethod from './PaymentMethod';
 import { toast } from 'react-toastify';
 import PaymentInvoice from './PaymentInvoice';

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { differenceInDays, format } from "date-fns"
-import { axiosClient as axios } from "../../../services/axiosClient"
+import { axiosClient as axios } from "../../services/axiosClient"
 import { useSession } from 'next-auth/react';
 
 

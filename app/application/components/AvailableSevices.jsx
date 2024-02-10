@@ -1,7 +1,7 @@
 import { capitalizeFirst } from '@/app/utils/utils';
 import React, { useEffect, useState } from 'react';
-import { format } from "../../../utils/utils"
-import Typography from "../../../components/Shared/Typography"
+import { format } from "../../utils/utils"
+import Typography from "../../components/Shared/Typography"
 
 const AvailableServices = ({ property, onChange }) => {
   const [selectedServices, setSelectedServices] = useState([]);

@@ -65,7 +65,7 @@ function ReservationBox({ property }) {
     const decideSubmitButtonLinkHref = () => {
         if (property?.payment_type === "rent") {
             if (confirmedUser) {
-                return `/application/${property?._id}`
+                return `/application?id=${property?._id}`
             } else {
                 return "/login/confirm"
             }
@@ -145,7 +145,7 @@ function ReservationBox({ property }) {
                 </div>
                 <div className='flex flex-row justify-between mt-2'>
                     <p>Mobile Number: </p>
-                    <p>{property?.owner?.mobile || "01032315996"}</p>
+                    <p>{property?.owner?.mobile || ""}</p>
                 </div>
             </Modal>
         </>

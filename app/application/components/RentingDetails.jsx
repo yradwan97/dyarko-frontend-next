@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { axiosClient as axios } from "../../../services/axiosClient"
+import { axiosClient as axios } from "../../services/axiosClient"
 
 import Button from '@/app/components/Shared/Button'
 import Typography from '@/app/components/Shared/Typography'

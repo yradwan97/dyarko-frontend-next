@@ -8,8 +8,8 @@ import Typography from '@/app/components/Shared/Typography'
 import Loader from '@/app/components/Shared/Loader'
 import { useSession } from 'next-auth/react'
 import { toast } from "react-toastify"
-import PaymentButton from '@/app/application/[slug]/components/PaymentButton'
-import PaymentSuccessfuly from '@/app/application/[slug]/components/PaymentSuccessfuly'
+import PaymentButton from '@/app/application/components/PaymentButton'
+import PaymentSuccessfuly from '@/app/application/components/PaymentSuccessfuly'
 
 const Payment = () => {
     const { slug } = useParams()

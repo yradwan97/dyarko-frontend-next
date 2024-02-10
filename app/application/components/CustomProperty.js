@@ -1,8 +1,8 @@
 import React from 'react'
 import Typography from '@/app/components/Shared/Typography'
-import SquareOutline from '../../../components/UI/icons/SquareOutline'
-import BedSolid from '../../../components/UI/icons/BedSolid'
-import BathSolid from '../../../components/UI/icons/BathSolid'
+import SquareOutline from '../../components/UI/icons/SquareOutline'
+import BedSolid from '../../components/UI/icons/BedSolid'
+import BathSolid from '../../components/UI/icons/BathSolid'
 import { capitalizeFirst, getPropertyPeriod, getPropertyPrice } from '@/app/utils/utils'
 import Image from 'next/image'
 import property1 from "@/public/assets/property-1.png"
