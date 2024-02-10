@@ -1,4 +1,4 @@
-'use client'
+
 import { useParams } from 'next/navigation';
 import React, { Suspense } from 'react'
 import CompanyDetailsContent from "../components/CompanyDetailsContent"
