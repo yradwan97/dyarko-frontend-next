@@ -4,14 +4,30 @@ import InputGroup from "@/app/components/Shared/Form/InputGroup";
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
 
-const UpdateProfileForm = ({ defaultValues, onFormSubmit }) => {
+const PersonalInfoForm = ({ defaultValues, onFormSubmit }) => {
 
     const {
         register,
         formState: { errors },
         handleSubmit,
-        reset
+        reset,
+        watch
     } = useForm();
+
+    const isFormDirty = () => {
+        for (const key in watchedFields) {
+            if (watchedFields[key] !== defaultValues[key]) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const handleCancel = () => {
+        reset(defaultValues)
+    };
+
+    const watchedFields = watch();
 
     useEffect(() => {
         setTimeout(() => {
@@ -19,7 +35,7 @@ const UpdateProfileForm = ({ defaultValues, onFormSubmit }) => {
                 ...defaultValues
             }, 500)
         })
-    }, [defaultValues])
+    }, [reset, defaultValues])
 
     return (
         <form onSubmit={handleSubmit(async (data) => onFormSubmit(data))}>
@@ -31,6 +47,7 @@ const UpdateProfileForm = ({ defaultValues, onFormSubmit }) => {
                 label="Name"
                 type="text"
                 id="name"
+                className="!text-black capitalize placeholder:text-gray-400"
                 placeholder="John Doe"
                 register={register("name", { required: "Name is required" })}
                 error={errors.name}
@@ -39,6 +56,7 @@ const UpdateProfileForm = ({ defaultValues, onFormSubmit }) => {
             <InputGroup
                 label="Phone Number"
                 type="text"
+                className="!text-black placeholder:text-gray-400"
                 id="phoneNumber"
                 placeholder="5XXXXXXX"
                 register={register("phone", { required: "Phone Number is required" })}
@@ -48,30 +66,22 @@ const UpdateProfileForm = ({ defaultValues, onFormSubmit }) => {
             <InputGroup
                 label="Email"
                 type="text"
+                className="!text-black placeholder:text-gray-400"
                 id="email"
                 placeholder="hi@example.com"
                 register={register("email", { required: "Email is required" })}
                 error={errors.email}
             />
 
-            {/* <InputGroup
-                label="Address"
-                type="text"
-                id="address"
-                placeholder="123 Kuwait City, Kuwait"
-                register={register("address", { required: "Address is required" })}
-                error={errors.address}
-            /> */}
-
-            <Button type="submit" variant="primary" className="mr-4 h-auto">
+            <Button type="submit" variant={!isFormDirty() ? "primary-outline" : "primary"} disabled={!isFormDirty()} className="mr-4 h-auto">
                 Save Changes
             </Button>
 
-            <Button type="button" variant="primary-outline">
+            <Button type="button" variant="primary-outline" onClick={handleCancel}>
                 Cancel
             </Button>
         </form>
     );
 };
 
-export default UpdateProfileForm;
+export default PersonalInfoForm;

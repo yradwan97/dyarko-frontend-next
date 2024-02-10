@@ -2,9 +2,9 @@
 import React from "react";
 import ReactSlider from "react-slider"
 import "./style.css";
+import format from "../../utils/utils"
 
-function RangeInput({ value, setValue }) {
-
+function RangeInput({ value, setValue, activeCategory }) {
 
   return (
     <>
@@ -18,12 +18,12 @@ function RangeInput({ value, setValue }) {
         ariaLabel={['Lower thumb', 'Upper thumb']}
         ariaValuetext={state => `Thumb value ${state.valueNow}`}
         renderThumb={(props, state) => <div {...props}>
-          <p className="mt-4 text-center text-black mr-3 pr-3">${state.valueNow}</p>
+          <p className="mt-4 text-center mr-3 pr-3">${state.valueNow}</p>
         </div>}
         pearling
-        minDistance={50}
-        min={100}
-        max={1000}
+        minDistance={10}
+        min={activeCategory === "rent" ? 10 : 200}
+        max={activeCategory === "rent" ? 5000 : 1000000}
       />
 
     </>

@@ -7,7 +7,7 @@ function LikesAndComments({comment}) {
   // console.log({comment})
   const [liked, setLiked] = useState(comment?.like.status);
   const [likes, setLikes] = useState(comment?.like.count)
-  // TODO: finalize liking video comment
+  
   return (
     <div className="flex items-center space-x-4">
       <div className="flex flex-col">
@@ -25,8 +25,6 @@ function LikesAndComments({comment}) {
                   liked ? setLikes(likes => likes - 1) : setLikes(likes => likes + 1)
                   setLiked(!liked)
                 }
-                
-                // console.log(comment._id, "comment")
               }
             }
           />

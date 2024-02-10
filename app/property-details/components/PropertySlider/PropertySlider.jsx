@@ -1,29 +1,18 @@
 import React, { useState } from 'react';
-import Button from "../../../components/Shared/Button";
-import Typography from "../../../components/Shared/Typography";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
-import CloseOutline from '../../../components/UI/icons/CloseOutline';
-import ImageIcon from '../../../components/UI/icons/ImageIcon';
-import Overlay from '../Overlay';
 import Image from 'next/image';
-
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/swiper-bundle.css';
+import CloseOutline from '../../../components/UI/icons/CloseOutline';
+import Overlay from '../Overlay';
+import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import './style.css';
+import './style.css'
+
 
 function PropertySlider({ property }) {
-  const images = Array(6).fill(property?.image)
   const [visible, setVisible] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
-
-  const pagination = {
-    clickable: true,
-    renderBullet: function (index, className) {
-      return `<span class="${className} !rounded-full !bg-black"></span>`;
-      // return `<span class="${className} !rounded-full bg-main-orange-600" />`
-    },
-  };
 
   const openOverlay = (image) => {
     setActiveImage(image);
@@ -33,39 +22,44 @@ function PropertySlider({ property }) {
   return (
     <>
       <Overlay visible={visible} setVisible={setVisible}>
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', width: '80%', height: '80%' }}>
           <div className='absolute top-6 right-6 z-999 cursor-pointer' onClick={() => setVisible(false)}>
             <CloseOutline className=' stroke-white w-5 h-5' />
           </div>
-          <Image width={250} loading='lazy' height={250} src={activeImage} className="w-auto h-auto" alt="" />
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
+            <Image width={450} height={450} src={activeImage} className="w-full h-full" alt="" />
+          </div>
         </div>
       </Overlay>
 
-      <div className='grid grid-cols-4 md:grid-cols-3 grid-rows-2 gap-4 mt-9'>
-        <div className='col-span-4 md:col-span-2 row-span-2 relative'>
+      <div className='flex flex-col md:flex-row mt-2 lg:h-[270px] h-[500px]'>
+        <div className='h-full'>
+          <Image src={property?.image} width={350} height={350} alt='Main Image' />
+        </div>
+        <div className='max-h-72 sm:mt-2 md:ml-2 -translate-x-[70px] md:-translate-x-6 md:mt-0 lg:h-full' >
           <Swiper
-            modules={[Pagination]}
-            spaceBetween={5}
-            slidesPerView={4}
-            navigation
-            pagination={pagination}
-            scrollbar={{ draggable: true }}
-            onSwiper={(swiper) => console.log(swiper)}
-            onSlideChange={() => console.log('slide change')}
+            direction={'vertical'}
+            pagination={{
+              clickable: true,
+            }}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            modules={[Pagination, Autoplay]}
+            className="mySwiper"
+            style={{ height: "85%" }}
           >
-            {property && property.images.length > 0 && property?.images.map((image, index) => (
+            {property?.images && property?.images.length > 0 && property.images.map((image, index) => (
               <SwiperSlide key={index} onClick={() => openOverlay(image)}>
-                <Image className='h-full w-full object-cover cursor-pointer object-center' width={200} height={200} src={image} alt={`image ${index + 1}`} />
+                <Image className='cursor-pointer object-cover object-center' width={300} height={300} src={image} alt={`Image ${index + 1}`} />
               </SwiperSlide>
             ))}
           </Swiper>
-          <Button variant='primary-outline' className="group flex sm:hidden z-2 items-center absolute bottom-5 right-4 " onClick={() => setVisible(true)}>
-            <ImageIcon className='stroke-main-600 group-hover:stroke-white mr-1 w-4 h-4 transition-colors ease-in-out duration-500' />
-            <Typography variant='body-sm-bold' as='span' className="text-black group-hover:text-white transition-colors ease-in-out duration-500">View all photos</Typography>
-          </Button>
         </div>
       </div>
     </>
+
   );
 }
 

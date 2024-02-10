@@ -16,11 +16,11 @@ const Transactions = () => {
     if (!data) {
       refetch()
     }
-  }, [session])
+  }, [data, refetch, session])
 
   useEffect(() => {
     refetch()
-  }, [page])
+  }, [page, refetch])
 
   return data === null ? (
     <NoTransaction />

@@ -6,7 +6,6 @@ import Button from "../components/Shared/Button"
 import Typography from "../components/Shared/Typography"
 import Input from "../components/Shared/Form/Input"
 import Label from "../components/Shared/Form/Label"
-import Link from "next/link"
 import { useForm } from "react-hook-form";
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { toast } from "react-toastify"
@@ -15,8 +14,6 @@ const ForgetPassword = () => {
   const {
     register,
     handleSubmit,
-    setError,
-    clearErrors,
     formState: { errors, isValid },
   } = useForm();
 

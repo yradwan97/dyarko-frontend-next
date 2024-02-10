@@ -11,20 +11,25 @@ const Categories = () => {
     const { data: session } = useSession()
     const [categories, setCategories] = useState([])
 
-    const { data, refetch } = useQuery(["categories", session?.user?.accessToken],
+    const { data, refetch } = useQuery(
+        ["categories", session?.user?.accessToken],
         async () => await axios.get(`/properties/categories`).then(response => {
 
             if (response.status === 200) {
                 setCategories(response.data.data)
             }
 
-        })
+        }),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
 
     )
 
     useEffect(() => {
         refetch()
-    }, [session])
+    }, [session, refetch])
 
 
     return (
@@ -35,9 +40,9 @@ const Categories = () => {
                     <Typography variant='body-lg-bold' as='p' className="text-black mr-auto">
                         Property Categories
                     </Typography>
-                    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 md:gap-8 lg:grid-cols-3">
-                        {categories.length > 0 ? categories.map(category => {
-                            return <SingleCategory category={category} />
+                    <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:mt-10 md:gap-8 lg:grid-cols-4">
+                        {categories.length > 0 ? categories.map((category, index) => {
+                            return <SingleCategory key={index} category={category} />
                         })
                             :
                             (

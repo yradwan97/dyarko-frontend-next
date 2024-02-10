@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import map from "../../../public/assets/map.png";
@@ -16,6 +16,11 @@ import SingleProperty from "@/app/landingPage/properties/SingleProperty";
 import { useSearchParams } from "next/navigation";
 import { useUrlSearchParams } from "@/app/utils/utils";
 import { useSession } from "next-auth/react";
+
+const sortingValues = [
+  { name: "Lowest Price", icon: "Lowest Price", id: 1 },
+  { name: "Highest Price", icon: "Highest Price", id: 2 }
+];
 
 const governerates = [
   { id: "al ahmadi", icon: "Al Ahmadi" },
@@ -37,18 +42,23 @@ function SearchPageContent() {
   const { data: session } = useSession()
   const { data: propertyTypes } = useGetPropertyTypes(session?.user?.accessToken)
   const [selectedPropertyType, setSelectedPropertyType] = useState(finalTypes?.length > 0 ? finalTypes[0] : undefined)
-
-  let mapTypes = () => {
-    let final = propertyTypes?.map((type, index) => {
-      return {
-        id: type.value,
-        icon: type.name
-      }
-    })
-    setFinalTypes(final)
-  }
+  const [priceTo, setPriceTo] = useState("")
+  const [selectedSort, setSelectedSort] = useState(sortingValues[0]);
+  const [bedrooms, setBedrooms] = useState("")
+  const size = 12
 
   useEffect(() => {
+
+    const mapTypes = () => {
+      let final = propertyTypes?.map((type, index) => {
+        return {
+          id: type.value,
+          icon: type.name
+        }
+      })
+      setFinalTypes(final)
+    }
+
     if (propertyTypes?.length > 0) {
       mapTypes()
     }
@@ -63,9 +73,8 @@ function SearchPageContent() {
       if (searchParams.get("city")) {
         setSelectedGov(governerates.find(g => g.id === searchParams.get("city")))
       }
-      if (searchParams.get("type")) {
+      if (searchParams.get("type") && finalTypes) {
         let selectedType = finalTypes?.find(t => t.id === searchParams.get("type"))
-        console.log("yes", selectedType, searchParams.get("type"), finalTypes)
         if (selectedType) {
           setSelectedPropertyType(finalTypes?.find(t => t.id === searchParams.get("type")))
         }
@@ -73,7 +82,7 @@ function SearchPageContent() {
     }
   }, [searchParams, finalTypes])
 
-  const { data: properties, totalCount, refetch } = useGetProperties(`${finalSearchParams.toString()}&page=${page}`)
+  const { data: properties, totalCount, refetch } = useGetProperties(`${finalSearchParams.toString()}&page=${page}&size=${size}`)
 
   const handleSearchParamsChange = (newSearchParams) => {
     const seenKeys = new Set();
@@ -95,107 +104,137 @@ function SearchPageContent() {
     setFinalSearchParams(final)
   };
 
+  const handleApplyFilters = () => {
+    const searchParams = {
+      bedrooms: bedrooms,
+      price_from: priceTo ? 0 : null,
+      price_to: priceTo,
+      type: selectedPropertyType?.id,
+      sort: selectedSort.icon === "Highest Price" ? "price" : "-price",
+      city: selectedGov.id
+    };
+
+    handleSearchParamsChange(searchParams);
+  }
+
+  const onApplyFilters = (extraFilters) => {
+    const searchParams = {
+      ...extraFilters,
+      type: selectedPropertyType?.id,
+      sort: selectedSort.icon === "Highest Price" ? "price" : "-price",
+      city: selectedGov.id
+    };
+
+    handleSearchParamsChange(searchParams);
+  }
+
   useEffect(() => {
     refetch()
-  }, [page, finalSearchParams])
+  }, [page, finalSearchParams, refetch])
 
 
   return (
-    <div className="flex lg:h-screen">
-      <div className="hidden h-full w-5/12 lg:block">
-        <Image className="h-full w-full" priority src={map} alt="" />
-      </div>
-      <div className="h-full overflow-y-scroll px-4 py-8 sm:px-8 md:px-12 lg:w-7/12">
-        <nav className="flex" aria-label="Breadcrumb">
-          <ol className="inline-flex items-center space-x-1 md:space-x-3">
-            <li className="inline-flex items-center">
-              <Link
-                href="/"
-                className="text-md inline-flex items-center font-medium text-main-secondary hover:text-main-blue"
+    <Suspense>
+      <div className="flex ">
+        <div className="h-full  px-4 py-8 sm:px-8 md:px-12 w-full">
+          <nav className="flex" aria-label="Breadcrumb">
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <Link
+                  href="/"
+                  className="text-md inline-flex items-center font-medium text-main-secondary hover:text-main-blue"
+                >
+                  Home
+                </Link>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <ChevronRight className="h-2.5 w-2 stroke-main-secondary" />
+                  <span className="text-md ml-1 font-medium text-main-blue md:ml-2">
+                    Search
+                  </span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+          <Typography variant="h3" as="h3" className="my-4 text-main-blue">
+            Search properties
+          </Typography>
+          <Typography
+            variant="body-md-medium"
+            as="p"
+            className="text-main-blue/70"
+          >
+            {totalCount} properties available
+          </Typography>
+          <div className="flex flex-col lg:flex-row space-y-4 mt-5 ">
+            <div className="w-1/2 flex items-center mr-4">
+              <FilterSection governerates={governerates} selectedGov={selectedGov} setSelectedGov={setSelectedGov} onApplyFilters={onApplyFilters} />
+            </div>
+            <div className="items-center lg:-translate-y-2 lg:w-1/3 flex lg:ml-8">
+              <Button variant="primary" onClick={handleApplyFilters}>Apply Filters</Button>
+            </div>
+            <div className="items-center lg:w-1/4 lg:-translate-y-2 flex lg:ml-8">
+              <Button
+                variant="button"
+                className={`group h-10 w-10 rounded-lg border-2 ${type === "grid" ? "border-gray-200" : "border-white"
+                  }  flex items-center justify-center`}
+                onClick={() => setType("grid")}
               >
-                Home
-              </Link>
-            </li>
-            <li aria-current="page">
-              <div className="flex items-center">
-                <ChevronRight className="h-2.5 w-2 stroke-main-secondary" />
-                <span className="text-md ml-1 font-medium text-main-blue md:ml-2">
-                  Search
-                </span>
-              </div>
-            </li>
-          </ol>
-        </nav>
-        <Typography variant="h3" as="h3" className="my-4 text-main-blue">
-          Search properties
-        </Typography>
-        <Typography
-          variant="body-md-medium"
-          as="p"
-          className="text-main-blue/70"
-        >
-          {totalCount} properties available to rent
-        </Typography>
-        <div className="mt-5 flex items-center">
-          <FilterSection governerates={governerates} selectedGov={selectedGov} setSelectedGov={setSelectedGov} />
-        </div>
-        <div className="mt-6 flex flex-col items-right md:space-x-8">
-
-          <div className="hidden items-center md:flex ml-8">
-            <Button
-              variant="button"
-              className={`group h-10 w-10 rounded-lg border-2 ${type === "grid" ? "border-gray-200" : "border-white"
-                }  flex items-center justify-center`}
-              onClick={() => setType("grid")}
-            >
-              <GridSolid
-                className={`h-5 w-5 ${type === "grid" ? " fill-main-600" : " fill-main-secondary"
-                  } hover:fill-main-600 `}
-              />
-            </Button>
-            <Button
-              variant="button"
-              className={`group h-10 w-10 rounded-lg border-2 ${type === "list" ? "border-gray-200" : "border-white"
-                }  flex items-center justify-center`}
-              onClick={() => setType("list")}
-            >
-              <ListSolid
-                className={`h-5 w-5 ${type === "list" ? " fill-main-600" : " fill-main-secondary"
-                  } hover:fill-main-600 `}
-              />
-            </Button>
+                <GridSolid
+                  className={`h-5 w-5 ${type === "grid" ? " fill-main-600" : " fill-main-secondary"
+                    } hover:fill-main-600 `}
+                />
+              </Button>
+              <Button
+                variant="button"
+                className={`group h-10 w-10 rounded-lg border-2 ${type === "list" ? "border-gray-200" : "border-white"
+                  }  flex items-center justify-center`}
+                onClick={() => setType("list")}
+              >
+                <ListSolid
+                  className={`h-5 w-5 ${type === "list" ? " fill-main-600" : " fill-main-secondary"
+                    } hover:fill-main-600 `}
+                />
+              </Button>
+            </div>
           </div>
-          <div className="lg:w-11/12">
-            <SearchSection
-              onSearchParamsChange={handleSearchParamsChange}
-              finalTypes={finalTypes}
-              selectedPropertyType={selectedPropertyType}
-              setSelectedPropertyType={setSelectedPropertyType}
-            />
-          </div>
-        </div>
-        <div className="mt-4 block h-[350px] lg:hidden">
-          <Image className="h-full w-full" src={map} alt="" />
-        </div>
-        <div className={`mt-8 grid gap-4 ${type === "grid" ? 'sm:grid-cols-2 lg:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-1'}`}>
-          {properties && properties.data.map((property, index) => {
-            return (
-              <SingleProperty
-                key={index}
-                property={property}
-                listView={type !== "grid"}
-                className={type === "grid"
-                  ? "rounded-lg border-2 border-white p-1 hover:border-main-600"
-                  : "flex flex-row rounded-lg border-[1.5px]  border-main-100 hover:border-main-600"
-                }
-                location={"search"}
+          <div className="mt-6 flex flex-col items-right md:space-x-8">
+            <div className="lg:w-11/12">
+              <SearchSection
+                finalTypes={finalTypes}
+                selectedPropertyType={selectedPropertyType}
+                setSelectedPropertyType={setSelectedPropertyType}
+                priceTo={priceTo}
+                setPriceTo={setPriceTo}
+                bedrooms={bedrooms}
+                setBedrooms={setBedrooms}
+                selectedSort={selectedSort}
+                sortingValues={sortingValues}
+                setSelectedSort={setSelectedSort}
               />
-            );
-          })}
+            </div>
+          </div>
+          <div className={`mt-8 grid gap-4 ${type === "grid" ? 'sm:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-1'}`}>
+            {properties && properties.data.map((property, index) => {
+              return (
+                <SingleProperty
+                  key={index}
+                  property={property}
+                  listView={type !== "grid"}
+                  className={type === "grid"
+                    ? "rounded-lg border-2 border-white p-1"
+                    : "flex flex-row rounded-lg border-[1.5px]  border-main-100"
+                  }
+                  location={"search"}
+                />
+              );
+            })}
+          </div>
+          <Paginator page={page} onChange={(e) => setPage(e)} lastPage={properties?.pages || 1} />
         </div>
-        <Paginator page={page} onChange={(e) => setPage(e)} lastPage={properties?.pages || 1} />
       </div>
-    </div>
+    </Suspense>
   );
 }
 

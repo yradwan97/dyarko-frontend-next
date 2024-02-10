@@ -1,13 +1,9 @@
 'use client'
-import { Tab } from '@headlessui/react';
 import React, { useEffect, useState } from 'react';
-import { getOwnerVideos } from '@/app/companies/ownersApi'
+import { useGetOwnerVideos } from '@/app/companies/ownersApi'
 import Banner from './Banner';
 import OwnerProperties from "./OwnerProperties"
 import Typography from '@/app/components/Shared/Typography';
-import BuildingSolid from '@/app/components/UI/icons/BuildingSolid';
-import PropertiesSection from '@/app/landingPage/properties/PropertiesSection';
-import Paginator from '@/app/components/Shared/pagination/Pagination';
 import Loader from '@/app/components/Shared/Loader';
 import Footer from '@/app/components/Shared/Footer/Footer';
 import ClientReview from './ClientReview';
@@ -27,7 +23,7 @@ function CompanyDetailsContent({ slug }) {
         itemsCount: videosCount,
         pages: videosPages,
         refetch: refetchVideos
-    } = getOwnerVideos(slug)
+    } = useGetOwnerVideos(slug)
 
     const { properties, pages, totalCount, isFetching, refetch } = useGetOwnerProperties({
         owner: slug,
@@ -37,7 +33,7 @@ function CompanyDetailsContent({ slug }) {
     });
     useEffect(() => {
         refetch();
-    }, [slug, activeTab, page]);
+    }, [slug, activeTab, page, refetch]);
 
     return isFetching ? (
         <Loader />
@@ -60,7 +56,7 @@ function CompanyDetailsContent({ slug }) {
                         />
                     </>
                     :
-                    <Typography as='h3' variant='h3'>No properties yet!</Typography>
+                    <Typography className='mt-5' as='h3' variant='h3'>No properties yet!</Typography>
                 }
                 <ClientReview id={slug} />
                 {videosCount > 0 &&

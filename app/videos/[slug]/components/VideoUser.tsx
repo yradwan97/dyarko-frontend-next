@@ -9,6 +9,7 @@ import { Video } from "../../../types/types";
 import { likeVideo } from "../../videoService";
 import { useSession } from "next-auth/react";
 import HeartSolid from "@/app/components/UI/icons/HeartSolid";
+import Link from "next/link";
 
 type VideoUserProps = {
   videoData: Video;
@@ -17,7 +18,6 @@ type VideoUserProps = {
 
 const VideoUser = ({videoData, onTriggerRefetch}: VideoUserProps) => {
   
-  const {data: session} = useSession()
   const [liked, setLiked] = useState(videoData.like.status)
   const [likes, setLikes] = useState(videoData.like.count)
   // console.log(videoData)
@@ -42,7 +42,9 @@ const VideoUser = ({videoData, onTriggerRefetch}: VideoUserProps) => {
     <>
       <div className="mt-5 flex w-full items-center">
         <div className="relative flex items-center justify-center rounded-full bg-main-yellow-600">
-          <Avatar userName={videoData?.user?.name} />
+          <Link href={`/company-details/${videoData?.user?._id}`}>
+            <Avatar userName={videoData?.user?.name} userImg={videoData?.user?.image}/>
+          </Link>
         </div>
         <Typography variant="h5" as="h5" className="ml-2 text-lg font-bold">
           {videoData?.user?.name}
@@ -70,12 +72,6 @@ const VideoUser = ({videoData, onTriggerRefetch}: VideoUserProps) => {
             </Typography>
           </div>
         </div>
-        {/*<Button*/}
-        {/*  variant="primary"*/}
-        {/*  className="!rounded-[4px] !py-[7px] !px-4 text-xs font-bold "*/}
-        {/*>*/}
-        {/*  Follow*/}
-        {/*</Button>*/}
       </div>
     </>
   );

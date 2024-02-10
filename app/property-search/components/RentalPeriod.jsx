@@ -13,10 +13,10 @@ function RentalPeriod() {
         Rental Period
       </Typography>
       <RadioGroup value={plan} onChange={setPlan}>
-        {plans.map((plan) => (
+        {plans.map((plan, index) => (
           /* Use the `active` state to conditionally style the active option. */
           /* Use the `checked` state to conditionally style the checked option. */
-          <RadioGroup.Option key={plan} value={plan} as={Fragment}>
+          <RadioGroup.Option key={index} value={plan} as={Fragment}>
             {({ active, checked }) => (
               <li className={`mb-5 flex items-center`}>
                 <span

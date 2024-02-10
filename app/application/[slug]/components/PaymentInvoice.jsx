@@ -25,7 +25,7 @@ const Invoice = ({ paymentDetails, onEnd }) => {
                 onEnd()
             }, 5000)
         }
-    }, paymentStatus)
+    }, [paymentStatus, onEnd])
 
     return (
         <div className="flex w-full h-3/4 flex-col justify-center items-center mt-8 p-6 border border-gray-200 rounded-lg">

@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: PropsWithChildren<AuthProviderProps>)
   useEffect(() => {
     if (status === "authenticated")
       verifyAuth()
-  }, []);
+  }, [status]);
 
   return (
     <>

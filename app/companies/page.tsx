@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import Header from '../components/Shared/Header/Header'
 import BackButton from "../components/Shared/BackButton"
 import Typography from '../components/Shared/Typography'
@@ -15,18 +15,18 @@ const Companies = () => {
     
     const size = "10"
     const [page, setPage] = useState(1)
-    const { isLoading, data, refetch } = useGetCompanies(page.toString(), size)
+    const { isFetching, data, refetch } = useGetCompanies(page.toString(), size)
     
 
     useEffect(() => {
         setTimeout(() => {
             refetch()
         }, 10)
-    }, [page])
+    }, [page, refetch])
 
-    if (isLoading) return <Loader/>
+    if (isFetching) return <Loader/>
     return (
-        <>
+        <Suspense>
             <Header />
             <div className="container pt-8 pb-28">
                 <BackButton to="/"/>
@@ -53,7 +53,7 @@ const Companies = () => {
                 </div>
             </div>
             <Footer />
-        </>
+        </Suspense>
     );
 }
 

@@ -2,16 +2,13 @@
 import React, { useState } from "react";
 import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
-import SearchOutline from "../../components/UI/icons/SearchOutline"
 import SortOutline from "../../components/UI/icons/SortOutline"
 import PlusOutline from "../../components/UI/icons/PlusOutline"
 import FilterSide from "./FilterSide";
 import Select from "../../components/Shared/Form/Select";
 
-
-
-function FilterSection({ selectedGov, setSelectedGov, governerates }) {
-  const [open, setOpen] = useState(true);
+function FilterSection({ selectedGov, setSelectedGov, governerates, onApplyFilters }) {
+  const [open, setOpen] = useState(false);
   return (
     <>
       <div className="relative mr-4 flex-grow">
@@ -21,7 +18,6 @@ function FilterSection({ selectedGov, setSelectedGov, governerates }) {
           selected={selectedGov}
           setSelected={(e) => setSelectedGov(e)}
         />
-
       </div>
       <Button
         variant="primary"
@@ -41,7 +37,7 @@ function FilterSection({ selectedGov, setSelectedGov, governerates }) {
         className="block h-6 w-6 cursor-pointer stroke-main-600 sm:hidden"
         onClick={() => setOpen(true)}
       />
-      {open && <FilterSide setOpen={setOpen} />}
+      {open && <FilterSide setOpen={setOpen} onApplyFilters={onApplyFilters} />}
     </>
   );
 }

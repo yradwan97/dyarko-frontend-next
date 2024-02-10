@@ -7,7 +7,7 @@ import { useGetVideos } from "@/app/videos/videoService";
 import VideoItem from "@/app/videos/VideoItem";
 
 function RelatedVideos() {
-  const { videos } = useGetVideos(1, "size=3&sort=createdAt")
+  const { videos } = useGetVideos(1, "size=3")
   return (
     <div className="bg-main-100  py-20 ">
       <div className="container">

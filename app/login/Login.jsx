@@ -37,14 +37,6 @@ const LoginPage = () => {
                                 Welcome back! Please enter your details.
                             </Typography>
                             <LoginForm />
-                            <button type="button" className={buttonStyle}>
-                                <Image className="mr-2 h-6 w-6" src={google} alt="google icon" />
-                                Continue with Google
-                            </button>
-                            <button type="button" className={buttonStyle}>
-                                <FacebookSolid className="mr-3 fill-[#3D6AD6]" />
-                                Continue with Facebook
-                            </button>
                             <Typography
                                 variant="body-sm-medium"
                                 as="p"
@@ -63,7 +55,7 @@ const LoginPage = () => {
                                 as="p"
                                 className="pt-6 text-center text-gray-500"
                             >
-                                Don't have an account?{" "}
+                                Don&apos;t have an account?{" "}
                                 <Link
                                     href="/sign-up"
                                     className="font-bold text-black underline decoration-1"

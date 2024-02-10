@@ -1,5 +1,4 @@
 import type { Property, PropertyType } from "../types/types";
-import { useEffect, useState } from "react";
 import { ReadonlyURLSearchParams } from "next/navigation";
 
 export const getPropertyAddress = (property: Property): string => {
@@ -39,6 +38,9 @@ export const capitalizeFirst = (value: string) : string => {
 }
 
 export const calculateDifference = (dateString: string, week: boolean) => {
+    if (!week && dateString === undefined) {
+        return 0
+    }
     // Convert the input string to a Date object
     const inputDate: any = new Date(dateString);
   
@@ -48,10 +50,10 @@ export const calculateDifference = (dateString: string, week: boolean) => {
     // Calculate the time difference in milliseconds
     const timeDifference = currentDate - inputDate;
     if (week) {
-        // Calculate the difference in weeks
-            const weeksDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
-            return weeksDifference;
-        }
+    // Calculate the difference in weeks
+        const weeksDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
+        return weeksDifference;
+    }
     
     return timeDifference
 }
@@ -74,23 +76,6 @@ export const getPropertyPrice = (property: any) => {
             : property?.price
 }
 
-export const validateImageSource = (src: any) => {
-    
-    const [valid, setValid] = useState<boolean>(true)
-    useEffect(() => {
-        const image = new window.Image()
-        image.src = src
-
-        image.onload = () => {
-            setValid(true)
-        }
-        image.onerror = () => {
-            setValid(false)
-        }
-    }, [src])
-    
-    return valid
-}
 
 export const useUrlSearchParams = (searchParams: ReadonlyURLSearchParams) => {
     const urlSearchParams = new URLSearchParams()
@@ -125,8 +110,10 @@ export const prettifyError = (error: string) => {
 
 export const fixRefundUrl = (src: string) => {
     let baseUrl = "https://api.dyarko.com/refund_policy/files"
-    if (!src.includes(baseUrl)) {
+    if (src && !src.includes(baseUrl)) {
         return src[0] === "/" ? `${baseUrl}${src}` : `${baseUrl}/${src}`
+    } else {
+        return ""
     }
 }
 

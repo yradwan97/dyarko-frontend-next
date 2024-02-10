@@ -248,7 +248,7 @@ const countriesCode = [
   },
 ];
 
-const PhoneInput = React.forwardRef((props, ref) => {
+const PhoneInput = (props, ref) => {
   const {
     containerClass,
     id,
@@ -274,7 +274,7 @@ const PhoneInput = React.forwardRef((props, ref) => {
       {isError && <p className="text-error">{error.message}</p>}
     </div>
   );
-});
+};
 
 PhoneInput.propTypes = {
   id: PropTypes.string.isRequired,

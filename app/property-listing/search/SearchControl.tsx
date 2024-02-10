@@ -2,7 +2,7 @@ import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
 import DropDownSelect from "../../components/Shared/DropDownSelect";
 import CalenderOutline from "../../components/UI/icons/CalenderOutline";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format as formatCurrency } from "../../utils/utils";
@@ -133,7 +133,7 @@ useEffect(() => {
 
 
   return (
-    <>
+    <Suspense>
       <div className="flex flex-col items-center justify-between space-y-6 lg:flex-row lg:space-y-0">
         <Typography variant="h2" as="h2" className="text-black">
           Search properties to {getTitleText()}
@@ -234,7 +234,7 @@ useEffect(() => {
           </Button>
         </div>
       </div>
-    </>
+    </Suspense>
   );
 }
 export default SearchControl;

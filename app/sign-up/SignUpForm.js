@@ -92,8 +92,8 @@ const SignUpForm = (props) => {
         ...register("civilianId", {
           required: "Civilian ID is required",
           pattern: {
-            value: /^\d{12}$/,
-            message: "Please enter a valid Civilian ID (12 numbers)",
+            value: /^\d{11}$/,
+            message: "Please enter a valid Civilian ID (11 numbers)",
           },
         }),
       },
@@ -107,8 +107,8 @@ const SignUpForm = (props) => {
         ...register("password", {
           required: "Password is required",
           minLength: {
-            value: 8,
-            message: "Minimum character length is 8",
+            value: 6,
+            message: "Minimum character length is 6",
           },
         }),
       },
@@ -121,22 +121,10 @@ const SignUpForm = (props) => {
       register: {
         ...register("phoneNumber", {
           required: "Phone Number is required",
-          minLength: {
-            value: 8,
-            message: "Minimum character length is 8",
-          },
         }),
       },
       error: errors.phoneNumber,
     },
-    // type: {
-    //   register: {
-    //     ...register("type", {
-    //       required: "Select account type",
-    //     }),
-    //   },
-    //   error: errors.type,
-    // },
   };
 
   if (userType === "owner")

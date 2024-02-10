@@ -6,7 +6,8 @@ export const useGetVideos = (page = 1, searchParams = "size=9") => {
     const {data, isLoading, isFetching, refetch, isRefetching} = useQuery("videos", 
         async () => await axios.get(`/videos?page=${page}&${searchParams?.toString()}`),
         {
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
         }
     )
 
@@ -30,7 +31,8 @@ export const useGetVideo = (id) => {
     } = useQuery("video-details", 
         async () => await axios.get(`/videos/${id}`),
         {
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
         }
     )
 
@@ -42,7 +44,8 @@ export const useGetVideo = (id) => {
         isFetching
     }
 }
-export const useGetVideoComments = (id) => {
+export const useGetVideoComments = (id, accessToken) => {
+    
     const {
         data, 
         isSuccess,
@@ -51,7 +54,8 @@ export const useGetVideoComments = (id) => {
     } = useQuery("video-comments", 
         async () => await axios.get(`/videos/${id}/comments`),
         {
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
         }
     )
     console.log(data?.data?.data)
@@ -90,7 +94,7 @@ export const addComment = async (comment, id) => {
 }
 
 export const likeVideoComment = async (id, isLiked) => {
-    //TODO: confirm after backend is done.
+    
     console.log(isLiked)
     try {
         let res;

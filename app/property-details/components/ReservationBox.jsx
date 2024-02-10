@@ -10,7 +10,7 @@ import { axiosClient as axios } from "@/app/services/axiosClient"
 import { useSession } from 'next-auth/react'
 import { toast } from "react-toastify"
 import Modal from "@/app/components/Shared/Modal"
-
+import { useRouter } from 'next/navigation'
 
 
 function ReservationBox({ property }) {
@@ -18,26 +18,31 @@ function ReservationBox({ property }) {
     const { data: session } = useSession()
     const [confirmedUser, setConfirmedUser] = useState(false)
     const [isContactOwnerOpen, setIsContactOwnerOpen] = useState(false)
-
-    const isUserConfirmed = async () => {
-        try {
-            let res = await axios.get("/otp_requests/check", {
-                headers: {
-                    "auth-token": `Bearer ${session?.user?.accessToken}`
-                }
-            })
-
-            if (res.data.success && res.data.status !== "has_pending_request" && res.data.status !== null) {
-                setConfirmedUser(true)
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
+    const router = useRouter()
 
     useEffect(() => {
-        isUserConfirmed()
-    }, [session])
+        if (session) {
+            const isUserConfirmed = async () => {
+                try {
+                    let res = await axios.get("/otp_requests/check", {
+                        headers: {
+                            "auth-token": `Bearer ${session?.user?.accessToken}`
+                        }
+                    })
+
+                    if (res.data.success && res.data.status !== "has_pending_request" && res.data.status !== null) {
+                        setConfirmedUser(true)
+                    }
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+
+            isUserConfirmed()
+        } else {
+            router.push("/login")
+        }
+    }, [session, router])
 
 
     const getSubmitButtonText = () => {

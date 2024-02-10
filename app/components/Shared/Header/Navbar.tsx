@@ -16,7 +16,7 @@ const Navbar = (props: any) => {
         { to: '/companies', text: 'Companies' },
         { to: '/videos', text: 'Videos' },
     ];
-    let linkStyle = "capitalize text-base font-medium text-black px-1 py-2 rounded-lg";
+    let linkStyle = "capitalize text-base font-medium text-black px-1 py-2 hover:bg-gray-200 hover:shadow-md rounded-lg";
     let activeClass = `${linkStyle} !text-main-600 !font-bold bg-main-100`; 
     
     let buyLinksArray = [
@@ -72,7 +72,7 @@ const Navbar = (props: any) => {
                                 <Menu anchorEl={buyMenuAnchor} open={Boolean(buyMenuAnchor)} onClose={handleSubMenuClose}>
                                     {navLink.text === 'Buy' &&
                                         buyLinksArray.map((link: any, index: number) => (
-                                            <MenuItem key={index}>
+                                            <MenuItem key={index} className='px-1 py-2 relative rounded-lg hover:bg-gray-200 hover:shadow-md z-[9999]'>
                                                 <Link href={link.link} replace>
                                                     {link.name}
                                                 </Link>

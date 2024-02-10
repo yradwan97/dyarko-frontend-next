@@ -15,7 +15,9 @@
     border-style: solid;
     border-color: #f8b03e;
     cursor: grab;
+    
 }
+
 .horizontal-slider .custom-track {
     top: 20px;
     height: 5px;    
@@ -37,4 +39,8 @@
     padding-top: 12px;
     text-align: center;
     margin-top: 12px;
+}
+
+.horizontal-slider .custom-thumb:focus {
+    outline: none;
 }

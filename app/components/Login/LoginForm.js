@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { Suspense } from "react";
 import InputGroup from "../Shared/Form/InputGroup";
 import PasswordInput from "../Shared/Form/PasswordInput"
 import Link from "next/link";
@@ -9,7 +9,7 @@ import {signIn, useSession} from "next-auth/react"
 import { useRouter, useSearchParams } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import {axiosClient as axios} from "../../services/axiosClient"
-import { firebaseCloudMessaging } from "../../lib/firebase/firebase";
+import useFcmToken from "@/app/utils/hooks/useFcmToken";
 
 const LoginForm = () => {
   const router = useRouter()  
@@ -66,10 +66,6 @@ const LoginForm = () => {
         return
       } else if (response.ok) {
         await update()
-        const token = await firebaseCloudMessaging.init();
-        if (token) {
-          axios.put("/users/device_token", { device_token: token })
-        }
         if (callBack) {
           router.push(callBack)
         } else {
@@ -100,7 +96,6 @@ const LoginForm = () => {
         Login
       </Button>
     </form>
-    <ToastContainer/>
     </>
   );
 };

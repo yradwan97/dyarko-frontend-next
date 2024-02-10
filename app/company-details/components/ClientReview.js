@@ -6,8 +6,6 @@ import PlusOutline from '@/app/components/UI/icons/PlusOutline';
 import SingleReview from './SingleReview';
 import { useGetReviews } from '../../companies/ownersApi';
 import LeaveAReview from './LeaveAReview';
-import { axiosClient as axios } from '@/app/services/axiosClient';
-import { useSession } from 'next-auth/react';
 
 function ClientReview({ id }) {
   const [visible, setVisible] = useState(false);
@@ -23,9 +21,13 @@ function ClientReview({ id }) {
         setVisibleReviews(data?.reviews)
       }
     }
-
+    
     getLimitedReviews()
   }, [data, limit])
+
+  const onTriggerRefetch = () => {
+    refetch()
+  }
 
   return (
     <>
@@ -60,7 +62,7 @@ function ClientReview({ id }) {
                   {visibleReviews?.map((review) => (
                     <SingleReview key={review.id} review={review} />
                   ))}
-                  <Button
+                  {data?.reviews?.length > limit && <Button
                     variant="button"
                     onClick={() => setLimit(limit => limit + 3)}
                     className="transition-color group mt-12 hidden items-center space-x-2 rounded-lg border border-black p-4 outline-0 duration-500 ease-in-out hover:bg-black hover:text-white group-hover:bg-black md:flex"
@@ -73,7 +75,7 @@ function ClientReview({ id }) {
                       See more
                     </Typography>
                     <ChevronDown className="h-3 w-3 stroke-black !stroke-1 group-hover:stroke-white" />
-                  </Button>
+                  </Button>}
                 </>
               ) : (
                 <Typography variant="body-md" as="h2" className="text-gray-400">
@@ -94,7 +96,7 @@ function ClientReview({ id }) {
         </div>
       </div>
 
-      <LeaveAReview visible={visible} setVisible={setVisible} ownerId={id} onTriggerRefetch={() => refetch()} />
+      <LeaveAReview visible={visible} setVisible={setVisible} ownerId={id} onTriggerRefetch={onTriggerRefetch} />
     </>
   );
 }

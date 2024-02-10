@@ -57,11 +57,11 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
             }
           });
           if (response.data.data.length === 0) {
-            setVisible(false)
-            setTimeout(() => {
-              toast.warn("No available time slots for tour, try again later!")
-            }, 500)
-            return
+            // setVisible(false)
+            // setTimeout(() => {
+            //   toast.warn("No available time slots for tour, try again later!")
+            // }, 500)
+            // return
           }
           console.log("schedule", response.data.data)
           setAvailableTimeSlots(response.data.data);
@@ -100,33 +100,35 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
       });
     }
 
+    return []
 
-    // If availableTimeSlots is an empty array, generate time slots as before
-    const timeSlots = [];
-    for (let hour = 0; hour < 24; hour++) {
-      const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-      const from = `${formattedHour}:00`;
-      const to = `${(hour + 1).toString().padStart(2, "0")}:00`
-      const slot = `${from} - ${to}`
-      const isSlotDisabled =
-        (selectedPeriod === "AM" && parseInt(slot) >= 12) ||
-        (selectedPeriod === "PM" && parseInt(slot) < 12)
-      timeSlots.push({
-        from,
-        to,
-        slot,
-        isSlotDisabled
-      });
-    }
 
-    return timeSlots;
+    // // If availableTimeSlots is an empty array, generate time slots as before
+    // const timeSlots = [];
+    // for (let hour = 0; hour < 24; hour++) {
+    //   const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
+    //   const from = `${formattedHour}:00`;
+    //   const to = `${(hour + 1).toString().padStart(2, "0")}:00`
+    //   const slot = `${from} - ${to}`
+    //   const isSlotDisabled =
+    //     (selectedPeriod === "AM" && parseInt(slot) >= 12) ||
+    //     (selectedPeriod === "PM" && parseInt(slot) < 12)
+    //   timeSlots.push({
+    //     from,
+    //     to,
+    //     slot,
+    //     isSlotDisabled
+    //   });
+    // }
+
+    // return timeSlots;
   };
 
   const onSubmit = async (e) => {
     e.preventDefault()
 
-    if (!selectedDate || !selectedTimeSlot || !phoneNumber) {
-      toast.error("Please make sure to select a date and time slot, and enter your phone number!")
+    if (!selectedDate || !phoneNumber) {
+      toast.error("Please make sure to select a date and enter your phone number!")
       return
     }
 
@@ -174,7 +176,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
           <div className="flex flex-col space-x-4 md:flex-row">
             <div className="w-1/2">
               <CalendarComponent onDateChange={handleDateChange} dateRanges={availableTimeSlots} />
-              <div className="mt-6 flex items-center justify-between">
+              {/* <div className="mt-6 flex items-center justify-between">
                 <Typography variant="body-md-bold" as="p">
                   Time Slot
                 </Typography>
@@ -199,8 +201,8 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
                     ))}
                   </Tab.List>
                 </Tab.Group>
-              </div>
-              <ul className="mt-2 grid grid-cols-2 gap-2.5 px-8 sm:grid-cols-3 md:px-0">
+              </div> */}
+              {/* <ul className="mt-2 grid grid-cols-2 gap-2.5 px-8 sm:grid-cols-3 md:px-0">
                 {generateTimeSlots().map((slot, i) => {
                   return (
                     <li
@@ -219,15 +221,15 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
                     </li>
                   );
                 })}
-              </ul>
+              </ul> */}
             </div>
 
             <form>
 
-              <div className="w-full mt-3  md:mt-0 md:w-1/2">
+              <div className="w-[250px] mt-3">
                 <PhoneInput className='w-[250px]' {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
                 <div className="flex flex-col space-y-3">
-                  <Label htmlFor="comment">Comments</Label>
+                  <Label htmlFor="comment">Comment</Label>
                   <textarea
                     id="comment"
                     className="w-[250px] rounded-lg border border-gray-200 py-4 px-6 outline-0 focus:border-main-600"
@@ -235,7 +237,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
                     placeholder="Leave a comment"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
-                  ></textarea>
+                  />
                 </div>
               </div>
             </form>

@@ -2,12 +2,11 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import ApplicationProvider from './providers/ApplicationProvider'
-import { Bounce, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { SessionContext, SessionProvider } from 'next-auth/react';
+import PushNotificationLayout from './components/Shared/PushNotificationLayout';
 
-
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({subsets: ['latin']})
 
 export const metadata: Metadata = {
   title: 'Dyarko',
@@ -24,8 +23,10 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ApplicationProvider>
+          <PushNotificationLayout>
           {children}
           <ToastContainer />
+          </PushNotificationLayout>
         </ApplicationProvider>
       </body>
     </html>

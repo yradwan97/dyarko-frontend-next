@@ -1,15 +1,35 @@
 import React, { Fragment } from "react";
 import logo2 from "../../../public/assets/logo2.png";
 import Button from "../../components/Shared/Button";
-
+import Link from "next/link"
 import { Dialog, Transition } from "@headlessui/react";
-import Navbar from "../../components/Shared/Header/Navbar"
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
+
+const navLinks = [
+  { to: '/property-listing/rent', text: 'Rent' },
+  { to: '/property-listing/installment', text: 'Installment' },
+  { to: '/property-listing/cash', text: 'Cash' },
+  { to: '/property-listing/shared', text: 'Shared' },
+  { to: '/property-listing/replacement', text: 'Replacement' },
+  { to: '/categories', text: 'Categories' },
+  { to: '/companies', text: 'Companies' },
+  { to: '/videos', text: 'Videos' },
+];
 
 function SideBar({ visible, setVisible }) {
+  const { data: session } = useSession()
+  const pathname = usePathname()
 
-const pathname = usePathname()
+  const determinePathName = (path) => {
+    return path.split('/')[2] ? path.split('/')[2] : path.split('/')[1];
+  };
+
+  let linkStyle = "capitalize text-base font-medium text-black px-1 py-2 rounded-lg";
+  let activeClass = `${linkStyle} !text-main-600 !font-bold bg-main-100`;
+
+
 
   function closeModal() {
     setVisible(false);
@@ -46,28 +66,42 @@ const pathname = usePathname()
             >
               <Image className="mx-auto" src={logo2} alt="logo" />
 
-              <div className="mt-4 flex flex-col space-y-4">
-                <Navbar pathname={pathname} />
+              <div className="mt-4 flex flex-col space-y-1">
+                {/* <Navbar pathname={pathname} /> */}
+                {navLinks.map((navLink, index) => (
+                  <Link
+                    id={navLink.text}
+                    href={navLink.to}
+                    key={index}
+                    className={
+                      determinePathName(pathname) === determinePathName(navLink.to)
+                        ? activeClass
+                        : linkStyle
+                    }
+                    replace
+                  >
+                    {navLink.text}
+                  </Link>
+                ))}
               </div>
-              {/* {authStatus === authStatusEnum.IDLE ||
-              authStatus === authStatusEnum.LOGGED_OUT ? ( */}
-                <div className="mt-4 flex flex-col space-y-2">
-                  <Button
-                    variant="primary-outline"
-                    to="/login"
-                    className="text-center"
-                  >
-                    Login
-                  </Button>
-                  <Button
-                    variant="primary"
-                    to="/sign-up"
-                    className="text-center"
-                  >
-                    Sign up
-                  </Button>
-                </div>
-              {/* ) : null} */}
+
+              {!session && <div className="mt-4 flex flex-col space-y-2">
+                <Button
+                  variant="primary-outline"
+                  to="/login"
+                  className="text-center"
+                >
+                  Login
+                </Button>
+                <Button
+                  variant="primary"
+                  to="/sign-up"
+                  className="text-center"
+                >
+                  Sign up
+                </Button>
+              </div>}
+
             </Dialog.Panel>
           </Transition.Child>
         </div>

@@ -23,7 +23,7 @@ const MyRealEstates = () => {
   const { data, isLoading, refetch } = useGetRealEstates(`/${selectedValue.name}?page=${page}`)
   useEffect(() => {
     refetch()
-  }, [page, selectedValue])
+  }, [page, refetch, selectedValue])
 
 
 

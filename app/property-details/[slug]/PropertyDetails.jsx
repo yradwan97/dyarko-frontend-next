@@ -16,12 +16,10 @@ import { useQuery } from "react-query";
 import { capitalizeFirst } from '@/app/utils/utils';
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { useIsPropertySaved } from "../../property-listing/propertiesApis"
-
-const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
+import { toast } from "react-toastify"
 
 const PropertyDetails = ({ slug }) => {
 
-  const [ownerId, setOwnerId] = useState("")
   const [property, setProperty] = useState()
   const isLiked = useIsPropertySaved(slug)
   const [liked, setLiked] = useState(isLiked)
@@ -30,28 +28,42 @@ const PropertyDetails = ({ slug }) => {
     setLiked(isLiked)
   }, [isLiked])
 
-  useEffect(() => {
-    if (property && property?.owner && property?.owner._id) {
-      setOwnerId(property.owner._id)
-    }
-  }, [property])
 
   const { isLoading, data, refetch } = useQuery(
-    ["property-details"],
-    async () => await axios.get(`/properties/${slug}`).then(
-      (response) => {
-        if (response?.data?.success) {
-          setOwnerId(response.data.data.owner._id)
-          setProperty(response.data.data)
-        }
-        return response
-      }
-    )
+    ["property-details", slug],
+    async () => await axios.get(`/properties/${slug}`),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true
+    }
   )
 
   useEffect(() => {
+    if (data?.data?.success) {
+      setProperty(data.data.data)
+    }
+  }, [data])
+
+  useEffect(() => {
     refetch()
-  }, [slug])
+  }, [slug, refetch])
+
+  const handleShareClicked = (e) => {
+    console.log(e)
+    e.preventDefault()
+
+    const textToCopy = window?.location.href
+    console.log(textToCopy)
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        console.log('URL copied to clipboard successfully:', textToCopy);
+        toast.success("Property link copied to clipboard")
+      })
+      .catch(err => {
+        console.error('Could not copy URL: ', err);
+        toast.error('Could not copy URL. Please try again.');
+      });
+  }
 
   const handleLikePressed = async (method) => {
     try {
@@ -68,8 +80,6 @@ const PropertyDetails = ({ slug }) => {
       return
     }
   }
-
-  let [visible, setVisible] = useState(false);
 
   return (
     <>
@@ -94,9 +104,9 @@ const PropertyDetails = ({ slug }) => {
             {getPropertyAddress(property)}
           </Typography>
           <div className="flex flex-wrap gap-4 sm:gap-5">
-            {/* TODO: add share functionality */}
             <Button
               variant="primary-outline"
+              onClick={handleShareClicked}
               className="flex flex-1 items-center justify-center stroke-main-600 leading-6 hover:stroke-white sm:flex-none sm:justify-start"
             >
               <LinkIcon className="stroke-inherit mr-1 h-4 w-4" />
@@ -114,7 +124,7 @@ const PropertyDetails = ({ slug }) => {
             </Button>
           </div>
         </div>
-        {property !== undefined && <PropertySlider property={property} />}
+        {(property !== undefined && property?.image) && <PropertySlider property={property} />}
         {property !== undefined && <AboutProperty property={property} />}
       </div>}
 

@@ -11,8 +11,7 @@ import AvailableServices from "./AvailableSevices"
 
 import { useSession } from 'next-auth/react'
 
-const RentingDetails = ({ property, setStep, onChange }) => {
-
+const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
   const [fromToDates, setFromToDates] = useState({})
   const [availableTents, setAvailableTents] = useState([])
   const [selectedTents, setSelectedTents] = useState([])
@@ -22,37 +21,37 @@ const RentingDetails = ({ property, setStep, onChange }) => {
   const [validationError, setValidationError] = useState('');
   const [caravanLocation, setCaravanLocation] = useState('')
   const { data: session } = useSession()
-  let rentingInfo = {}
+
   let isCaravanMovable = (property?.category === "caravan" && property?.type === "movable")
   let isTentGroup = property?.category === "tent_group"
   let isRent = property?.payment_type === "rent"
   let hasServices = property?.services?.length > 0
 
-
   useEffect(() => {
+    const getTents = async () => {
+      let datesBody = {
+        "startDate": fromToDates.fromDate,
+        "endDate": fromToDates.toDate,
+        "property": property?._id
+      }
+      try {
+        let response = await axios.post("/rents/available-tents", datesBody)
+        if (response.status === 200) {
+          setShowTents(true)
+          if (response.data.data.availableTents.length)
+            setAvailableTents(response.data.data.availableTents)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     if (property?.category === "tent_group") {
       if (fromToDates.fromDate && fromToDates.toDate && session) {
         getTents()
       }
     }
-  }, [fromToDates, session])
-
-  const getTents = async () => {
-    let datesBody = {
-      "startDate": fromToDates.fromDate,
-      "endDate": fromToDates.toDate,
-      "property": property?._id
-    }
-
-    let response = await axios.post("/rents/available-tents", datesBody)
-    if (response.status === 200) {
-      setShowTents(true)
-      if (response.data.data.availableTents.length)
-        setAvailableTents(response.data.data.availableTents)
-    }
-  }
-
-
+  }, [fromToDates, session, property?.category])
 
   const validateAndProceed = () => {
     setValidationError('');

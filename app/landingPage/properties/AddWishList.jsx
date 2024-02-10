@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react'
 import { useIsPropertySaved } from '@/app/property-listing/propertiesApis'
 import { ToastContainer, toast, Bounce } from "react-toastify"
 
-function AddWishlist({ location, id }) {
+function AddWishlist({ location, onTriggerRefetch, id }) {
 
   const isLiked = useIsPropertySaved(id)
   const [pressed, setPressed] = useState(isLiked)
@@ -17,7 +17,9 @@ function AddWishlist({ location, id }) {
     setPressed(isLiked)
   }, [isLiked])
 
-  const handleLikePressed = async (method) => {
+  const handleLikePressed = async (e, method) => {
+
+    e.preventDefault()
     try {
       let response =
         method === "post" ?
@@ -32,19 +34,20 @@ function AddWishlist({ location, id }) {
   return (
 
     <div className={`w-8 h-8 cursor-pointer ${pressed ? 'bg-main-100 border-main-100' : "border-main-200"} border  rounded-full flex justify-center items-center`}
-      onClick={async () => {
+      onClick={async (e) => {
         console.count("clicked")
         let response
         if (pressed) {
-          response = await handleLikePressed("delete")
+          response = await handleLikePressed(e, "delete")
         } else {
-          response = await handleLikePressed("post")
+          response = await handleLikePressed(e, "post")
         }
 
         if (response.status === 200) {
+          location === "savedProperties" && onTriggerRefetch()
           setPressed(!pressed)
           if (pressed) {
-            toast.success("Property unsaved!")
+            toast.error("Property unsaved!")
           } else {
             toast.success("Property saved!")
           }

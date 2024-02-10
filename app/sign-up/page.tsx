@@ -20,7 +20,7 @@ const SignUp = () => {
       console.log(data)
       try {
         const response = await signup(data)
-      if (response.status === 200) {
+      if (response.success) {
         setIsSuccess(true)
       }
     } catch (e: any) {

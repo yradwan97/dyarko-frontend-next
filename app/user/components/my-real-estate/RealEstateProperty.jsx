@@ -4,7 +4,8 @@ import AddWishlist from "../../../landingPage/properties/AddWishList";
 import Price from "../../../landingPage/properties/Price";
 import TopBadge from "../../../landingPage/properties/TopBadge";
 import Link from "next/link";
-import StatusButton from "./StatusButton";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { capitalizeFirst, fixImageSource, getPropertyPeriod, getPropertyPrice, prettifyError } from "@/app/utils/utils";
@@ -19,7 +20,7 @@ import Button from "../../../components/Shared/Button"
 import Line from "@/app/property-search/components/Line";
 
 function RealEstateProperty({ property, onShowInvoices, }) {
-  // console.log(property)
+  console.log(property)
   const [anchorEl, setAnchorEl] = useState(null);
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)
@@ -29,24 +30,26 @@ function RealEstateProperty({ property, onShowInvoices, }) {
 
   const { data: session } = useSession()
 
-  const getServices = async () => {
-    try {
-      let res = await axios.get("/additional_services")
 
-      if (res.status === 200) {
-        setServices(res.data.data)
-      }
-    } catch (e) {
-      console.error(e)
-      toast.error(e)
-    }
-  }
 
   useEffect(() => {
+    const getServices = async () => {
+      try {
+        let res = await axios.get("/additional_services")
+
+        if (res.status === 200) {
+          setServices(res.data.data)
+        }
+      } catch (e) {
+        console.error(e)
+        toast.error(e)
+      }
+    }
+
     if (session && services.length === 0) {
       getServices()
     }
-  }, [session])
+  }, [session, services.length])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -74,19 +77,39 @@ function RealEstateProperty({ property, onShowInvoices, }) {
     }
   }
 
+  const confirmSubmit = (request) => {
+    confirmAlert({
+      title: "Confirm to request",
+      message: "Are you sure you want to do this?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => request === "Discharge" ? await handleFinancialDischarge() : await handleTerminateContract()
+        },
+        {
+          label: "No",
+          onClick: () => { return }
+        }
+      ]
+    });
+  };
+
+  const handleFinancialDischarge = async () => {
+    try {
+      let response = await axios.post(`/disclaimer/${property?._id}`)
+      if (response.data.success) {
+        toast.success("Request created successfully. Pending owner confirmation.")
+      }
+    } catch (e) {
+      console.error(e)
+      toast.error(prettifyError(e?.response?.data?.errors[0]?.msg))
+    }
+  }
+
   const handleMenuItemClick = async (event) => {
 
     if (event.target.textContent === "Financial Discharge") {
-      try {
-        let response = await axios.post(`/disclaimer/${property?._id}`)
-        if (response.data.success) {
-          toast.success("Request created successfully. Pending owner confirmation.")
-        }
-      } catch (e) {
-        console.error(e)
-        toast.error(prettifyError(e?.response?.data?.errors[0]?.msg))
-      }
-
+      confirmSubmit("Discharge")
     } else if (event.target.textContent === "Services") {
       setShowServicesModal(true)
     } else if (event.target.textContent === "Terminate Contract") {
@@ -164,15 +187,17 @@ function RealEstateProperty({ property, onShowInvoices, }) {
           {property?.locations.join(", ")}
         </Typography>
       </div>
+
       <Modal isOpen={showReason} onClose={() => setShowReason(false)}>
         <div className="flex flex-col space-y-3 items-center justify-center">
-          <Input type="text" className="text-black" placeholder="Enter Termination Reason." value={reason} onChange={e => setReason(e.target.value)} />
+          <Input type="text" className="!text-black" placeholder="Enter Termination Reason." value={reason} onChange={e => setReason(e.target.value)} />
           <div className="flex space-x-2 flex-row">
-            <Button variant="primary" onClick={handleTerminateContract}>Submit</Button>
+            <Button variant={!reason ? 'primary-outline' : "primary"} disabled={!reason} onClick={() => confirmSubmit("Terminate")}>Submit</Button>
             <Button variant="primary" onClick={() => setShowReason(false)}>Cancel</Button>
           </div>
         </div>
       </Modal>
+
       <Modal isOpen={showServicesModal} onClose={() => setShowServicesModal(false)}>
         <div className="flex flex-col space-y-3 items-center justify-center">
           <Typography as="h1" variant="body-lg-medium">Available Services</Typography>

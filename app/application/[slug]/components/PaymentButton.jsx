@@ -16,6 +16,7 @@ const PaymentButton = (props) => {
         const paymentChannel = new BroadcastChannel('paymentChannel');
 
         paymentChannel.onmessage = (event) => {
+            console.log(event)
             if (event.data === 'paymentSuccess') {
                 setPaymentStatus('success');
                 paymentChannel.close();

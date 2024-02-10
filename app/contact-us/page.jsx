@@ -88,7 +88,7 @@ const ContactUs = () => {
       error: errors.message,
     },
   };
-  // TODO: implement signup
+
   const signUpSubmitHandler = (data) => {
     console.log(data);
   };

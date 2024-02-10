@@ -1,13 +1,13 @@
 import Typography from '@/app/components/Shared/Typography';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const Process = ({ step }) => {
-  const processNo = ["renting information", "terms and conditions", "OTP", "payment option", "payment"];
+  const processNo = useMemo(() => ["renting information", "terms and conditions", "OTP", "payment option", "payment"], []);
   const [activeProcess, setActiveProcess] = useState(processNo[step - 1]);
 
   useEffect(() => {
     setActiveProcess(processNo[step - 1])
-  }, [step])
+  }, [step, processNo])
 
   let proccesses = processNo.map((p, i) => {
     return <span key={i}

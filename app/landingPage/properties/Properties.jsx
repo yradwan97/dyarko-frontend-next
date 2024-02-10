@@ -33,7 +33,7 @@ function Properties() {
             type="main"
           />
         </div>
-        <div className="flex flex-col-reverse items-center gap-5 lg:flex-row lg:justify-between lg:gap-0">
+        <div className="flex flex-col items-center gap-5 lg:flex-row lg:justify-between lg:gap-0">
           <ul
             className={`flex flex-row rounded-lg border-[1.5px] border-main-100 p-2`}
           >
@@ -58,7 +58,7 @@ function Properties() {
               Installment
             </li>
           </ul>
-          <div className="relative mx-auto sm:w-6/12 md:mx-0 lg:w-4/12 ">
+          <div className="relative mx-auto w-3/4 sm:w-3/4 md:w-5/12 lg:w-4/12">
             <Select
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={governerates}
@@ -67,15 +67,15 @@ function Properties() {
             />
 
           </div>
+          <Button
+            variant="primary"
+            to={`/property-listing/${activeTab}?city=${selectedGov.id}`}
+            className=" block w-fit"
+          >
+            Browse more properties
+          </Button>
         </div>
-        <PropertiesSection />
-        <Button
-          variant="primary"
-          to={`/property-listing/${activeTab}?city=${selectedGov.id}`}
-          className="mx-auto mt-10 block w-fit"
-        >
-          Browse more properties
-        </Button>
+        {/* <PropertiesSection /> */}
       </div>
     </div>
   );

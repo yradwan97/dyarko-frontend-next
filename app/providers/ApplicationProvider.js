@@ -8,6 +8,10 @@ import { useEffect } from "react";
 import {jwtDecode} from "jwt-decode";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
+import useFcmToken from "../utils/hooks/useFcmToken";
+import { LoadScript } from '@react-google-maps/api';
+import Loader from "../components/Shared/Loader";
+
 
 const isExpired = (accessToken) => {
   const decodedAccessToken = jwtDecode(accessToken);
@@ -20,6 +24,24 @@ const ApplicationProvider = ({
   const Application = () => {
     const {data: session, update} = useSession()
     const router = useRouter()
+    const {fcmToken} = useFcmToken()
+    const googleMapsApiKey = "AIzaSyCT3dCEg1vWJEHdlrYjeKD9LZBTrQhuKkM"
+
+    const updateDeviceToken = async () => {
+      await axios.put("/users/device_token", {device_token: fcmToken}, 
+        {
+          headers: {
+            "auth-token": `Bearer ${session?.user?.accessToken}`
+          }
+        }
+      )
+    }
+
+    useEffect(() => {
+      if (session && fcmToken) {
+        updateDeviceToken()
+      }
+    }, [fcmToken, session])
 
     useEffect(() => {
       const axiosInterceptor = axios.interceptors.request.use(
@@ -74,11 +96,13 @@ const ApplicationProvider = ({
       return () => {
         axios.interceptors.request.eject(axiosInterceptor)
       }
-    }, [session])
+    }, [session, router, update])
     return (
-    <QueryProvider>      
-      {children}      
-    </QueryProvider>
+      <LoadScript loadingElement={<Loader/>} googleMapsApiKey={googleMapsApiKey}>
+        <QueryProvider>      
+          {children}      
+        </QueryProvider>
+      </LoadScript>
     );
   };
 

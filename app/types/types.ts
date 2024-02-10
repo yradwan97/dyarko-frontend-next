@@ -40,18 +40,7 @@ export interface owner {
 export interface Review {
     _id: string;
     owner: string;
-    user: string;
-    rate: number;
-    comment: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-}
-
-export interface Review {
-    _id: string;
-    owner: string;
-    user: string;
+    user: User;
     rate: number;
     comment: string;
     createdAt: string;
@@ -61,11 +50,15 @@ export interface Review {
 
 export class User {
     id: string;
+    _id: string
     name: string;
+    image: string
   
-    constructor(id: string, name: string) {
+    constructor(id: string, name: string, image: string, _id: string) {
       this.id = id;
       this.name = name;
+      this._id = _id
+      this.image = image
     }
 }
 

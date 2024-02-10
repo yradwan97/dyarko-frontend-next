@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import logo from "../../../../public/assets/logo.png";
+import logo from "../../../../public/assets/DYARKO LOGO PNG-01.png";
 import menuBar from "../../../../public/assets/menu.png";
 import Image from "next/image";
 import Button from "../Button"
@@ -14,92 +14,80 @@ import NotificationOutline from "@/app/components/UI/icons/NotificationOutline"
 import NotificationDropdown from "./NotificationDropdown"
 import Typography from "../Typography"
 import Avatar from "../Avatar"
-import { ToastContainer } from "react-toastify"
 import { axiosClient as axios } from "@/app/services/axiosClient"
+import { useGetNotifications } from "@/app/user/userApi";
 
 
-const Header = ({ refetch = false }) => {
+const Header = () => {
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [notifications, setNotifications] = useState([]);
   const { data: session } = useSession()
   const [user, setUser] = useState({})
   const [notificationCount, setNotificationCount] = useState(0)
-
-  const getNotifications = async () => {
-    try {
-      if (session) {
-        const response = await axios.get("/notifications", {
-          headers: {
-            "auth-token": `Bearer ${session?.user.accessToken}`,
-            "Accept": "*/*",
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (response?.data.message === "success") {
-          let unreadNotifications = response.data.data.filter(n => !n.is_read)
-          setNotifications(unreadNotifications);
-          setNotificationCount(unreadNotifications?.length || 0)
-        }
-      }
-    } catch (error) {
-      // Handle errors if necessary
-      console.error("Error fetching notifications:", error);
-    }
-  };
-
-  const getLoggedInUser = async () => {
-    try {
-      let res = await axios.get("/users", {
-        headers: {
-          "auth-token": `Bearer ${session?.user?.accessToken}`
-        }
-      })
-      if (res.data.message === "success") {
-        setUser(res.data.data)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
+  const { data, isSuccess, refetch } = useGetNotifications(1, session?.user?.accessToken)
 
   useEffect(() => {
-    getNotifications();
+    refetch()
+  }, [session])
+
+  useEffect(() => {
+    if (isSuccess) {
+      let unreadNotifications = data?.data.filter(n => !n.is_read)
+      setNotifications(unreadNotifications);
+      setNotificationCount(unreadNotifications?.length || 0)
+    }
+  }, [data, isSuccess])
+
+  useEffect(() => {
+    const getLoggedInUser = async () => {
+      try {
+        let res = await axios.get("/users", {
+          headers: {
+            "auth-token": `Bearer ${session?.user?.accessToken}`
+          }
+        })
+        if (res.data.message === "success") {
+          setUser(res.data.data)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
 
     if (session && session?.user) {
       getLoggedInUser()
     } else {
-      setUser({})
+      setUser(false)
     }
 
   }, [session])
 
-  useEffect(() => {
-    if (refetch) {
-      getNotifications()
-    }
-  }, [refetch])
-
   return (
     <>
-      <header className="sticky top-0 z-20 border-b-2 border-main-100 bg-white">
+      <header className="sticky top-0 z-20 shadow-md rounded-lg bg-white">
         <div className="mx-auto flex items-center px-2 py-4 lg:px-10">
           <div>
             <Link href={'/'}>
-              <Image src={logo} alt="menu image" priority />
+              <Image src={logo} height={80} width={80} alt="menu image" priority />
             </Link>
           </div>
           <nav className=" mx-16 border-separate space-x-11 items-center lg:flex lg:space-x-8 hidden">
             <Navbar pathname={pathname} />
           </nav>
+          <button
+            className="ml-auto inline-block lg:hidden"
+            onClick={() => setVisible(true)}
+          >
+            <Image src={menuBar} alt="menu bar" />
+          </button>
           {(session && user) ? <div className="relative ml-auto flex items-center space-x-4">
             {/* show notification dropdown at large screens */}
             <Menu as="div" className="hidden lg:block relative">
               <Menu.Button className="flex relative h-9 w-9 items-center justify-center rounded-lg bg-main-200">
                 <NotificationOutline className="h-7 w-7 relative z-10" />
                 {notificationCount > 0 && (
-                  <span className="absolute -bottom-[0.65px] -right-[0.65px] bg-red text-white text-sm rounded-full px-1 py-1 z-20" />
+                  <span className="absolute -bottom-[8.65px] -right-[6.65px] bg-red text-white text-[10px] rounded-full px-1.5 py-0.5 z-20">{notificationCount < 9 ? notificationCount : "9+"}</span>
                 )}
               </Menu.Button>
 
@@ -135,7 +123,7 @@ const Header = ({ refetch = false }) => {
                 </Button>
               </div>
               <button
-                className="ml-auto inline-block lg:hidden"
+                className="ml-auto  inline-block lg:hidden"
                 onClick={() => setVisible(true)}
               >
                 <Image src={menuBar} alt="menu bar" />
@@ -146,8 +134,6 @@ const Header = ({ refetch = false }) => {
         <Sidebar visible={visible} setVisible={setVisible} />
 
       </header>
-
-      <ToastContainer />
     </>
   );
 }

@@ -39,22 +39,24 @@ function Requests({ setShowRequest, id, type }) {
     });
   };
 
-  const getInvoices = async () => {
-    let endpoint = type === "rent" ? `/invoices?property=${id}&page=${page}` : `/installments_invoices?page=${page}`
-    try {
-      let response = await axios.get(endpoint)
 
-      if (response.status === 200) {
-        setInvoices(response.data)
-      }
-    } catch (e) {
-      console.error(e)
-    }
-  }
 
   useEffect(() => {
+    const getInvoices = async () => {
+      let endpoint = type === "rent" ? `/invoices?property=${id}&page=${page}` : `/installments_invoices?page=${page}`
+      try {
+        let response = await axios.get(endpoint)
+
+        if (response.status === 200) {
+          setInvoices(response.data)
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }
+
     getInvoices()
-  }, [id, page])
+  }, [id, page, type])
 
   if (showInvoice) {
     return <PDFViewer setShowInvoice={setShowInvoice} invoice={selectedInvoice} />

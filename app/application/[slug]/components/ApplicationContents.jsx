@@ -11,38 +11,35 @@ import AgreementTerms from './AgreementTerms';
 import OTP from './OTP';
 import { axiosClient as axios } from '../../../services/axiosClient';
 import PaymentMethod from './PaymentMethod';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import PaymentInvoice from './PaymentInvoice';
+import { prettifyError } from '@/app/utils/utils';
 
 
 const ApplicationContents = ({ id }) => {
   const [step, setStep] = useState(1);
   const [selectedMethod, setSelectedMethod] = useState();
-  const [rentingInfo, setRentingInfo] = useState();
+  const [rentingInfo, setRentingInfo] = useState({});
   const [response, setResponse] = useState(null);
   const [property, setProperty] = useState()
   const { data } = useGetSingleProperty(id);
   const router = useRouter();
 
-  // useEffect(() => {
-  //   router.refresh()
-  // }, [])
-
 
   useEffect(() => {
     if (data && data?.data) {
-      setProperty(data?.data)
-      if (data.data.payment_type === "cash") {
-        setStep(2)
-      }
+      setProperty(data?.data.data)
     }
   }, [data])
 
-  const onComplete = async (otp) => {
-    console.log(otp);
-    let response = await axios.post(`/otp/${otp}`, null);
+  useEffect(() => {
+    if (step > 5) {
+      router.push("/")
+    }
+  }, [step])
 
-    console.log(response);
+  const onComplete = async (otp) => {
+    let response = await axios.post(`/otp/${otp}`, null);
     response?.data?.success && setStep((step) => step + 1);
     !response?.data?.success && toast('Incorrect OTP! Please confirm and try again');
     return;
@@ -53,30 +50,36 @@ const ApplicationContents = ({ id }) => {
   const onCheckOut = async () => {
     let rentObject = { ...rentingInfo, payment_method: selectedMethod.key };
     console.log(rentObject);
-    let response = await axios.post('/rents', rentObject);
+    try {
+      let response = await axios.post('/rents', rentObject);
 
-    console.log(response.data.data);
+      console.log(response.data.data);
 
-    // Save the response for later use
-    setResponse(response?.data?.data);
-    setStep(step => step + 1)
+      // Save the response for later use
+      setResponse(response?.data?.data);
+      setStep(step => step + 1)
+    } catch (e) {
+      console.error(e)
+      if (e.response.data.errors[0].msg) {
+        toast.error(prettifyError(e.response.data.errors[0].msg))
+      } else {
+        toast.error("Something went wrong.")
+      }
+    }
   };
 
-  useEffect(() => {
-
-  }, property)
   const handleInvoiceComplete = async () => {
     router.push("/")
   }
 
   return (
     <div className="container py-20">
-      <div className="flex items-center mb-7">
+      {step > 1 && <div className="flex items-center mb-7">
         <ChevronLeftIcon className="w-5 h-6 mr-2.5 text-main-600" />
-        <Button onClick={() => router.back()} className="text-main-600 text-md font-bold">
+        <Button onClick={() => setStep(step => step - 1)} className="text-main-600 text-md font-bold">
           Back
         </Button>
-      </div>
+      </div>}
       <div className="lg:w-8/12 mx-auto">
         <Typography
           variant="h2"
@@ -87,12 +90,12 @@ const ApplicationContents = ({ id }) => {
         </Typography>
         <Process step={step} />
 
-        {data?.data && <CustomProperty property={data.data} />}
+        {data?.data && <CustomProperty property={property} />}
 
         {step === 1 ? (
-          <RentingDetails onChange={(values) => setRentingInfo(values)} property={data?.data} setStep={setStep} />
+          <RentingDetails rentingInfo={rentingInfo} onChange={(values) => setRentingInfo(values)} property={property} setStep={setStep} />
         ) : step === 2 ? (
-          <AgreementTerms onContinue={() => setStep((step) => step + 1)} property={data?.data} />
+          <AgreementTerms onContinue={() => setStep((step) => step + 1)} property={property} />
         ) : step === 3 ? (
           <OTP onComplete={(otp) => onComplete(otp)} />
         ) : step === 4 ? (
@@ -102,7 +105,7 @@ const ApplicationContents = ({ id }) => {
         ) : null}
       </div>
 
-      <ToastContainer />
+
     </div>
   );
 };

@@ -10,9 +10,7 @@ function AmenetiesComponent({ amenities }) {
                 <div className='flex-1'>
                     <ul className='space-y-2 list-disc sm:space-y-5'>
                         {amenities.map((a, i) => (
-                            <li className='ml-4' key={i}>
-                                <FeatureItem className="text-black capitalize font-medium" key={i} firstText={a.name} />
-                            </li>
+                            <FeatureItem className="text-black capitalize font-medium" key={i} firstText={a.name} />
                         ))}
                     </ul>
                 </div>

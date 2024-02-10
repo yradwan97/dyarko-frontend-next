@@ -31,8 +31,8 @@ function CalendarComponent({ onDateChange, dateRanges }) {
   };
 
   const tileDisabled = ({ date }) => {
-    // Disable dates that are not in the selectableDates array
-    return selectableDates.findIndex((d) => d.toDateString() === date.toDateString()) === -1;
+    // // Disable dates that are not in the selectableDates array
+    // return selectableDates.findIndex((d) => d.toDateString() === date.toDateString()) === -1;
   };
 
   return (

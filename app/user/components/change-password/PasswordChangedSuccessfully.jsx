@@ -16,7 +16,7 @@ const PasswordChangedSuccessfully = (props) => {
         <Typography variant='body-md-medium' as='p' className="text-gray-500 md:w-8/12 lg:w-[35%] text-center">Click the button below to go back to your profile. </Typography>
         <Button variant='primary' className="w-full sm:w-1/2 md:w-4/12 mt-12" onClick={() => {
           props.setVisible(!props.visible)
-          router.refresh()
+          router.push("/login")
         }}>Okay</Button>
       </div>
     </Overlay>

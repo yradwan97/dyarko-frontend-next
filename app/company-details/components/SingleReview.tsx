@@ -17,10 +17,10 @@ function SingleReview({ review } : Props) {
     >
         <div className='flex flex-col w-3/4 space-y-6'>
             <div className="flex items-center space-x-4">
-                <Image src={avatar} className="h-16 w-16 rounded-full" alt="" />
+                <Image src={review?.user?.image || avatar} width={50} height={50} className="h-16 w-16 rounded-full" alt="" />
                     <div className="flex flex-col space-y-2 md:space-y-3">
                         <Typography variant="body-lg-bold" as="h4">
-                        {review.owner}
+                        {review.user.name}
                         </Typography>
                         <div className="flex flex-col md:flex-row md:items-center md:space-x-2">
                         <Rating value={review.rate} readOnly />

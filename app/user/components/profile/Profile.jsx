@@ -1,49 +1,53 @@
-// Profile.js
+
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
 import profile from "../../../../public/assets/profile.png";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import UpdateProfileForm from "./UpdateProfileForm";
+import PersonalInfoForm from "./PersonalInfoForm";
+import BankingInfoForm from "./BankingInfoForm"
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { toast } from "react-toastify"
+import "../tabs.css"
+import { useGetUser } from "../../userApi";
 
 const Profile = () => {
   const { data: session } = useSession();
+  const [activeTab, setActiveTab] = useState(1);
   const [profileImg, setProfileImg] = useState(profile.src);
   const [file, setFile] = useState(null)
-  const [formDefaultValues, setFormDefaultValues] = useState({})
+  const [formDefaultValuesPersonal, setFormDefaultValuesPersonal] = useState({})
+  const [formDefaultValuesBanking, setFormDefaultValuesBanking] = useState({})
   const [userProfile, setUserProfile] = useState()
+
+  const { data, isFetching, refetch } = useGetUser(session?.user?.accessToken)
 
 
   useEffect(() => {
-    const getUser = async () => {
-      try {
-        let res = await axios.get("/users", {
-          headers: {
-            "auth-token": `Bearer ${session?.user?.accessToken}`
-          }
-        })
-        if (res.status === 200) {
-          setUserProfile(res.data.data)
-        }
-      } catch (e) {
-        console.error(e)
-      }
+    refetch()
+  }, [session, refetch])
+
+  useEffect(() => {
+    if (data) {
+      setUserProfile(data)
     }
-    getUser()
-  }, [session])
+  }, [data])
 
   useEffect(() => {
     if (userProfile) {
-      const defaultValues = {
+      const defaultValuesPersonal = {
         name: userProfile.name,
         phone: userProfile.phone,
         email: userProfile.email
       }
-      setFormDefaultValues(defaultValues)
+      const defaultValuesBanking = {
+        bankAccount: userProfile?.bankAccount,
+        IBAN: userProfile.IBAN,
+        swiftCode: userProfile.swiftCode
+      }
+      setFormDefaultValuesPersonal(defaultValuesPersonal)
+      setFormDefaultValuesBanking(defaultValuesBanking)
       if (userProfile?.image) {
         setProfileImg(userProfile?.image)
       }
@@ -53,6 +57,10 @@ const Profile = () => {
   const handleRemovePicture = () => {
     setFile(null)
     setProfileImg(session?.user?.image ? session?.user?.image : profile.src)
+  }
+
+  const handleTabClick = (tabNumber) => {
+    setActiveTab(tabNumber);
   }
 
   const handleFileChange = (e) => {
@@ -67,11 +75,30 @@ const Profile = () => {
     }
   };
 
-  const onSubmit = async (data) => {
+  const onSubmitBanking = async (data) => {
+    console.log(data)
+    const updateBankingBody = { ...data }
+    try {
+      const response = await axios.put('/users', updateBankingBody, {
+        headers: {
+          "auth-token": `Bearer ${session?.user?.accessToken}`
+        }
+      });
+      if (response.status === 200) {
+        toast.success("Banking information updated successfully.")
+        refetch()
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  }
+
+  const onSubmitProfile = async (data) => {
     console.log(data)
     const formData = new FormData();
     if (file) {
       formData.append('image', file);
+      console.log([...formData.entries()])
       try {
         const res = await axios.put("/users/image", formData, {
           headers: {
@@ -84,7 +111,6 @@ const Profile = () => {
         console.error(e)
       }
     }
-    console.log([...formData.entries()])
     const updateProfileBody = { ...data }
     try {
       const response = await axios.put('/users', updateProfileBody, {
@@ -94,6 +120,7 @@ const Profile = () => {
       });
       if (response.status === 200) {
         toast.success("Profile updated successfully")
+        refetch()
       }
     } catch (error) {
       console.error('Error updating profile:', error);
@@ -102,39 +129,68 @@ const Profile = () => {
 
   return (
     <div className="flex flex-col gap-6">
-      <Typography
-        variant="h4"
-        as="h4"
-        className="pb-5 font-extrabold capitalize text-black"
-      >
-        Profile
-      </Typography>
-      <div className="flex items-center">
-        <div className="mr-4 flex h-[100px] w-[100px] items-center justify-center rounded-full bg-main-200">
-          <Image src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
+      <div className="tabs-container mb-5">
+        <div
+          className={`tab ${activeTab === 1 && 'active'}`}
+          onClick={() => handleTabClick(1)}
+        >
+          Personal Info
         </div>
-        <div className="flex flex-row gap-4">
-          <Button
-            type="button"
-            variant="primary"
-            className="relative w-full text-black sm:w-auto"
-          >
-            Upload
-            <input
-              id="profilePicture"
-              type="file"
-              className="absolute inset-0 opacity-0"
-              onChange={handleFileChange}
-            />
-          </Button>
-
-          <Button type="button" onClick={handleRemovePicture} variant="primary-outline" className="w-full capitalize">
-            Remove
-          </Button>
+        <div
+          className={`tab ${activeTab === 2 && 'active'}`}
+          onClick={() => handleTabClick(2)}
+        >
+          Banking Info
         </div>
       </div>
+      {activeTab === 1 ?
+        <>
+          <Typography
+            variant="h4"
+            as="h4"
+            className="pb-5 font-bold capitalize text-black"
+          >
+            Personal Information
+          </Typography>
 
-      <UpdateProfileForm defaultValues={formDefaultValues} onFormSubmit={onSubmit} />
+          <div className="flex items-center">
+            <div className="mr-4 flex h-[100px] w-[100px] items-center justify-center rounded-full bg-main-200">
+              <Image src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
+            </div>
+            <div className="flex flex-row gap-4">
+              <Button
+                type="button"
+                variant="primary"
+                className="relative w-full text-black sm:w-auto"
+              >
+                Upload
+                <input
+                  id="profilePicture"
+                  type="file"
+                  className="absolute inset-0 opacity-0"
+                  onChange={handleFileChange}
+                />
+              </Button>
+
+              <Button type="button" onClick={handleRemovePicture} variant="primary-outline" className="w-full capitalize">
+                Remove
+              </Button>
+            </div>
+          </div>
+
+          <PersonalInfoForm defaultValues={formDefaultValuesPersonal} onFormSubmit={onSubmitProfile} />
+        </>
+        :
+        <>
+          <Typography
+            variant="h4"
+            as="h4"
+            className="pb-5 font-bold capitalize text-black"
+          >
+            Bank Information
+          </Typography>
+          <BankingInfoForm defaultValues={formDefaultValuesBanking} onFormSubmit={onSubmitBanking} />
+        </>}
     </div>
   );
 };

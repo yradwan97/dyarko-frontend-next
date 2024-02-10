@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Typography from "../../../components/Shared/Typography"
 import RequestProperty from "./RequestProperty";
-import './tabs.css'
+import '../tabs.css'
 import { useSession } from "next-auth/react";
 import { useGetRequests } from "../../userApi";
 import Loader from "@/app/components/Shared/Loader";
 import Paginator from '@/app/components/Shared/pagination/Pagination'
 
 
-const MyRequests = ({ installmentRequest }) => {
+const MyRequests = ({ request }) => {
 
   const [activeTab, setActiveTab] = useState(1);
   const { data: session } = useSession()
@@ -25,7 +25,7 @@ const MyRequests = ({ installmentRequest }) => {
 
   useEffect(() => {
     refetch()
-  }, [activeTab, page])
+  }, [refetch, activeTab, page])
 
   useEffect(() => {
     if (data && data?.data) {
@@ -34,14 +34,14 @@ const MyRequests = ({ installmentRequest }) => {
   }, [data])
 
   useEffect(() => {
-    if (installmentRequest) {
-      setActiveTab(2)
+    if (request) {
+      if (request === "tour") {
+        setActiveTab(1)
+      } else {
+        setActiveTab(2)
+      }
     }
-  }, [installmentRequest])
-  useEffect(() => {
-
-    console.log(requests)
-  }, [requests])
+  }, [request])
 
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);

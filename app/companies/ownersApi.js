@@ -3,7 +3,11 @@ import {axiosClient as axios} from "../services/axiosClient"
 
 export const useGetCompanies = (page = "1", size = "10") => {
     const { isLoading, isFetching, data, refetch, isSuccess } = useQuery("owners", 
-        async () => await axios.get(`/owners?page=${page}&size=${size}`)
+        async () => await axios.get(`/owners?page=${page}&size=${size}`),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     );
 
     return {
@@ -28,7 +32,8 @@ export const useGetOwnerProperties = ({ owner, payment_type, page, size }) => {
         const response = await axios.get(`/properties?${queryParams.toString()}`);
         return response.data;
       }, {
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true
       }
     );
   
@@ -79,7 +84,7 @@ export const addReview = async (review) => {
     try {
         const data = await axios.post(`/owners/reviews`, review)
         return {
-            success: data.success,
+            success: data?.data.success,
             data,
         };
     } catch (error) {
@@ -92,13 +97,8 @@ export const addReview = async (review) => {
 };
 
 export const useAddReview = () => {
-    const queryClient = useQueryClient();
 
-    const { isLoading, mutate, isSuccess, reset } = useMutation(addReview, {
-        onSuccess: (data) => {
-            queryClient.setQueryData(["review", data], data);
-        },
-    })
+    const { isLoading, mutate, isSuccess, reset } = useMutation(addReview)
     return { isLoading, addReview: mutate, isSuccess, reset };
 };
 
@@ -120,7 +120,8 @@ export const getAllReviews = async (id) => {
       ['owner-reviews', id], // Unique key for the query including owner's ID
       () => getAllReviews(id),
       {
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true
       }
     );
   
@@ -133,17 +134,21 @@ export const getAllReviews = async (id) => {
   };
   
 
-export const getSingleOwner = (id, accessToken) => {
+export const useGetSingleOwner = (id, accessToken) => {
     const { data, isSuccess, isFetching, isLoading, refetch } = useQuery("owner", 
         async () => await axios.get(`/owners/${id}`, {
             headers: {
                 "auth-token": `Bearer ${accessToken}`
             }
-        })
+        }),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
 
     return {
-        data: isSuccess ? data?.data : null,
+        data: isSuccess ? data?.data.data : null,
         isSuccess,
         isLoading,
         isFetching,
@@ -151,10 +156,14 @@ export const getSingleOwner = (id, accessToken) => {
     }
 }
 
-export const getOwnerVideos = (ownerId) => {
+export const useGetOwnerVideos = (ownerId) => {
   const { data, isSuccess, isFetching, refetch } = useQuery(
     ["owner-videos", ownerId], 
-        async () => await axios.get(`/videos/users/${ownerId}`)
+        async () => await axios.get(`/videos/users/${ownerId}`),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
     return {
         data: isSuccess ? data?.data.data : null,

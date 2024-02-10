@@ -35,13 +35,14 @@ function PaymentDetails({onChange}) {
     'payment-types',
     async () =>  await axios.get(`/payment_methods`).then(res => {
         if (res.data.success) {
-          setValues(res.data.data)
+          setValues(res.data.data.filter(m => m.key !== "points"))
         }
       }),
     
     {
         enabled: Boolean(session),
         refetchOnWindowFocus: false,
+        refetchOnReconnect: true
     }
   );
 
@@ -56,7 +57,7 @@ function PaymentDetails({onChange}) {
       console.log(selected)
       onChange(selected)
     }
-  }, [selected])
+  }, [selected, onChange])
   return (
     <div>
       <Typography variant="h4" as="h4" className={`mt-16 mb-2 text-black`}>
@@ -153,21 +154,7 @@ function PaymentDetails({onChange}) {
                   Add a new card
                 </Typography>
               </Button>
-              <Button
-                variant="primary-outline"
-                className="group flex w-full items-center justify-center space-x-4"
-              >
-                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 group-hover:bg-white">
-                  <Image src={link} className="w-5" alt="link" />
-                </span>
-                <Typography
-                  variant="body-sm-bold"
-                  as="h6"
-                  className="text-main-600 group-hover:text-white"
-                >
-                  Create a payment Link
-                </Typography>
-              </Button>
+              
             </div>
            
           </>

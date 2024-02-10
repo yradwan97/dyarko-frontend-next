@@ -31,12 +31,14 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
         }
     }
 
-    const checkFollow = async () => {
-        let ownerFollowed = await isFollowed(owner._id, session?.user?.accessToken)
-        setFollowed(ownerFollowed)
-    }
+
 
     useEffect(() => {
+        const checkFollow = async () => {
+            let ownerFollowed = await isFollowed(owner._id, session?.user?.accessToken)
+            setFollowed(ownerFollowed)
+        }
+
         checkFollow()
     }, [session, owner])
 
@@ -67,7 +69,7 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
             <div className=" col-span-1 mb-1 flex-grow md:col-span-2">
                 <div className="flex items-center justify-between">
                     <Link href={`/company-details/${owner._id}`} >
-                        <Typography variant="h4" as="h4" className=" text-black">
+                        <Typography variant="h4" as="h4" className="text-black capitalize">
                             {owner.name}
                         </Typography>
                     </Link>
@@ -78,13 +80,12 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
                         <Rating name="simple-controlled" value={owner.average_rating} readOnly />
                     </div>
                 </div>
-                <div className="col-span-1 mt-1 flex items-end">
+                {/* <div className="col-span-1 mt-1 flex items-end">
                     <BuildingSolid className="mr-3 h-5 w-5 fill-main-500" />
-
                     <Typography variant="body-sm" as="p" className="text-black/75">
                         {owner.number_of_properties || 0} Properties
                     </Typography>
-                </div>
+                </div> */}
                 <Typography variant="body-md" as="p" className="mt-4 mb-8 text-gray-600">
                     {owner.about
                         ? owner.about
@@ -95,12 +96,12 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
                          offering you a better and more secure future.`
                     }
                 </Typography>
-                {/* <Link
+                <Link
                     href={`/company-details/${owner._id}`}
                     className="text-md font-bold text-main-500"
                 >
                     See more
-                </Link> */}
+                </Link>
             </div>
             <div className="relative col-span-1 hidden text-end sm:col-span-2 sm:block md:col-span-1">
                 <Button variant={!followed ? "primary" : "primary-outline"} className="!px-5 !py-2 font-bold"

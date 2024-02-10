@@ -7,9 +7,9 @@ import { useSession } from "next-auth/react";
 function Tabs(props) {
   const {data: session} = useSession()
   const [activeTab, setActiveTab] = useState("rent");
-  const tabstyle = "flex-1 py-2 px-4 sm:px-7 cursor-pointer text-lg border-b-3";
+  const tabstyle = "flex-1 py-2 px-4  cursor-pointer text-lg border-b-3";
   return (
-    <div className="relative rounded-t-lg bg-white">
+    <div className="relative w-full rounded-t-lg bg-white">
       <ul
         className={`flex flex-row border-b border-main-200 ${props.boxStyle}`}
       >
@@ -31,7 +31,7 @@ function Tabs(props) {
           } ${tabstyle}`}
           onClick={() => setActiveTab("buy")}
         >
-          Buy
+          Cash
         </li>
         <li
           className={`${
@@ -45,7 +45,7 @@ function Tabs(props) {
         </li>
       </ul>
       {props.content && (
-        <div className={`absolute top-full left-0 rounded-lg bg-white py-6 shadow-xl ${session ? "w-[1000px]": "w-[840px]"}`}>
+        <div className={`absolute top-full left-0 w-full md:w-[500px] rounded-lg bg-white py-6 shadow-xl ${session ? "lg:w-[1000px]": "lg:w-[840px]"}`}>
             <TabContent tab={activeTab} session={session} />
         </div>
       )}

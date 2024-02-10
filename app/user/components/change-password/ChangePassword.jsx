@@ -11,8 +11,6 @@ import { toast } from "react-toastify"
 import { prettifyError } from "@/app/utils/utils";
 
 const ChangePassword = () => {
-
-  const { data: session } = useSession()
   const [visible, setVisible] = useState(false)
 
   const mutation = useMutation({
@@ -130,7 +128,7 @@ const ChangePassword = () => {
         <PasswordInput {...changePasswordSchema.newPassword} register={changePasswordSchema.newPassword.register} error={errors.newPassword} />
         <PasswordInput {...changePasswordSchema.confirmPassword} register={changePasswordSchema.confirmPassword.register} error={errors.confirmPassword} />
         <div className="mt-6 flex items-center justify-start space-x-4">
-          <Button type="submit" disabled={!isValid} variant="primary" className="mr-4">
+          <Button type="submit" disabled={!isValid} variant={isValid ? "primary" : "primary-outline"} className="mr-4">
             Save new password
           </Button>
           <Button type="button" to="/forget-password" variant="primary-outline" className="text-main">

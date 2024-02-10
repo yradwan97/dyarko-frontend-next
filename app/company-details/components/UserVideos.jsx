@@ -13,7 +13,7 @@ const UserVideos = ({ videos, isFetching, itemsCount, pages, refetch }) => {
                 as="h2"
                 className="my-12 text-2xl font-bold leading-[44px] text-black sm:text-4xl sm:leading-[56px]"
             >
-                Owner's Videos {itemsCount !== undefined && `(${itemsCount})`}
+                Owner&apos;s Videos {itemsCount !== undefined && `(${itemsCount})`}
             </Typography>
             {isFetching ? (
                 <Typography as='h3' variant='body-md-medium'>Loading Videos...</Typography>

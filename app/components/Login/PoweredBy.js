@@ -15,11 +15,11 @@ const PoweredBy = (props) => {
             Powered by
           </Typography>
           <Typography variant="body-xs" as="p" className="text-gray-500">
-            You agree to Estatery's{" "}
+            You agree to Estatery&apos;s{" "}
             <Link href="/terms-conditions" className="font-medium text-main-600">
               Terms of Use & Privacy Policy.
             </Link>{" "}
-            You don't need to consent as a condition of renting any property, or
+            You don&apos;t need to consent as a condition of renting any property, or
             buying any other goods or services. Message/data rates may apply.
           </Typography>
         </div>

@@ -4,8 +4,8 @@ import PlusOutline from "../../components/UI/icons/PlusOutline";
 import MinusOutline from "../../components/UI/icons/MinusOutline";
 import Typography from "../../components/Shared/Typography";
 
-function FeatureControl(props) {
-  const [number, setNumber] = useState(props.number);
+function FeatureControl({ number, setNumber }) {
+
   return (
     <div className="flex items-center space-x-3">
       <span

@@ -1,5 +1,5 @@
 import { Rating } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Overlay from "../../property-details/components/Overlay";
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
@@ -15,14 +15,19 @@ function LeaveAReview({ visible, setVisible, ownerId, onTriggerRefetch }) {
 
   const handleAddReview = async (event) => {
     event.preventDefault();
-    addReview({ owner: ownerId, rate, comment });
+    addReview({ owner: ownerId, rate, comment })
     setRate(0);
     setComment("");
-    onTriggerRefetch()
     setTimeout(() => {
       reset()
     }, 5000);
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      onTriggerRefetch()
+    }
+  }, [isSuccess])
 
   return (
     <Overlay visible={visible} setVisible={setVisible}>

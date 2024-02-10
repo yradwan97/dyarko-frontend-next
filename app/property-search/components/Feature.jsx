@@ -2,7 +2,7 @@ import React from "react";
 import Typography from "../../components/Shared/Typography";
 import FeatureControl from "./FeatureControl";
 
-function Feature() {
+function Feature({ bathrooms, bedrooms, setBathrooms, setBedrooms }) {
   return (
     <div>
       <Typography variant="body-md-bold" className="mb-3" as="p">
@@ -13,13 +13,13 @@ function Feature() {
           <Typography variant="body-md-medium" as="p" className="text-black">
             Bedroom
           </Typography>
-          <FeatureControl number={4} />
+          <FeatureControl number={bedrooms} setNumber={setBedrooms} />
         </li>
         <li className="flex items-center justify-between">
           <Typography variant="body-md-medium" as="p" className="text-black">
             Bathroom
           </Typography>
-          <FeatureControl number={2} />
+          <FeatureControl number={bathrooms} setNumber={setBathrooms} />
         </li>
       </ul>
     </div>

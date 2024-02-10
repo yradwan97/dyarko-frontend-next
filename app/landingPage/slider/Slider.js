@@ -12,7 +12,7 @@ import CountUp from "react-countup";
 
 function Slider() {
   return (
-    <div className="flex bg-cover bg-slider-bg bg-center bg-no-repeat">
+    <div className="flex bg-cover bg-slider-bg bg-center bg-no-repeat ">
       <div className="container pt-20 md:w-52 md:pl-20 md:pr-10 lg:pl-40">
         <Typography
           variant="h1"
@@ -29,7 +29,7 @@ function Slider() {
           A great platform to buy, sell, or even rent your properties without
           any commisions.
         </Typography>
-        <div className="mt-10 mb-36 w-full xl:w-4/6 ">
+        <div className="mt-10 mb-60 md:mb-36 w-full lg:w-full xl:w-4/6 ">
           <Tabs
             content={true}
             color="text-black"
@@ -37,7 +37,7 @@ function Slider() {
             activeStyle="text-main-600 border-main-600 font-bold"
           />
         </div>
-        <div className="mb-12 flex">
+        <div className="mb-12 flex md:translate-y-[7rem]">
           <div className="flex-1">
             <CircleIcon
               className="mx-auto hidden sm:mx-0 sm:block"

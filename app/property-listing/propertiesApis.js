@@ -28,7 +28,8 @@ export const useGetPropertyTypes = (accessToken) => {
             
     }),
     {
-        refetchOnWindowFocus: false
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true
     })
     return {data, isLoading, isSuccess}
 }
@@ -36,7 +37,11 @@ export const useGetPropertyTypes = (accessToken) => {
 export const useGetSingleProperty = (id) => {
     const {isLoading, data, refetch} = useQuery(
         ["property-details"], 
-        async () => await fetch(`${baseUrl}/properties/${id}`).then(res => res.json())
+        async () => await axios.get(`/properties/${id}`),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
 
     return {
@@ -47,10 +52,14 @@ export const useGetSingleProperty = (id) => {
 }
 
 export const useGetProperties = (searchParams = "") => {
-    
+    console.log(searchParams)
     const {isLoading, data, refetch} = useQuery(
         ["properties", searchParams],
-        async () => await axios.get(`/properties?${searchParams}`)
+        async () => await axios.get(`/properties?${searchParams}`),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
     // console.log(data)
 

@@ -4,7 +4,11 @@ import {axiosClient as axios} from "../services/axiosClient"
 export const useGetWalletData = (accessToken, page = 1) => {
     const {data, isLoading, isError, isSuccess, refetch} = useQuery(
         ["user-wallet", page],
-        async () => await axios.get(`/wallet?page=${page}`)
+        async () => await axios.get(`/wallet?page=${page}`),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
 
     return {
@@ -25,7 +29,11 @@ export const useGetSavedProperties = (filterFlag = true) => {
             } else {
                 return response?.data?.data
             }
-        })
+        }),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
 
     return {
@@ -40,7 +48,11 @@ export const useGetSavedProperties = (filterFlag = true) => {
 export const useGetTransactions = (accessToken, page = 1) => {
     const {data, isSuccess, isLoading, refetch} = useQuery(
         ["transactions", page],
-        async () => await axios.get(`/wallet/transactions?page=${page}`)
+        async () => await axios.get(`/wallet/transactions?page=${page}`),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
         return {data: isSuccess ? data?.data : null, isLoading, isSuccess, refetch}
 }
@@ -48,7 +60,11 @@ export const useGetTransactions = (accessToken, page = 1) => {
 export const useGetRequests = (endpoint) => {
     const {data, isSuccess, isLoading, refetch} = useQuery(
         ["requests", endpoint],
-        async () => await axios.get(endpoint)
+        async () => await axios.get(endpoint),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
     )
 
     return {data: isSuccess ? data?.data : null, isLoading, isSuccess, refetch}
@@ -72,9 +88,51 @@ export const useGetRealEstates = (endpoint) => {
             return res
         }),
         {
-            refetchOnWindowFocus: false
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
         }
     )
 
     return {data: isSuccess ? data?.data : null, isLoading, isSuccess, refetch}
 }
+
+export const useGetNotifications = (page, accessToken) => {
+        const {data, isSuccess, isFetching, refetch} = useQuery(["notifications", page],
+            async () => await axios.get(`/notifications?page=${page}`, {
+                headers: {
+                    "auth-token": `Bearer ${accessToken}`,
+                    "Accept": "*/*",
+                    "Content-Type": "application/json",
+                },
+            }).then(response => {
+                response.data.data = response.data?.data?.sort((a, b) => a.is_read - b.is_read)
+                return response
+            }), 
+            {
+                refetchOnWindowFocus: false,
+                refetchOnReconnect: true
+            }
+        )
+        return {data: isSuccess ? data?.data : null, isSuccess, isFetching, refetch}
+};
+
+export const useGetUser = (accessToken) => {
+    const {data, isSuccess, isFetching, refetch} = useQuery("user-profile",
+        async () => await axios.get("/users", {
+            headers: {
+              "auth-token": `Bearer ${accessToken}`
+            }
+          }),
+          {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+          }
+    )
+
+    return {
+        data: isSuccess ? data?.data?.data : null,
+        isSuccess,
+        isFetching,
+        refetch
+    }
+  }

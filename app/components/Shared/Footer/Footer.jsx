@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from "react";
-import logo2 from "../../../../public/assets/logo2.png";
+import logo from "../../../../public/assets/DYARKO LOGO PNG-01.png";
 import FacebookSolid from "../../../components/UI/icons/FacebookSolid";
 import InstagramOutline from "../../../components/UI/icons/InstagramOutline";
 import LinkedInSolid from "../../../components/UI/icons/LinkedInSolid";
@@ -13,8 +13,12 @@ import { axiosClient as axios } from "@/app/services/axiosClient"
 function Footer() {
   const [links, setLinks] = useState()
   const getLinks = async () => {
-    let res = await axios.get("/settings/info")
-    setLinks(res.data.data)
+    try {
+      let res = await axios.get("/settings/info")
+      setLinks(res.data.data)
+    } catch (e) {
+      console.error(e)
+    }
   }
   useEffect(() => {
     getLinks()
@@ -25,7 +29,7 @@ function Footer() {
       <div className="container mx-auto py-20">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
           <div>
-            <Image src={logo2} loading="lazy" alt="" />
+            <Image src={logo} height={160} width={160} loading="lazy" alt="" />
           </div>
           <div>
             <Typography variant="h5" as="h5" className="mb-3">

@@ -14,7 +14,7 @@ const Wallet = () => {
   
   useEffect(() => {
     refetch()
-  }, [page])
+  }, [page, refetch])
 
   return isSuccess ? (
     <>

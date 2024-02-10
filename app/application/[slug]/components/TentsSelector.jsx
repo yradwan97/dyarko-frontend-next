@@ -27,7 +27,7 @@ const TentsSelector = ({ options, onChange, }) => {
 
   useEffect(() => {
     onChange(selectedTents)
-  }, [selectedTents])
+  }, [selectedTents, onChange])
 
   const handleSelectionChange = (event) => {
     const selectedCode = event.target.value[event.target.value.length - 1];

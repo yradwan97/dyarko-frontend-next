@@ -3,10 +3,10 @@ import SingleProperty from "./SingleProperty";
 
 
 
-const PropertiesSection = ({properties = []}) => {
+const PropertiesSection = ({ properties = [], propertyClasses = "" }) => {
   const mappedProperties = () => {
     return properties?.map((property) => (
-      <SingleProperty key={property._id} property={property} />
+      <SingleProperty key={property._id} property={property} className={propertyClasses} />
     )) || [];
   };
   return (

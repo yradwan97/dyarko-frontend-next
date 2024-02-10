@@ -5,13 +5,13 @@ import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
 import { Rating } from "@mui/material";
 import Image from "next/image";
-import { sendFollowRequest, getSingleOwner, isFollowed } from "@/app/companies/ownersApi";
+import { sendFollowRequest, useGetSingleOwner, isFollowed } from "@/app/companies/ownersApi";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 function Banner({id}) {
     const router = useRouter()
-    const {data, isFetching, refetch} = getSingleOwner(id)
+    const {data, isFetching, refetch} = useGetSingleOwner(id)
     const {data: session} = useSession()
     const [followed, setFollowed] = useState(false)
     
@@ -31,26 +31,26 @@ function Banner({id}) {
             setFollowed(ownerFollowed)
         }
         checkFollow()
-        console.log(data?.data.average_rating)
+        
     }, [session, id, data])
     
     useEffect(() => {
         refetch()
-    }, [id])
+    }, [id, refetch])
 
     return (
     <div className="relative">
       <Image src={companyBanner} className="h-[250px] w-auto" alt="" />
       <div className="relative -mt-[90px] flex w-full flex-col items-center md:top-full md:mt-0 md:-translate-y-1/2 md:flex-row md:items-end md:px-[7rem]">
-        <Image src={data?.data.image || companyImg} className="h-[183px] w-[183px]" alt="" width={200} height={200} />
+        <Image src={data?.image || companyImg} className="h-[183px] w-[183px]" alt="" width={200} height={200} />
         <div className="mt-6 flex flex-grow flex-col text-center md:ml-8 md:mt-0 md:text-left">
           <Typography variant="h4" as="h4" className=" mb-3 text-black md:mb-0">
-            {data?.data.name}
+            {data?.name}
           </Typography>
           <div className="flex items-center justify-center space-x-1 md:justify-start">
             <Rating
               name="simple-controlled"
-              value={data?.data.average_rating}
+              value={data?.average_rating || null}
               readOnly
               size="small"
               sx={{
@@ -60,7 +60,7 @@ function Banner({id}) {
               }}
             />
             <Typography variant="body-sm-medium" as="span" className="text-black">
-              {parseFloat(data?.data.average_rating).toFixed(1)}
+              {parseFloat(data?.average_rating).toFixed(1)}
             </Typography>
           </div>
         </div>

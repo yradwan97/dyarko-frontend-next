@@ -6,8 +6,9 @@ import Loader from '@/app/components/Shared/Loader';
 import Paginator from '@/app/components/Shared/pagination/Pagination';
 import SearchControl from '../search/SearchControl';
 import Loading from './loading';
-import PropertiesSection from '@/app/landingPage/properties/PropertiesSection';
 import { useGetProperties } from '../propertiesApis';
+import SingleProperty from '@/app/landingPage/properties/SingleProperty';
+import PropertiesSection from '@/app/landingPage/properties/PropertiesSection';
 
 const defaultFilters = {
   price_from: null,
@@ -56,8 +57,6 @@ const Properties = ({ slug }: any) => {
     if (shouldRefetch) {
       refetch();
     }
-
-    console.log(apiSearchParams);
   }, [page, filters, isLoading, refetch]);
 
   const handleReset = () => {
@@ -66,9 +65,8 @@ const Properties = ({ slug }: any) => {
   };
 
   const handleSearch = (newFilters: any) => {
-    console.log("should be empty",searchParameters.toString())
     setFilters(newFilters);
-    setPage(1); // Reset page to 1 when performing a new search
+    setPage(1);
   };
 
   return (
@@ -82,7 +80,7 @@ const Properties = ({ slug }: any) => {
               <Loader />
             ) : (
               <>
-                <PropertiesSection properties={properties || []} />
+                <PropertiesSection properties={properties} propertyClasses={"rounded-lg border-2 border-white p-1"}/>
                 <Paginator lastPage={pages || 1} page={page} onChange={(newPage) => setPage(newPage)} />
               </>
             )}

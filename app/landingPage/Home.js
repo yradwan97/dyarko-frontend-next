@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 
 import Header from "../components/Shared/Header/Header"
 import Slider from "./slider/Slider"
+import { useSession } from "next-auth/react";
 
 const Services = dynamic(() => import("./services/Services.jsx"))
 const Properties = dynamic(() => import("./properties/Properties.jsx"))
@@ -14,6 +15,7 @@ const Newsletter = dynamic(() => import("./Newsletter/Newsletter.jsx"))
 const Footer = dynamic(() => import("../components/Shared/Footer/Footer.jsx"))
 
 const Home = () => {
+    const {data: session} = useSession()
     
     return (
         <>
@@ -21,7 +23,7 @@ const Home = () => {
             <Slider />
             <Services />
             <Properties />
-            <RelatedVideos />
+            {session && <RelatedVideos />}
             <AboutUs />
             <FeaturedCompanies />
             <Newsletter />

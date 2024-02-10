@@ -34,6 +34,7 @@ const governerates = [
   let queryParams = () => {
     let str = []
     let final = ``
+    str.push(`payment_type=${tab}`)
     if (date !== "") str.push(`date=${date}`)
     if (selectedGov) str.push(`city=${selectedGov.id}`)
     if (selectedPropertyType) str.push(`type=${selectedPropertyType?.value}`)
@@ -58,8 +59,8 @@ const governerates = [
 
   return (
     <>
-      <div className={`flex flex-row ${session ? "w-[960px]" : "w-[800px]"}`}>
-        <div className="flex flex-col border-r w-3/5 border-main-200 px-4 lg:px-8">
+      <div className={`flex flex-col lg:flex-row w-full space-y-2 h-full ${session ? "md:w-[560px] lg:w-[960px]": "md:w-[460px] lg:w-[800px]"}`}>
+        <div className="flex flex-col lg:border-r w-full lg:w-3/5 border-main-200 px-4 lg:px-8">
           <Typography variant="body-sm" as="p" className="mb-1 text-gray-600">
             Location
           </Typography>
@@ -73,7 +74,7 @@ const governerates = [
 
           </div>
         </div>
-        <div className="w-5/12 border-r border-main-200 px-2 lg:px-8">
+        <div className="lg:w-5/12 w-full lg:border-r border-main-200 px-2 lg:px-8">
           <Typography variant="body-sm" as="p" className="mb-1 text-gray-600">
             When
           </Typography>
@@ -88,7 +89,7 @@ const governerates = [
             <CalenderOutline className="pointer-events-none absolute bottom-1 right-0 h-4 w-4 stroke-gray-600 " />
           </div>
         </div>
-        {session && tab !== "buy" && <div className="w-3/12 border-r border-main-200 px-6 lg:px-8">
+        {session && tab !== "buy" && <div className="lg:w-3/12 lg:border-r w-full border-main-200 px-2 lg:px-8">
           <Typography variant="body-sm" as="p" className="mb-1 text-gray-600">
             Property Type
           </Typography>
@@ -101,9 +102,9 @@ const governerates = [
         <Button
           variant="primary"
           to={`/property-search${finalQueryStr}`}
-          className="ml-4 flex w-4/12 items-center justify-center"
+          className="ml-5 w-[85%] flex lg:w-4/12 md:w-full items-center justify-center"
         >
-          Browse Properties
+          Browse
         </Button>
       </div>
       {/* <div className="relative md:hidden">

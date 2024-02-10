@@ -22,27 +22,27 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
     }, [paymentFrequency])
 
 
-    const getRentedDates = async (id) => {
-        try {
-            let response = await axios.get(`/rents/dates/${id}`, {
-                headers: {
-                    "auth-token": `Bearer ${session?.user?.accessToken}`
-                }
-            })
-            if (response.status === 200) {
-                console.log("rentedDates", response.data.data)
-                setRentedDates(response.data.data)
-            }
-        } catch (e) {
-            console.error(e)
-        }
-    }
+
 
     useEffect(() => {
+        const getRentedDates = async (id) => {
+            try {
+                let response = await axios.get(`/rents/dates/${id}`, {
+                    headers: {
+                        "auth-token": `Bearer ${session?.user?.accessToken}`
+                    }
+                })
+                if (response.status === 200) {
+                    setRentedDates(response.data.data)
+                }
+            } catch (e) {
+                console.error(e)
+            }
+        }
         if (property?._id && property?.category !== "tent_group" && session) {
             getRentedDates(property?._id)
         }
-    }, [property, session])
+    }, [property, session,])
 
     const handleFromDateChange = (date) => {
         setFromDate(date);
@@ -69,6 +69,12 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
             return false;
         }
 
+        // filter out before available date (if any)
+        if (property?.available_date && date < new Date(property?.available_date)) {
+            return false
+        }
+
+        // filter out rented dated
         for (const rentedDateRange of rentedDates) {
             const startDate = new Date(rentedDateRange.start_date);
             const endDate = new Date(rentedDateRange.end_date);
@@ -79,7 +85,7 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
             }
         }
 
-        // Make sure that the To Date is after the From Date.
+        // Make sure that To Date is after From Date.
         if (fromDate && date <= fromDate) {
             return false;
         }
@@ -92,12 +98,12 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
             return daysDifference % 7 === 0;
         } else if (paymentFrequency === "monthly" && fromDate) {
             const daysDifference = differenceInDays(new Date(date), new Date(fromDate));
-
+            console.log(daysDifference)
             // Filter out any days where the difference isn't divisible by 30
             return daysDifference % 30 === 0;
         }
 
-        // If the date is in the future and not within any rented date range, allow it
+        // If the date is in the future, not within any rented date range, and following rules per payment frequency, allow it
         return true;
     };
 
@@ -105,11 +111,17 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
     const filterPastAndRentedDatesFrom = (date) => {
         const currentDate = new Date();
 
-
+        // filter out past dates
         if (date < currentDate) {
             return false;
         }
 
+        // filter out before available date (if any)
+        if (property?.available_date && date < new Date(property?.available_date)) {
+            return false
+        }
+
+        // filter out rented dates
         for (const rentedDateRange of rentedDates) {
             const startDate = new Date(rentedDateRange.start_date);
             const endDate = new Date(rentedDateRange.end_date);
@@ -119,22 +131,28 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
             }
         }
 
-        if (toDate) {
-            return date < toDate
-        }
-
         return true;
     }
 
+    useEffect(() => {
+        if (toDate !== null) {
+            setToDate(null)
+        }
+    }, [fromDate])
+
     return (
         <>
+            {
+                (new Date(property?.available_date) > new Date()) &&
+                <p className='mt-3 m-2 text-main-yellow-600'>
+                    Available starting: {format(new Date(property?.available_date), "dd/MM/yyyy")}
+                </p>
+            }
             <div className="flex flex-col md:flex-row rounded-lg border my-2 border-main-300">
                 <div className='flex flex-col w-[50%] p-2 '>
                     <div className="relative flex w-full flex-row  pl-6 pr-4 ">
                         <label>From Date:</label>
-                        <div onClick={() => setFromDateVisible(!fromDateVisible)} className=" right-0 flex h-8 w-8 ml-5 items-center justify-center bg-white">
-                            <CalenderOutline className="h-3 w-3 stroke-main-600" />
-                        </div>
+
                     </div>
                     <div className="flex flex-row">
                         <DatePicker
@@ -142,20 +160,21 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
                             font-regular text-gray-500 text-center focus:border-main-400 focus-visible:outline-1"
                             selected={fromDate}
                             open={fromDateVisible}
-                            onFocus={() => setFromDateVisible(!fromDateVisible)}
+                            onFocus={() => setFromDateVisible(true)}
                             onBlur={() => setFromDateVisible(false)}
                             filterDate={filterPastAndRentedDatesFrom}
                             onChange={handleFromDateChange}
                             dateFormat="dd/MM/yyyy"
                         />
+                        <div onClick={() => setFromDateVisible(!fromDateVisible)} className=" right-0 flex h-8 w-8 ml-5 items-center justify-center bg-white">
+                            <CalenderOutline className="h-3 w-3 stroke-main-600" />
+                        </div>
                     </div>
                 </div>
                 <div className='flex flex-col w-[50%] p-2 '>
                     <div className="relative flex w-full flex-row  pl-6 pr-4 ">
                         <label>To Date:</label>
-                        <div onClick={() => setToDateVisible(!toDateVisible)} className=" right-0 flex h-8 w-8 ml-5 items-center justify-center bg-white">
-                            <CalenderOutline className="h-3 w-3 stroke-main-600" />
-                        </div>
+
                     </div>
                     <div className="flex flex-row">
                         <DatePicker
@@ -163,12 +182,15 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
                             font-regular text-gray-500 text-center focus:border-main-400 focus-visible:outline-1"
                             selected={toDate}
                             open={toDateVisible}
-                            onFocus={() => setToDateVisible(!toDateVisible)}
+                            onFocus={() => setToDateVisible(true)}
                             onBlur={() => setToDateVisible(false)}
                             filterDate={filterPastAndRentedDatesTo}
                             onChange={handleToDateChange}
                             dateFormat="dd/MM/yyyy"
                         />
+                        <div onClick={() => setToDateVisible(!toDateVisible)} className=" right-0 flex h-8 w-8 ml-5 items-center justify-center bg-white">
+                            <CalenderOutline className="h-3 w-3 stroke-main-600" />
+                        </div>
                     </div>
                 </div>
             </div>
