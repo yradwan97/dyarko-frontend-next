@@ -25,7 +25,7 @@ const ApplicationProvider = ({
     const {data: session, update} = useSession()
     const router = useRouter()
     const {fcmToken} = useFcmToken()
-    const googleMapsApiKey = "AIzaSyCT3dCEg1vWJEHdlrYjeKD9LZBTrQhuKkM"
+    const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY
 
     const updateDeviceToken = async () => {
       await axios.put("/users/device_token", {device_token: fcmToken}, 
