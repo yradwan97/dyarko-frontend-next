@@ -13,8 +13,8 @@ import UserVideos from "./UserVideos"
 import PropertyTypeTabs from "./PropertyTypeTabs"
 
 
-function CompanyDetailsContent({ slug }) {
-
+function CompanyDetailsContent() {
+    const { slug } = useParams()
     const [activeTab, setActiveTab] = useState('all');
     const [page, setPage] = useState(1);
     const {
