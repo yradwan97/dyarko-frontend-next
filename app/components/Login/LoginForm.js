@@ -48,7 +48,7 @@ const LoginForm = () => {
           required: "Password is required",
           minLength: {
             value: 6,
-            message: "Minimum character length is 8",
+            message: "Minimum character length is 6",
           },
         }),
       },

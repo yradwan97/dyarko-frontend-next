@@ -6,7 +6,7 @@ import Typography from '../components/Shared/Typography'
 import Loader from '../components/Shared/Loader'
 import SingleCompany from "./SingleCompany"
 import { owner } from '../types/types'
-import Button from '../components/Shared/Button'
+import Link from "next/link"
 import Footer from '../components/Shared/Footer/Footer'
 import Paginator from '../components/Shared/pagination/Pagination'
 import { useGetCompanies } from "./ownersApi"
@@ -43,7 +43,9 @@ const Companies = () => {
                 
                 <div className="flex flex-col gap-6">
                     {data?.data?.map((owner: owner, index: number) => (
-                        <SingleCompany key={index} owner={owner} onTriggerRefetch={() => refetch()}/>
+                        <Link href={`/company-details/${owner._id}`}>
+                            <SingleCompany key={index} owner={owner} onTriggerRefetch={() => refetch()}/>
+                        </Link>
                     ))}
                     <Paginator
                         lastPage={data?.pages}

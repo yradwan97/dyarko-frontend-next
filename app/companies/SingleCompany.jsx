@@ -18,7 +18,8 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
     const router = useRouter()
     const [followed, setFollowed] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
-    const handleFollow = async () => {
+    const handleFollow = async (e) => {
+        e.preventDefault()
         if (!session) {
             router.push("/login")
             return
@@ -48,17 +49,15 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
             className={`relative grid grid-cols-1 gap-y-4 rounded-lg bg-main-100 p-1 sm:grid-cols-2 sm:gap-8 sm:p-6 lg:grid-cols-4`}
         >
             <div className="relative col-span-1">
-                <Link href={`/company-details/${owner._id}`} >
-                    <Image
-                        src={owner.image || company}
-                        width={200}
-                        height={200}
-                        priority={true}
-                        alt="property"
-                        className="h-[240px] w-full rounded-lg sm:w-[240px]"
-                        crossOrigin="anonymous"
-                    />
-                </Link>
+                <Image
+                    src={owner.image || company}
+                    width={200}
+                    height={200}
+                    priority={true}
+                    alt="property"
+                    className="h-[240px] w-full rounded-lg sm:w-[240px]"
+                    crossOrigin="anonymous"
+                />
                 {/* commented as per Fahiem's request*/}
                 <Button onClick={handleFollow} variant={!followed ? "primary" : "primary-outline"} className={`!absolute !top-2 !right-2 !rounded-md !py-1 !px-2 transition-all duration-500 sm:!hidden`}>
                     <Typography variant="body-xs-medium" as="p" >
@@ -96,14 +95,8 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
                          offering you a better and more secure future.`
                     }
                 </Typography>
-                <Link
-                    href={`/company-details/${owner._id}`}
-                    className="text-md font-bold text-main-500"
-                >
-                    See more
-                </Link>
             </div>
-            <div className="relative col-span-1 hidden text-end sm:col-span-2 sm:block md:col-span-1">
+            <div className="relative col-span-1 hidden text-start lg:text-end sm:col-span-2 sm:block md:col-span-1">
                 <Button variant={!followed ? "primary" : "primary-outline"} className="!px-5 !py-2 font-bold"
                     onClick={handleFollow}>
                     {followed ? "Unfollow" : "Follow"}
