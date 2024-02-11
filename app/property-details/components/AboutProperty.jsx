@@ -28,21 +28,21 @@ function AboutProperty({ property }) {
          <div className='col-span-3 lg:col-span-2 order-2 lg:order-1'>
             <div className='border-[1.5px] border-gray-200 rounded-md p-6 flex flex-wrap -tracking-[0.005em] gap-x-2 md:gap-x-6 gap-y-6 lg:!gap-10'>
                {property?.bedrooms && <div className='w-3/12 sm:w-auto'>
-                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Bedrooms</Typography>
+                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Beds</Typography>
                   <div className='flex items-center space-x-2 mt-5'>
                      <BedSolid className='fill-main-secondary w-6 h-6' />
                      <Typography variant='body-lg-bold' as="p">{property.bedrooms}</Typography>
                   </div>
                </div>}
                {property?.bathrooms && <div className='w-3/12 sm:w-auto'>
-                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Bathrooms</Typography>
+                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Baths</Typography>
                   <div className='flex items-center space-x-2 mt-5'>
                      <BathSolid className='fill-main-secondary w-6 h-6' />
                      <Typography variant='body-lg-bold' as="p">{property.bathrooms}</Typography>
                   </div>
                </div>}
                {property?.area && <div className='w-4/12 sm:w-auto'>
-                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Square Area</Typography>
+                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Area</Typography>
                   <div className='flex items-center space-x-2 mt-5'>
                      <SquareOutline className='stroke-main-secondary w-6 h-6' />
                      <Typography variant='body-lg-bold' as="p">{property.area} m<sup>2</sup></Typography>

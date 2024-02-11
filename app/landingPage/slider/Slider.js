@@ -37,7 +37,7 @@ function Slider() {
             activeStyle="text-main-600 border-main-600 font-bold"
           />
         </div>
-        <div className="mb-12 flex md:translate-y-[7rem]">
+        <div className="mb-12 flex md:translate-y-[10rem] translate-y-[6rem] lg:translate-y-0">
           <div className="flex-1">
             <CircleIcon
               className="mx-auto hidden sm:mx-0 sm:block"
@@ -89,9 +89,9 @@ function Slider() {
               <Typography
                 variant="body-md-medium"
                 as="p"
-                className={`hidden text-black sm:block`}
+                className={`hidden text-black sm:block mb-1 lg:mb-0`}
               >
-                and house ready for occupancy
+                and houses ready for occupancy
               </Typography>
             </div>
           </div>

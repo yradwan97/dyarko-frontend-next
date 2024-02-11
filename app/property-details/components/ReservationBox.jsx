@@ -111,7 +111,7 @@ function ReservationBox({ property }) {
 
     return (
         <>
-            <ScheduleTour id={property?.owner?._id} propertyId={property?._id} visible={visible} setVisible={setVisible} />
+            <ScheduleTour id={property?.owner?._id} propertyId={property?._id} visible={true} setVisible={setVisible} />
             <div className='border-[1.5px] border-gray-200 rounded-md p-6 '>
                 <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" && "Rent"} Price</Typography>
                 <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">

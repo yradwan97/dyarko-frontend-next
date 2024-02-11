@@ -17,20 +17,20 @@ import Link from "next/link"
 function FeaturedCompanies() {
 
   const { data } = useGetCompanies()
-  const staticImages = [company1, company2, company3, company4, company5, company6, company7]
+  const staticImages = [company1, company2, company3, company4, company5, company6, company7, company1, company2, company3]
   let companiesWithImages = data?.data?.filter(d => d.image !== null) || []
   let companyImages = companiesWithImages.length > 0 && companiesWithImages?.map(c => {
     return { src: c.image, name: c.name, id: c._id }
   }) || []
 
   let testImages = []
-  let i = 0
-  while (i < 7) {
+  let i = companyImages.length
+  while (i < 12) {
     testImages.push(companyImages[0])
     i++
   }
 
-  staticImages.length = 7 - companyImages?.length || 7
+  staticImages.length = 12 - companyImages?.length || 12
   let finalStaticImages = staticImages.map(s => {
     return {
       src: s.src,
@@ -40,21 +40,6 @@ function FeaturedCompanies() {
 
   let images = [...companyImages, ...finalStaticImages]
 
-  const flickityOptions = {
-    initialIndex: 3,
-    pageDots: false,
-    prevNextButtons: true,
-    adaptiveHeight: true,
-    contain: true,
-    arrowShape: {
-      x0: 10,
-      x1: 60,
-      y1: 50,
-      x2: 70,
-      y2: 45,
-      x3: 20,
-    }
-  }
   return (
     <Suspense>
       <div className="bg-main-100 py-20 ">
@@ -66,13 +51,9 @@ function FeaturedCompanies() {
               desc="We are working with 100+ companies from whome you can get your desired property."
             />
           </div>
-          <Flickity
-            className="z-[9999]"
-            options={flickityOptions}
-
-          >
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {images && images?.map((image, index) => (
-              <div className="mx-3" key={index}>
+              <div className="mx-5 text-center items-center justify-center" key={index}>
                 {
                   image?.id ?
                     <Link href={`/company-details/${image.id}`}>
@@ -91,7 +72,7 @@ function FeaturedCompanies() {
                 </Typography>
               </div>
             ))}
-          </Flickity>
+          </div>
         </div>
       </div>
     </Suspense>

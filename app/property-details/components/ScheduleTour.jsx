@@ -173,66 +173,20 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
         </div>
         <Line />
         <div className="p-6 ">
-          <div className="flex flex-col space-x-4 md:flex-row">
-            <div className="w-1/2">
+          <div className="flex flex-col space-x-4 lg:flex-row">
+            <div className="w-full lg:w-1/2">
               <CalendarComponent onDateChange={handleDateChange} dateRanges={availableTimeSlots} />
-              {/* <div className="mt-6 flex items-center justify-between">
-                <Typography variant="body-md-bold" as="p">
-                  Time Slot
-                </Typography>
-                <Tab.Group>
-                  <Tab.List className="rounded-[12px] bg-main-100 p-[4px]">
-                    {["AM", "PM"].map((tab) => (
-                      <Tab
-                        key={tab}
-                        disabled={availableTimeSlots.length > 0}
-                        className={({ selected }) =>
-                          classNames(
-                            "rounded-lg p-2 text-xs",
-                            (availableTimeSlots.length === 0 && selected)
-                              ? "bg-white font-bold text-main-yellow-600"
-                              : "font-regular text-gray-500"
-                          )
-                        }
-                        onClick={() => handleTabClick(tab)}
-                      >
-                        {tab}
-                      </Tab>
-                    ))}
-                  </Tab.List>
-                </Tab.Group>
-              </div> */}
-              {/* <ul className="mt-2 grid grid-cols-2 gap-2.5 px-8 sm:grid-cols-3 md:px-0">
-                {generateTimeSlots().map((slot, i) => {
-                  return (
-                    <li
-                      key={i}
-                      className={`rounded-lg border py-2 px-4 text-xs font-bold ${slot.isSlotDisabled
-                        ? "text-gray-400 cursor-not-allowed"
-                        : "text-black cursor-pointer"
-                        } odd:border-gray-300 even:border-red even:text-red ${selectedTimeSlot === slot.slot
-                          ? "bg-main-yellow-200"
-                          : "hover:bg-gray-100"
-                        }`}
-                      onClick={() => handleSlotClick(slot.slot)}
-                      style={{ opacity: slot.isSlotDisabled ? 0.5 : 1 }}
-                    >
-                      {slot.slot}
-                    </li>
-                  );
-                })}
-              </ul> */}
             </div>
 
-            <form>
+            <form className="w-full lg:w-1/2">
 
-              <div className="w-[250px] mt-3">
-                <PhoneInput className='w-[250px]' {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
+              <div className="mt-3 lg:mt-0">
+                <PhoneInput className="lg:w-full" {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
                 <div className="flex flex-col space-y-3">
                   <Label htmlFor="comment">Comment</Label>
                   <textarea
                     id="comment"
-                    className="w-[250px] rounded-lg border border-gray-200 py-4 px-6 outline-0 focus:border-main-600"
+                    className="rounded-lg border border-gray-200 py-4 px-6 outline-0 focus:border-main-600"
                     rows={6}
                     placeholder="Leave a comment"
                     value={comment}

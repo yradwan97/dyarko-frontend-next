@@ -12,6 +12,7 @@ import useFcmToken from "../utils/hooks/useFcmToken";
 import { LoadScript } from '@react-google-maps/api';
 import Loader from "../components/Shared/Loader";
 
+const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY
 
 const isExpired = (accessToken) => {
   const decodedAccessToken = jwtDecode(accessToken);
@@ -25,7 +26,6 @@ const ApplicationProvider = ({
     const {data: session, update} = useSession()
     const router = useRouter()
     const {fcmToken} = useFcmToken()
-    const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY
 
     const updateDeviceToken = async () => {
       await axios.put("/users/device_token", {device_token: fcmToken}, 

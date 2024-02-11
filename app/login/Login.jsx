@@ -3,14 +3,9 @@ import React from 'react'
 import SimpleNavbar from "../components/Login/SimpleNavbar"
 import Typography from '../components/Shared/Typography'
 import Link from 'next/link'
-import FacebookSolid from "../components/UI/icons/FacebookSolid"
-import google from "../../public/assets/login/google.png"
 import loginPic from "../../public/assets/login/login-pic.png"
-import Image from "next/image"
 import PoweredBy from '../components/Login/PoweredBy'
-
 import LoginForm from '../components/Login/LoginForm'
-import Loader from "../components/Shared/Loader"
 
 const OWNER_DASHBOARD_URL = process.env.NEXT_PUBLIC_NEXT_APP_OWNER_DASHBOARD_URL;
 
@@ -33,7 +28,7 @@ const LoginPage = () => {
                             <Typography variant="h3" as="h3" className="mb-3 capitalize">
                                 Welcome back!
                             </Typography>
-                            <Typography variant="body-md-medium" as="p" className="opacity-50">
+                            <Typography variant="body-md-medium" as="p" className="opacity-50 mb-2">
                                 Welcome back! Please enter your details.
                             </Typography>
                             <LoginForm />

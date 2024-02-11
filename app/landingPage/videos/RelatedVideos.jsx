@@ -9,13 +9,13 @@ import VideoItem from "@/app/videos/VideoItem";
 function RelatedVideos() {
   const { videos } = useGetVideos(1, "size=3")
   return (
-    <div className="bg-main-100  py-20 ">
+    <div className="bg-main-100 py-20">
       <div className="container">
         <div className="mb-7 flex items-center justify-between">
           <Typography
             variant="h2"
             as="h2"
-            className="text-2xl font-bold leading-[44px] text-black sm:text-4xl sm:leading-[56px]"
+            className="md:text-4xl font-bold leading-[44px] text-black text-2xl sm:leading-[56px]"
           >
             Related videos
           </Typography>

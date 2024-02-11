@@ -60,9 +60,9 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
                     />
                 </Link>
                 {/* commented as per Fahiem's request*/}
-                <Button className="absolute top-2 right-2 rounded-md bg-white/30 py-1 px-2 transition-all duration-500 hover:bg-white sm:hidden">
+                <Button onClick={handleFollow} variant={!followed ? "primary" : "primary-outline"} className={`!absolute !top-2 !right-2 !rounded-md !py-1 !px-2 transition-all duration-500 sm:!hidden`}>
                     <Typography variant="body-xs-medium" as="p" >
-                        Follow
+                        {followed ? "Unfollow" : "Follow"}
                     </Typography>
                 </Button>
             </div>

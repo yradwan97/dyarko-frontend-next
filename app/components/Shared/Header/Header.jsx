@@ -75,15 +75,11 @@ const Header = () => {
           <nav className=" mx-16 border-separate space-x-11 items-center lg:flex lg:space-x-8 hidden">
             <Navbar pathname={pathname} />
           </nav>
-          <button
-            className="ml-auto inline-block lg:hidden"
-            onClick={() => setVisible(true)}
-          >
-            <Image src={menuBar} alt="menu bar" />
-          </button>
+          {/* {session && } */}
           {(session && user) ? <div className="relative ml-auto flex items-center space-x-4">
             {/* show notification dropdown at large screens */}
-            <Menu as="div" className="hidden lg:block relative">
+
+            <Menu as="div" className="lg:block relative">
               <Menu.Button className="flex relative h-9 w-9 items-center justify-center rounded-lg bg-main-200">
                 <NotificationOutline className="h-7 w-7 relative z-10" />
                 {notificationCount > 0 && (
@@ -97,17 +93,23 @@ const Header = () => {
               <Typography
                 variant="body-md-bold"
                 as="span"
-                className="capitalize"
+                className="hidden md:flex capitalize"
               >
                 {user.name}
               </Typography>
               <Avatar
-                className="ml-auto hidden items-center space-x-4 md:flex"
+                className="ml-auto items-center space-x-4 flex"
                 userName={user.name}
                 userImg={user.image}
                 isVerified={user.is_confirmed || false}
               />
             </Link>
+            <button
+              className="ml-auto inline-block lg:hidden"
+              onClick={() => setVisible(true)}
+            >
+              <Image src={menuBar} alt="menu bar" />
+            </button>
           </div>
             :
             <>

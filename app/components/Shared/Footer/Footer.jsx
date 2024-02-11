@@ -27,7 +27,7 @@ function Footer() {
   return (
     <div>
       <div className="container mx-auto py-20">
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4">
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-4">
           <div>
             <Image src={logo} height={160} width={160} loading="lazy" alt="" />
           </div>
@@ -42,13 +42,6 @@ function Footer() {
             >
               <Link href="/property-listing/rent">Rent</Link>
             </Typography>
-            {/* <Typography
-              variant="body-sm-medium"
-              as="p"
-              className="mb-3 text-gray-600"
-            >
-              <Link href="/property-listing/buy">Buy</Link>
-            </Typography> */}
             <Typography
               variant="body-sm-medium"
               as="p"
@@ -141,7 +134,7 @@ function Footer() {
               as="p"
               className="mb-6 text-center text-gray-400 md:mb-0 md:text-left"
             >
-              ©2023 Dyarko. All rights reserved
+              ©2024 Dyarko. All rights reserved
             </Typography>
             <div className="flex justify-center md:justify-end">
               <Link href={links?.facebook ? links?.facebook : "/"}>

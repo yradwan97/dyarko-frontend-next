@@ -10,11 +10,11 @@ function FeatureComponent({ property }) {
     console.log(weeksDiff)
 
     return (
-        <div className='py-12 border-b border-gray-200'>
+        <div className='py-12 border-b  border-gray-200'>
             <HeadTitle text="Unit Features" />
             <div className='flex flex-col md:flex-row md:space-x-20'>
                 <div className='md:w-1/2'>
-                    <ul className='space-y-2 sm:space-y-5'>
+                    <ul className='space-y-5'>
                         <FeatureItem firstText="Listed on " secondText={`${weeksDiff} ${weeksDiff === 1 ? "week" : "weeks"} `} companyName={true} />
                         <FeatureItem firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(new Date(property?.available_date), "dd/MM/yyyy")}`} />
                         <FeatureItem firstText="Year Built" secondText={getYear(new Date(property?.createdAt)).toString()} />
@@ -22,8 +22,8 @@ function FeatureComponent({ property }) {
 
                     </ul>
                 </div>
-                <div className='md:w-1/2'>
-                    <ul className='space-y-2 sm:space-y-5'>
+                <div className='md:w-1/2 mt-5 md:mt-0'>
+                    <ul className='space-y-5'>
                         <FeatureItem firstText="City" secondText={capitalizeFirst(property.city)} />
                         {property.area && <FeatureItem firstText="Size" secondText={`${property.area} m2`} />}
                         {property.area && <FeatureItem firstText="Lot Size" secondText={`${Math.floor(squareMetersToSquareFeet(property.area))} sqft`} />}

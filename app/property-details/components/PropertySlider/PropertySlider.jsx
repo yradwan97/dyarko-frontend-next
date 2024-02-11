@@ -27,16 +27,16 @@ function PropertySlider({ property }) {
             <CloseOutline className=' stroke-white w-5 h-5' />
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', height: '100%' }}>
-            <Image width={450} height={450} src={activeImage} className="w-full h-full" alt="" />
+            <Image width={450} height={450} src={activeImage} className="w-full h-1/2 md:h-2/3 lg:h-full" alt="" />
           </div>
         </div>
       </Overlay>
 
-      <div className='flex flex-col md:flex-row mt-2 lg:h-[270px] h-[500px]'>
+      <div className='flex flex-col md:flex-row mt-2 md:h-[270px] h-[500px]'>
         <div className='h-full'>
           <Image src={property?.image} width={350} height={350} alt='Main Image' />
         </div>
-        <div className='max-h-72 sm:mt-2 md:ml-2 -translate-x-[70px] md:-translate-x-6 md:mt-0 lg:h-full' >
+        <div className='relative max-h-[16rem] mt-2 md:mt-0 md:ml-2' >
           <Swiper
             direction={'vertical'}
             pagination={{
@@ -48,11 +48,11 @@ function PropertySlider({ property }) {
             }}
             modules={[Pagination, Autoplay]}
             className="mySwiper"
-            style={{ height: "85%" }}
+            style={{ height: "85%", width: "100%" }}
           >
             {property?.images && property?.images.length > 0 && property.images.map((image, index) => (
               <SwiperSlide key={index} onClick={() => openOverlay(image)}>
-                <Image className='cursor-pointer object-cover object-center' width={300} height={300} src={image} alt={`Image ${index + 1}`} />
+                <Image className='cursor-pointer object-cover object-center' width={350} height={350} src={image} alt={`Image ${index + 1}`} />
               </SwiperSlide>
             ))}
           </Swiper>
