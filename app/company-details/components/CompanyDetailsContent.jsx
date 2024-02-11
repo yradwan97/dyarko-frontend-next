@@ -11,6 +11,7 @@ import { useGetOwnerProperties } from '@/app/companies/ownersApi';
 import BackButton from '@/app/components/Shared/BackButton';
 import UserVideos from "./UserVideos"
 import PropertyTypeTabs from "./PropertyTypeTabs"
+import { useParams } from 'next/navigation';
 
 
 function CompanyDetailsContent() {
