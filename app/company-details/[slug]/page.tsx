@@ -9,7 +9,6 @@ const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
 
 export async function generateStaticParams() {
   let companies = await fetch(`${baseUrl}/owners`).then(res => res.json())
-  // console.log(companies)
   return companies?.data.map((c: any) => {
     slug: c.slug
   })
@@ -20,9 +19,9 @@ const CompanyDetails = () => {
   return (
     <>
       <Header />
-      <Suspense>
-        <CompanyDetailsContent slug={slug} />
-      </Suspense>
+        <Suspense>
+          <CompanyDetailsContent slug={slug} />
+        </Suspense>
       <Footer />
     </>
   )
