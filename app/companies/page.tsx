@@ -43,8 +43,8 @@ const Companies = () => {
                 
                 <div className="flex flex-col gap-6">
                     {data?.data?.map((owner: owner, index: number) => (
-                        <Link href={`/company-details/${owner._id}`}>
-                            <SingleCompany key={index} owner={owner} onTriggerRefetch={() => refetch()}/>
+                        <Link href={`/company-details/${owner._id}`} key={index}>
+                            <SingleCompany owner={owner} onTriggerRefetch={() => refetch()}/>
                         </Link>
                     ))}
                     <Paginator
