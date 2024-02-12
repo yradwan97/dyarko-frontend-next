@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import logo2 from "../../../public/assets/logo2.png";
+import logo2 from "../../../public/assets/DYARKO LOGO PNG-01.png";
 import Button from "../../components/Shared/Button";
 import Link from "next/link"
 import { Dialog, Transition } from "@headlessui/react";

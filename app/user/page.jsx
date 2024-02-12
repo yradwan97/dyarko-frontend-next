@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import AccountSettings from "./components/AccountSettings"
+import AccountSettings from "./components/account-settings/AccountSettings"
 
 const page = () => {
     return (

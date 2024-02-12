@@ -65,7 +65,7 @@ const Header = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-20 shadow-md rounded-lg bg-white">
+      <header className="sm:sticky top-0 z-20 shadow-md rounded-lg bg-white">
         <div className="mx-auto flex items-center px-2 py-4 lg:px-10">
           <div>
             <Link href={'/'}>
