@@ -6,17 +6,18 @@ import Link from 'next/link'
 import loginPic from "../../public/assets/login/login-pic.png"
 import PoweredBy from '../components/Login/PoweredBy'
 import LoginForm from '../components/Login/LoginForm'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 const OWNER_DASHBOARD_URL = process.env.NEXT_PUBLIC_NEXT_APP_OWNER_DASHBOARD_URL;
 
 const LoginPage = () => {
+    const router = useRouter()
+    const { data: session } = useSession()
 
-    const buttonStyle =
-        `flex justify-center py-3.5 px-5 mb-4 w-full 
-    rounded-lg text-md font-bold border border-gray-200 
-    hover:bg-main-600 hover:text-white transition-colors 
-    ease-in-out duration-500`;
-
+    if (session) {
+        router.push("/")
+    }
 
     return (
         <>

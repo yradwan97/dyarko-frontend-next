@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { axiosClient as axios } from "../../services/axiosClient"
 import { useSession } from 'next-auth/react'
 import { useIsPropertySaved } from '@/app/property-listing/propertiesApis'
-import { ToastContainer, toast, Bounce } from "react-toastify"
+import { toast } from "react-toastify"
 
 function AddWishlist({ location, onTriggerRefetch, id }) {
 

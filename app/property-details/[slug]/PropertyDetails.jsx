@@ -73,6 +73,11 @@ const PropertyDetails = ({ slug }) => {
           await axios.delete(`/save_properties/${slug}`)
       if (response.data.success) {
         setLiked(!liked)
+        if (liked) {
+          toast.error("Property unsaved!")
+        } else {
+          toast.success("Property saved!")
+        }
       }
       return response
     } catch (e) {
@@ -117,8 +122,11 @@ const PropertyDetails = ({ slug }) => {
               onClick={() => handleLikePressed(liked ? "delete" : "post")}
               className="flex flex-1 items-center justify-center stroke-main-600 leading-6 hover:stroke-white sm:flex-none sm:justify-start"
             >
-              {liked && <HeartSolid className="fill-red stroke-red w-4 h-4 mr-2" />}
-              {!liked && <HeartOutline className="stroke-main-600 w-4 h-4 mr-2" />}
+              {liked ?
+                <HeartSolid className="fill-red stroke-red w-4 h-4 mr-2" />
+                :
+                <HeartOutline className="stroke-main-600 fill-white w-4 h-4 mr-2" />
+              }
 
               <span className="">{liked ? "Unfavorite" : "Favorite"}</span>
             </Button>

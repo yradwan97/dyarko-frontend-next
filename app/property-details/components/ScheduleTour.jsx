@@ -14,17 +14,10 @@ import { useSession } from "next-auth/react";
 import { toast, Bounce } from "react-toastify"
 import { format } from "date-fns"
 
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 function ScheduleTour({ visible, setVisible, id, propertyId }) {
-  const { register, formState: { errors }, reset } = useForm();
+  const { register, formState: { errors } } = useForm();
   const { data: session } = useSession();
-  const [selectedPeriod, setSelectedPeriod] = useState("AM");
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [comment, setComment] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("")
@@ -56,13 +49,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
               "auth-token": `Bearer ${session?.user?.accessToken}`
             }
           });
-          if (response.data.data.length === 0) {
-            // setVisible(false)
-            // setTimeout(() => {
-            //   toast.warn("No available time slots for tour, try again later!")
-            // }, 500)
-            // return
-          }
+
           console.log("schedule", response.data.data)
           setAvailableTimeSlots(response.data.data);
         } catch (error) {
@@ -74,54 +61,8 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
 
   }, [id, session, visible]);
 
-  const handleTabClick = (period) => {
-    setSelectedPeriod(period);
-  };
-
-  const handleSlotClick = (slot) => {
-    setSelectedTimeSlot(slot);
-    console.log(slot)
-  };
-
   const handleDateChange = (date) => {
     setSelectedDate(date);
-  };
-
-  const generateTimeSlots = () => {
-    if (availableTimeSlots.length > 0) {
-      // If availableTimeSlots is not an empty array, use it for rendering time slots
-      return availableTimeSlots.map((slot) => {
-        return ({
-          key: slot._id,
-          from: format(new Date(slot.from), "dd/MM/yyyy"),
-          to: format(new Date(slot.to), "dd/MM/yyyy"),
-          slot: `${format(new Date(slot.from), "dd/MM/yyyy")} - ${format(new Date(slot.to), "dd/MM/yyyy")}`
-        });
-      });
-    }
-
-    return []
-
-
-    // // If availableTimeSlots is an empty array, generate time slots as before
-    // const timeSlots = [];
-    // for (let hour = 0; hour < 24; hour++) {
-    //   const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
-    //   const from = `${formattedHour}:00`;
-    //   const to = `${(hour + 1).toString().padStart(2, "0")}:00`
-    //   const slot = `${from} - ${to}`
-    //   const isSlotDisabled =
-    //     (selectedPeriod === "AM" && parseInt(slot) >= 12) ||
-    //     (selectedPeriod === "PM" && parseInt(slot) < 12)
-    //   timeSlots.push({
-    //     from,
-    //     to,
-    //     slot,
-    //     isSlotDisabled
-    //   });
-    // }
-
-    // return timeSlots;
   };
 
   const onSubmit = async (e) => {
@@ -179,7 +120,6 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
             </div>
 
             <form className="w-full lg:w-1/2">
-
               <div className="mt-3 lg:mt-0">
                 <PhoneInput className="lg:w-full" {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
                 <div className="flex flex-col space-y-3">

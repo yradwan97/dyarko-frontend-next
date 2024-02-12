@@ -61,10 +61,10 @@ function SideBar({ visible, setVisible }) {
           >
             <Dialog.Panel
               className={`
-                    relative h-full w-[285px] animate-swapOpen
+                    relative h-full w-[285px] animate-swapOpen overflow-y-scroll
                     bg-white bg-gradient-to-b from-main-100 to-white p-5 text-start`}
             >
-              <Image className="mx-auto" src={logo2} alt="logo" />
+              <Image className="mx-auto" width={150} height={150} src={logo2} alt="logo" />
 
               <div className="mt-4 flex flex-col space-y-1">
                 {/* <Navbar pathname={pathname} /> */}
