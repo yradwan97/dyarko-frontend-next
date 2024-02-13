@@ -26,7 +26,7 @@ const Wallet = () => {
       </div>
         {data?.data?.map((item, index) => {
           return (
-            <div className={index}>
+            <div key={index}>
               <SingleWalletItem item={item} />
               <Line />
             </div>
