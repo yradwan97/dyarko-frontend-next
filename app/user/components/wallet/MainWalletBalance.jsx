@@ -2,7 +2,7 @@ import React from 'react'
 
 const MainWalletBalance = ({ user }) => {
   return (
-    <div className="w-[50%] bg-walletBase justify-center rounded-md flex p-10">
+    <div className="w-full lg:w-1/2 bg-walletBase justify-center rounded-md flex p-10">
       <div className='flex flex-col justify-center text-center'>
         <p>Your balance</p>
         <h6 className='font-bold text-white mb-1'>KWD {user.point_balance}</h6>

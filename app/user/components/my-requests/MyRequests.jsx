@@ -71,7 +71,7 @@ const MyRequests = ({ request }) => {
         </div>
         <div className="flex flex-col gap-4">
           {requests.length > 0 ? requests.map((r) => {
-            return <RequestProperty key={r?._id} badge={r?.status} request={r} />
+            return <RequestProperty activeTab={activeTab} key={r?._id} badge={r?.status} request={r} />
           })
             :
             (

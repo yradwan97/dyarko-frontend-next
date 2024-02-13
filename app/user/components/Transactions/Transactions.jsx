@@ -50,7 +50,7 @@ const Transactions = () => {
             return (
               <tr key={i} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100">
                 <td className="flex-1 text-left text-sm font-medium text-gray-500">
-                  {format(date, "MMMM dd, yyyy hh:mm:ss a")}
+                  {format(date, "dd/MM/yyyy hh:mm a")}
                 </td>
                 <td className="flex-1 text-center text-sm font-medium text-black">
                   {capitalizeFirst(t.title)}

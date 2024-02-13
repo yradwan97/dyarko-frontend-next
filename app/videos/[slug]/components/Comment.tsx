@@ -13,9 +13,9 @@ function Comment({comment}: CommentProps) {
   
   return (
     <div className="mt-4 pl-12">
-      <div className="flex items-center">
-        <Image className="mr-4 h-9 w-9" src={comment?.user.image || defaultUserImage} width={200} height={200} alt="" />
-        <Typography variant="body-md-bold" as="p">
+      <div className="flex rounded-full items-center">
+        <Image className="mr-4 h-9 w-9 rounded-full" src={comment?.user.image || defaultUserImage} width={200} height={200} alt="" />
+        <Typography variant="body-md-bold" as="p" className="capitalize">
           {comment?.user.name}          
         </Typography>
       </div>

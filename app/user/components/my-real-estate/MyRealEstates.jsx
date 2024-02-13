@@ -43,16 +43,20 @@ const MyRealEstates = () => {
         <Requests setShowRequest={setShowRequest} type={propertyType} id={selectedId} />
       ) : (
         <>
-          <div className="mb-6 flex items-center justify-between">
-            <Typography variant="body-xl-bold" as="h2" className="text-black">
-              My real-estates {`(${data?.itemsCount !== undefined ? data?.itemsCount : 0})`}
-            </Typography>
-            <Select
-              containerClass="py-3 px-5 w-full rounded-lg !justify-between"
-              values={values}
-              selected={selectedValue}
-              setSelected={e => setSelectedValue(e)}
-            />
+          <div className="mb-6 flex items-center">
+            <div className="w-1/2 flex justify-start">
+              <Typography variant="body-xl-bold" as="h2" className="text-black">
+                My real-estates <span className="hidden sm:block">{`(${data?.itemsCount !== undefined ? data?.itemsCount : 0})`}</span>
+              </Typography>
+            </div>
+            <div className="w-1/2 flex justify-end">
+              <Select
+                containerClass="py-3 px-5 rounded-lg"
+                values={values}
+                selected={selectedValue}
+                setSelected={e => setSelectedValue(e)}
+              />
+            </div>
           </div>
           <div className="flex flex-col gap-4">
             {data?.data?.map((f, i) => {

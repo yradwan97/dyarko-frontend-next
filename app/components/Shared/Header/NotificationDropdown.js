@@ -27,7 +27,7 @@ function NotificationDropdown({notifications}) {
       leaveFrom="transform opacity-100 scale-100"
       leaveTo="transform opacity-0 scale-95"
     >
-      <Menu.Items className="absolute top-10 -right-9 md:top-full md:right-0 flex w-60 md:w-[400px] flex-col rounded-lg bg-white py-5 drop-shadow-basic-sm ">
+      <Menu.Items className="absolute top-10 z-999 -right-14 sm:-right-5 md:top-full md:right-0 flex w-60 sm:w-[320px] md:w-[400px] flex-col rounded-lg bg-white py-5 drop-shadow-basic-sm ">
         <div className="max-h-[350px] md:max-h-[450px] space-y-6 overflow-y-auto">
           <Typography
             variant="body-md-bold"

@@ -20,24 +20,19 @@ export const useGetWalletData = (accessToken, page = 1) => {
     }
 }
 
-export const useGetSavedProperties = (filterFlag = true) => {
+export const useGetSavedProperties = (page = 1) => {
     const {data, isLoading, isError, isSuccess, refetch} = useQuery(
         "saved-properties",
-        async () => await axios.get(`/save_properties`).then(response => {
-            if (filterFlag) {
-                return response?.data?.data?.filter(d => d.property !== null)
-            } else {
-                return response?.data?.data
-            }
-        }),
+        async () => await axios.get(`/save_properties?page=${page}`),
         {
             refetchOnWindowFocus: false,
             refetchOnReconnect: true
         }
     )
-
     return {
-        data: isSuccess ? data : null,
+        data: isSuccess ? data?.data?.data : null,
+        pages: data?.data.pages,
+        itemsCount: data?.data?.itemsCount,
         isSuccess,
         isError,
         isLoading,

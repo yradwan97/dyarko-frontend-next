@@ -65,7 +65,7 @@ function ClientReview({ id }) {
                   {data?.reviews?.length > limit && <Button
                     variant="button"
                     onClick={() => setLimit(limit => limit + 3)}
-                    className="transition-color group mt-12 hidden items-center space-x-2 rounded-lg border border-black p-4 outline-0 duration-500 ease-in-out hover:bg-black hover:text-white group-hover:bg-black md:flex"
+                    className="transition-color group mt-12 items-center space-x-2 rounded-lg border border-black p-4 outline-0 duration-500 ease-in-out hover:bg-black hover:text-white group-hover:bg-black flex"
                   >
                     <Typography
                       variant="body-md"

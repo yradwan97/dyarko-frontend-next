@@ -32,7 +32,7 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
         <div
           className={`bg-white  ${listView
             ? "w-1/2 rounded-r-lg border-0 p-4 sm:p-6"
-            : "border border-main-100 py-8 px-6"
+            : "border border-main-100 py-8 px-6 "
             }`}
         >
           <div className="flex items-center justify-between">

@@ -68,7 +68,7 @@ const ChangePassword = () => {
     oldPassword: {
       id: "oldPassword",
       label: "Old Password",
-      placeholder: "Enter Old password",
+      placeholder: "Enter old password",
       register: {
         ...register("oldPassword", {
           required: "Password is required",
@@ -83,7 +83,7 @@ const ChangePassword = () => {
     newPassword: {
       id: "newPassword",
       label: "New Password",
-      placeholder: "Enter New password",
+      placeholder: "Enter new password",
       register: {
         ...register("newPassword", {
           required: "Password is required",
@@ -128,10 +128,10 @@ const ChangePassword = () => {
         <PasswordInput {...changePasswordSchema.newPassword} register={changePasswordSchema.newPassword.register} error={errors.newPassword} />
         <PasswordInput {...changePasswordSchema.confirmPassword} register={changePasswordSchema.confirmPassword.register} error={errors.confirmPassword} />
         <div className="mt-6 flex items-center justify-start space-x-4">
-          <Button type="submit" disabled={!isValid} variant={isValid ? "primary" : "primary-outline"} className="mr-4">
+          <Button type="submit" disabled={!isValid} variant={isValid ? "primary" : "primary-outline"} className="mr-4 text-center">
             Save new password
           </Button>
-          <Button type="button" to="/forget-password" variant="primary-outline" className="text-main">
+          <Button type="button" to="/forget-password" variant="primary-outline" className="text-main text-center">
             Forgot password
           </Button>
         </div>

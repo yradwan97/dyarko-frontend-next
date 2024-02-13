@@ -4,15 +4,19 @@ import { Calendar } from 'react-calendar';
 import './style.css';
 
 function CalendarComponent({ onDateChange, dateRanges }) {
-  const [value, onChange] = useState(new Date());
+  // State to manage the selected date
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  // State to store selectable dates based on dateRanges
   const [selectableDates, setSelectableDates] = useState([]);
 
+  // Update selectableDates whenever dateRanges changes
   useEffect(() => {
-    // Generate an array of selectable dates based on the dateRanges
-    const updatedSelectableDates = dateRanges.reduce((dates, range) => {
+    const updatedSelectableDates = dateRanges.flatMap(range => {
       const startDate = new Date(range.from);
       const endDate = new Date(range.to);
-      const current = new Date(startDate);
+      const dates = [];
+      let current = new Date(startDate);
 
       while (current <= endDate) {
         dates.push(new Date(current));
@@ -20,26 +24,27 @@ function CalendarComponent({ onDateChange, dateRanges }) {
       }
 
       return dates;
-    }, []);
+    });
 
     setSelectableDates(updatedSelectableDates);
   }, [dateRanges]);
 
-  const handleDateChange = (date) => {
-    onChange(date);
+  // Function to handle date change
+  const handleDateChange = date => {
+    setSelectedDate(date);
     onDateChange(date);
   };
 
+  // Function to disable tiles based on selectableDates
   const tileDisabled = ({ date }) => {
-    // // Disable dates that are not in the selectableDates array
-    // return selectableDates.findIndex((d) => d.toDateString() === date.toDateString()) === -1;
+    return selectableDates.every(d => d.toDateString() !== date.toDateString());
   };
 
   return (
     <div className="calendar-component">
       <Calendar
         onChange={handleDateChange}
-        value={value}
+        value={selectedDate}
         tileDisabled={tileDisabled}
       />
     </div>

@@ -67,7 +67,7 @@ export const useGetProperties = (searchParams = "") => {
 }
 
 export const useIsPropertySaved = (propertyId) => {
-    const {data} = useGetSavedProperties(false)
+    const {data} = useGetSavedProperties(1)
     let match = data?.find(p => p.property && p.property._id === propertyId) || false
     return match ? true : false
 }

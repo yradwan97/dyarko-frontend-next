@@ -15,7 +15,7 @@ const VideoItem = ({ className, videoData }) => {
             alt="" />
           {/* <PlayVideoSolid className="absolute top-1/2 left-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 cursor-pointer stroke-black stroke-2 fill-white" /> */}
         </div>
-        <Typography variant="h4" as="h4">
+        <Typography variant="h4" as="h4" className='capitalize'>
           {videoData.title}
         </Typography>
       </div>

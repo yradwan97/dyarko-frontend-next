@@ -11,32 +11,36 @@ function FilterSection({ selectedGov, setSelectedGov, governerates, onApplyFilte
   const [open, setOpen] = useState(false);
   return (
     <>
-      <div className="relative mr-4 flex-grow">
+      <div className="relative w-full lg:w-3/5 mr-4 flex space-x-3 flex-row">
         <Select
-          containerClass="py-2 px-6 w-full rounded-lg !justify-between"
+          containerClass="py-2 px-4 w-full rounded-md !justify-between"
           values={governerates}
           selected={selectedGov}
           setSelected={(e) => setSelectedGov(e)}
         />
+        <div onClick={() => setOpen(true)}>
+          <SortOutline
+            className="block mt-3 h-8 w-8 cursor-pointer stroke-main-600 lg:hidden"
+          />
+        </div>
       </div>
-      <Button
-        variant="primary"
-        className="group hidden items-center sm:flex"
-        onClick={() => setOpen(true)}
-      >
-        <PlusOutline className="mr-2 h-5 w-5 stroke-white group-hover:stroke-main-600" />
-        <Typography
-          variant="body-md-bold"
-          as="span"
-          className="text-inherite group-hover:text-main-600"
+      <div>
+        <Button
+          variant="primary"
+          className="group hidden items-center lg:flex"
+          onClick={() => setOpen(true)}
         >
-          More filters
-        </Typography>
-      </Button>
-      <SortOutline
-        className="block h-6 w-6 cursor-pointer stroke-main-600 sm:hidden"
-        onClick={() => setOpen(true)}
-      />
+          <PlusOutline className="mr-2 h-5 w-5 stroke-white group-hover:stroke-main-600" />
+          <Typography
+            variant="body-md-bold"
+            as="span"
+            className="text-inherite group-hover:text-main-600"
+          >
+            More filters
+          </Typography>
+        </Button>
+      </div>
+
       {open && <FilterSide setOpen={setOpen} onApplyFilters={onApplyFilters} />}
     </>
   );

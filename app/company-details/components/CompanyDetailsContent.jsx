@@ -5,7 +5,6 @@ import Banner from './Banner';
 import OwnerProperties from "./OwnerProperties"
 import Typography from '@/app/components/Shared/Typography';
 import Loader from '@/app/components/Shared/Loader';
-import Footer from '@/app/components/Shared/Footer/Footer';
 import ClientReview from './ClientReview';
 import { useGetOwnerProperties } from '@/app/companies/ownersApi';
 import BackButton from '@/app/components/Shared/BackButton';
@@ -18,6 +17,23 @@ function CompanyDetailsContent() {
     const { slug } = useParams()
     const [activeTab, setActiveTab] = useState('all');
     const [page, setPage] = useState(1);
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(max-width: 600px)');
+
+        const handleMediaQueryChange = (e) => {
+            setIsSmallScreen(e.matches);
+        };
+
+        handleMediaQueryChange(mediaQuery); // Initial check
+        mediaQuery.addEventListener('change', handleMediaQueryChange);
+
+        return () => {
+            mediaQuery.removeEventListener('change', handleMediaQueryChange);
+        };
+    }, []);
+
     const {
         data: videos,
         isFetching: isVideosFetching,
@@ -28,17 +44,15 @@ function CompanyDetailsContent() {
 
     const { properties, pages, totalCount, isFetching, refetch } = useGetOwnerProperties({
         owner: slug,
-        payment_type: activeTab !== 'all' ? activeTab : undefined,
+        payment_type: activeTab === "rent" ? activeTab : activeTab === "buy" ? "installment" : undefined,
         page,
-        size: 3,
+        size: isSmallScreen ? 2 : 4,
     });
     useEffect(() => {
         refetch();
     }, [slug, activeTab, page, refetch]);
 
-    return isFetching ? (
-        <Loader />
-    ) : (
+    return (
         <>
             <div className="container my-6">
                 <BackButton to="/companies" />
@@ -46,10 +60,12 @@ function CompanyDetailsContent() {
             <Banner id={slug} />
             <div className="container">
                 <PropertyTypeTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-                {properties.length > 0 ?
+                {properties?.length > 0 ?
                     <>
                         <OwnerProperties
+                            activeTab={activeTab}
                             page={page}
+                            isFetching={isFetching}
                             pages={pages}
                             properties={properties}
                             setPage={setPage}
@@ -70,7 +86,6 @@ function CompanyDetailsContent() {
                     />
                 }
             </div>
-            <Footer />
         </>
     );
 }

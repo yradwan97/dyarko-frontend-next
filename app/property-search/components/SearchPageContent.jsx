@@ -165,38 +165,40 @@ function SearchPageContent() {
             as="p"
             className="text-main-blue/70"
           >
-            {totalCount} properties available
+            {totalCount} properties
           </Typography>
-          <div className="flex flex-col lg:flex-row space-y-4 mt-5 ">
-            <div className="w-1/2 flex items-center mr-4">
+          <div className="flex flex-col space-y-4 mt-5 ">
+            <div className="w-full lg:w-1/2 flex items-center mr-4">
               <FilterSection governerates={governerates} selectedGov={selectedGov} setSelectedGov={setSelectedGov} onApplyFilters={onApplyFilters} />
             </div>
-            <div className="items-center lg:-translate-y-2 lg:w-1/3 flex lg:ml-8">
-              <Button variant="primary" onClick={handleApplyFilters}>Apply Filters</Button>
-            </div>
-            <div className="items-center lg:w-1/4 lg:-translate-y-2 flex lg:ml-8">
-              <Button
-                variant="button"
-                className={`group h-10 w-10 rounded-lg border-2 ${type === "grid" ? "border-gray-200" : "border-white"
-                  }  flex items-center justify-center`}
-                onClick={() => setType("grid")}
-              >
-                <GridSolid
-                  className={`h-5 w-5 ${type === "grid" ? " fill-main-600" : " fill-main-secondary"
-                    } hover:fill-main-600 `}
-                />
-              </Button>
-              <Button
-                variant="button"
-                className={`group h-10 w-10 rounded-lg border-2 ${type === "list" ? "border-gray-200" : "border-white"
-                  }  flex items-center justify-center`}
-                onClick={() => setType("list")}
-              >
-                <ListSolid
-                  className={`h-5 w-5 ${type === "list" ? " fill-main-600" : " fill-main-secondary"
-                    } hover:fill-main-600 `}
-                />
-              </Button>
+            <div className="flex flex-row space-x-5 justify-between lg:w-1/2">
+              <div className="items-center lg:-translate-y-2 lg:w-1/3 flex ">
+                <Button variant="primary" onClick={handleApplyFilters}>Apply Filters</Button>
+              </div>
+              <div className="items-center lg:w-1/4 lg:-translate-y-2 flex">
+                <Button
+                  variant="button"
+                  className={`group h-10 w-10 rounded-lg border-2 ${type === "grid" ? "border-gray-200" : "border-white"
+                    }  flex items-center justify-center`}
+                  onClick={() => setType("grid")}
+                >
+                  <GridSolid
+                    className={`h-5 w-5 ${type === "grid" ? " fill-main-600" : " fill-main-secondary"
+                      } hover:fill-main-600 `}
+                  />
+                </Button>
+                <Button
+                  variant="button"
+                  className={`group h-10 w-10 rounded-lg border-2 ${type === "list" ? "border-gray-200" : "border-white"
+                    }  flex items-center justify-center`}
+                  onClick={() => setType("list")}
+                >
+                  <ListSolid
+                    className={`h-5 w-5 ${type === "list" ? " fill-main-600" : " fill-main-secondary"
+                      } hover:fill-main-600 `}
+                  />
+                </Button>
+              </div>
             </div>
           </div>
           <div className="mt-6 flex flex-col items-right md:space-x-8">
@@ -215,7 +217,7 @@ function SearchPageContent() {
               />
             </div>
           </div>
-          <div className={`mt-8 grid gap-4 ${type === "grid" ? 'sm:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-1'}`}>
+          <div className={`mt-8 grid gap-4 ${type === "grid" ? 'sm:grid-cols-2 lg:grid-cols-4' : 'grid-cols-1'}`}>
             {properties && properties.data.map((property, index) => {
               return (
                 <SingleProperty
@@ -226,7 +228,6 @@ function SearchPageContent() {
                     ? "rounded-lg border-2 border-white p-1"
                     : "flex flex-row rounded-lg border-[1.5px]  border-main-100"
                   }
-                  location={"search"}
                 />
               );
             })}

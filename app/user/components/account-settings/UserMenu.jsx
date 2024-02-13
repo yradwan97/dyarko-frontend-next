@@ -11,7 +11,7 @@ const navLinks = [
     { to: "/user/profile", text: "profile" },
     { to: "/user/wallet", text: "wallet" },
     { to: "/user/saved", text: "saved properties" },
-    { to: "/user/your-requests", text: "my requests" },
+    { to: "/user/my-requests", text: "my requests" },
     { to: "/user/my-real-estates", text: "my real estate" },
     { to: "/user/transactions", text: "transactions" },
     { to: "/user/change-password", text: "change password" }
@@ -45,7 +45,7 @@ const UserMenu = ({ visible, selectedEndpoint, setSelectedEndpoint }) => {
         }
     };
     return (
-        <div className={`${visible ? "flex space-y-2" : "hidden md:flex"} md:w-5/12 lg:w-3/12`}>
+        <div className={`${visible ? "flex space-y-2" : "hidden lg:flex"} lg:w-3/12`}>
             <ul>
                 {navLinks.map((link, i) => (
                     <li key={i}>

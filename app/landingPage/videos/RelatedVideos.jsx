@@ -27,7 +27,7 @@ function RelatedVideos() {
           {videos?.map((video, index) => (
             <VideoItem
               key={index}
-              className="!bg-main-100 !p-3"
+              className="!p-3"
               videoData={video}
             />
           ))}

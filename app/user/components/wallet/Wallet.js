@@ -26,10 +26,10 @@ const Wallet = () => {
       </div>
         {data?.data?.map((item, index) => {
           return (
-            <>
-            <SingleWalletItem key={index} item={item} />
-            <Line />
-            </>
+            <div className={index}>
+              <SingleWalletItem item={item} />
+              <Line />
+            </div>
           )
         })}
       <Paginator 

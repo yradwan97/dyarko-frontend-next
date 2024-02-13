@@ -1,5 +1,5 @@
 'use client'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSession } from "next-auth/react"
 import SingleNotification from './SingleNotification';
 import Typography from "@/app/components/Shared/Typography"
@@ -68,7 +68,7 @@ const NotificationsContent = () => {
             >
                 All Notifications
             </Typography>
-            <div className="border border-gray-200 rounded-lg w-[500px] min-h-[200px] space-y-3 px-2 py-3 overflow-y-auto">
+            <div className="border border-gray-200 rounded-lg w-[330px] md:w-[500px] min-h-[200px] space-y-3 px-2 py-3 overflow-y-auto">
                 {notifications && notifications.length ?
                     notifications.map((n, i) => (
                         <SingleNotification key={i} notification={n} onClickNotification={(id, type) => handleNotificationClick(id, type)} />

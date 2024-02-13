@@ -17,7 +17,14 @@ import { format as formatDate } from "date-fns"
 import { axiosClient as axios } from "../../../services/axiosClient"
 import { toast } from "react-toastify"
 
-function RequestProperty({ badge, request }) {
+const stylesMap = {
+  pending: "bg-main-orange-600",
+  visited: "bg-main-yellow-600",
+  approved: "bg-main-600"
+}
+
+
+function RequestProperty({ badge, request, activeTab }) {
   let { property, owner_status, user_status } = request
   const [showInstallmentPlanModal, setShowInstallmentPlanModal] = useState(false)
 
@@ -55,13 +62,7 @@ function RequestProperty({ badge, request }) {
 
   return (
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
-      {badge === "pending" ? (
-        <RequestBadge text="pending" bgColor="bg-main-orange-600" />
-      ) : badge === "approved" ? (
-        <RequestBadge text="approved" bgColor="bg-main-600" />
-      ) : (
-        <RequestBadge text="visited" bgColor="bg-main-yellow-600" />
-      )}
+      {activeTab === 1 && <RequestBadge text={badge || "visited"} bgColor={stylesMap[badge]} />}
       <div className="relative">
         {property?.payment_type === "rent" && <TopBadge />}
         <Link href={`/property-details/${property?._id}`}>

@@ -154,7 +154,7 @@ const Profile = () => {
           </Typography>
 
           <div className="flex items-center">
-            <div className="mr-4 flex h-[100px] w-[100px] items-center justify-center rounded-full bg-main-200">
+            <div className={`mr-4 w-[100px] min-w-[69px] min-h-[69px] items-center ${(profileImg.src !== profile.src) ? "bg-white" : "bg-main-200"} justify-center rounded-full border-r-[50%] flex`}>
               <Image src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
             </div>
             <div className="flex flex-row gap-4">
@@ -191,7 +191,7 @@ const Profile = () => {
           </Typography>
           <BankingInfoForm defaultValues={formDefaultValuesBanking} onFormSubmit={onSubmitBanking} />
         </>}
-    </div>
+    </div >
   );
 };
 

@@ -77,12 +77,14 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
             <Typography className='text-center mb-4 mt-8' as="h3" variant='h3'>
                 Invoice #{ID ? ID : invoice_no}
             </Typography>
-            {status === "PAID" ? <iframe
-                title="Invoice"
-                src={srcUrl.toString()}
-                width="100%"
-                height="600px"
-            ></iframe>
+            {status === "PAID" ? <div className='h-2/3 md:h-[600px]'>
+                <iframe
+                    title="Invoice"
+                    src={srcUrl.toString()}
+                    width="100%"
+                    height="100%"
+                />
+            </div>
                 :
                 <Typography as='h4' variant="h4" className='text-center mt-8'>
                     Invoice not available yet.

@@ -24,16 +24,16 @@ const AccountSettings = () => {
     { endpoint: "/user/profile", child: <Profile /> },
     { endpoint: "/user/wallet", child: <Wallet /> },
     { endpoint: "/user/saved", child: <SavedProperties /> },
-    { endpoint: "/user/your-requests", child: <MyRequests request={searchParams.get("request")} /> },
+    { endpoint: "/user/my-requests", child: <MyRequests request={searchParams.get("request")} /> },
     { endpoint: "/user/my-real-estates", child: <MyRealEstates /> },
     { endpoint: "/user/transactions", child: <Transactions /> },
     { endpoint: "/user/change-password", child: <ChangePassword /> }
   ]
 
-  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/profile");
+  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/my-real-estates");
   useEffect(() => {
     if (searchParams.get("request")) {
-      setSelectedEndpoint("/user/your-requests")
+      setSelectedEndpoint("/user/my-requests")
     }
     if (searchParams.get("my-real-estates")) {
       setSelectedEndpoint("/user/my-real-estates")
@@ -50,7 +50,7 @@ const AccountSettings = () => {
     <Suspense>
       <div className="flex flex-col">
         <Header />
-        <div onClick={() => setVisible(true)} className="absolute top-36 md:hidden left-3 text-center text-black">
+        <div onClick={() => setVisible(true)} className="absolute z-10 top-36 lg:hidden left-3 text-center text-black">
           <Fab color="warning" variant="extended" size="medium">
             Menu
             <DoubleArrowIcon />

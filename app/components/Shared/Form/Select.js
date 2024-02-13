@@ -9,7 +9,7 @@ const Select = (props) => {
   return (
     <Listbox value={selected} onChange={(value) => setSelected(value)}>
       <div className="relative">
-        <Listbox.Button className={`flex h-full items-center justify-center gap-x-1 border border-gray focus:border-main-yellow-600 ${containerClass || ""}`}>
+        <Listbox.Button className={`flex h-full items-center justify-center gap-x-5 border border-gray focus:border-main-yellow-600 ${containerClass || ""}`}>
           <div>{selected && selected.icon}</div>
           <span className="pointer-events-none">
             <ChevronDownIcon

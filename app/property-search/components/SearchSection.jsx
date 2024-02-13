@@ -5,10 +5,6 @@ import Typography from "../../components/Shared/Typography"
 import { useSession } from "next-auth/react";
 import Button from "@/app/components/Shared/Button"
 
-// TODO:Implement filtration
-
-
-
 const SearchSection = ({
   priceTo,
   setPriceTo,
@@ -25,7 +21,7 @@ const SearchSection = ({
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-2 md:grid-cols-2 space-x-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-2 md:grid-cols-1 lg:space-x-2 lg:grid-cols-4">
         <div className="relative h-[75%] pb-2">
           <Typography
             variant="body-md-medium"
