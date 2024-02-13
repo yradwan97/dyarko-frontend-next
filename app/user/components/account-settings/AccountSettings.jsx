@@ -30,7 +30,7 @@ const AccountSettings = () => {
     { endpoint: "/user/change-password", child: <ChangePassword /> }
   ]
 
-  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/my-real-estates");
+  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/profile");
   useEffect(() => {
     if (searchParams.get("request")) {
       setSelectedEndpoint("/user/my-requests")
