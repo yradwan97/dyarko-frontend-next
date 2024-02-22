@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Typography from '@/app/components/Shared/Typography';
 import OTPInput from './OTPInput';
-import { axiosClient as axios } from "../../services/axiosClient";
+import { axiosClient as axios } from "../../../services/axiosClient";
 import { useSession } from 'next-auth/react';
 import { toast } from "react-toastify";
 import Button from '@/app/components/Shared/Button';

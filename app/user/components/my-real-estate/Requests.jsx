@@ -21,11 +21,8 @@ function Requests({ setShowRequest, id, type }) {
   const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
   const [showInvoice, setShowInvoice] = useState(false)
   const [selectedInvoice, setSelectedInvoice] = useState()
-  console.log(id)
 
-  useEffect(() => {
-    console.log(selectedInvoice)
-  }, [selectedInvoice])
+
 
   const handleInvoiceSelection = (invoiceId) => {
     setSelectedInvoice((prevSelectedInvoice) => {
@@ -141,7 +138,12 @@ function Requests({ setShowRequest, id, type }) {
                 <tr key={index} className={`flex ${invoice.pdf ? "cursor-pointer" : "cursor-default"} justify-between border-b border-main-100 px-2 py-7 hover:bg-main-100`}
                   onClick={() => handleInvoiceSelection(invoice._id)}>
                   <td className="flex-1 text-left text-sm font-medium text-black">
-                    {format(new Date(invoice?.paid_at), "dd/MM/yyyy")}
+                    {format(selected.name === "paid" ?
+                      new Date(invoice?.paid_at)
+                      :
+                      (invoice?.extendRequestStatus && invoice?.extendRequestStatus === "APPROVED")
+                        ?
+                        new Date(invoice.extend_date) : new Date(invoice?.date), "dd/MM/yyyy")}
                   </td>
                   <td className="flex-1 capitalize text-center text-sm font-medium text-black">
                     {invoice?.title} - {capitalizeFirst(invoice?.property[0]?.type)}

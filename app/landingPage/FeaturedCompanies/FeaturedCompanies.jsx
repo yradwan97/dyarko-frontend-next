@@ -38,8 +38,8 @@ function FeaturedCompanies() {
     }
   })
 
-  let images = [...companyImages, ...finalStaticImages]
-
+  let images = [...companyImages]
+  console.log(images)
   return (
     <Suspense>
       <div className="bg-main-100 py-20 ">
@@ -53,20 +53,22 @@ function FeaturedCompanies() {
           </div>
           <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {images && images?.map((image, index) => (
-              <div className="mx-5 text-center items-center justify-center" key={index}>
+              <div className="mx-5 flex flex-col h-full align-text-bottom justify-center rounded-full" key={index}>
                 {
                   image?.id ?
-                    <Link href={`/company-details/${image.id}`}>
-                      <Image className="rounded-[50%] max-w-[90px] max-h-[90px]" width={100} height={100} src={image?.src} alt="company image" />
+                    <Link className="flex justify-center" href={`/company-details/${image.id}`}>
+                      <Image className="rounded-full" width={100} height={100} src={image?.src} alt="company image" />
                     </Link>
                     :
-                    <Image className="rounded-[50%] max-w-[90px] max-h-[90px]" width={100} height={100} src={image?.src} alt="company image" />
+                    <div className="flex justify-center">
+                      <Image className="flex justify-center rounded-full " width={100} height={100} src={image?.src} alt="company image" />
+                    </div>
                 }
 
                 <Typography
                   variant="body-sm"
                   as="p"
-                  className="text-center capitalize justify-center leading-[19px]"
+                  className="text-center capitalize justify-center"
                 >
                   {image?.name}
                 </Typography>

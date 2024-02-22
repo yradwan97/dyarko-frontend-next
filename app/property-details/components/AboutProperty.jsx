@@ -22,6 +22,7 @@ import TentInformation from './TentInformation';
 
 function AboutProperty({ property }) {
    const { _id: ownerId, name: ownerName, image: ownerImage } = property?.owner
+   // console.log(ownerImage)
    const { long, lat, amenities, services, category, tents_info } = property
    return (
       <div className='grid grid-cols-3 gap-4 mt-9 '>

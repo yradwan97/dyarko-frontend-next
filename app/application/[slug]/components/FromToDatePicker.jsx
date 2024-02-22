@@ -2,17 +2,19 @@ import CalenderOutline from '@/app/components/UI/icons/CalenderOutline';
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { differenceInDays, format } from "date-fns"
-import { axiosClient as axios } from "../../services/axiosClient"
+import { differenceInDays, differenceInCalendarMonths, format } from "date-fns"
+import { axiosClient as axios } from "../../../services/axiosClient"
 import { useSession } from 'next-auth/react';
 
 
-const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
+const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChange, paymentFrequency }) => {
     const [fromDate, setFromDate] = useState(null);
     const [toDate, setToDate] = useState(null);
     const [fromDateVisible, setFromDateVisible] = useState(false);
     const [toDateVisible, setToDateVisible] = useState(false);
     const [rentedDates, setRentedDates] = useState([])
+
+    const [overlap, setOverlap] = useState(null)
     const { data: session } = useSession()
 
     useEffect(() => {
@@ -20,8 +22,6 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
             setToDate(null)
         }
     }, [paymentFrequency])
-
-
 
 
     useEffect(() => {
@@ -60,6 +60,62 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
         });
     };
 
+    useEffect(() => {
+        if (fromDate && toDate) {
+            let conflict = checkRentedDatesInRange()
+            setOverlap(conflict)
+            setOverlapError(conflict.overlap)
+            console.log(conflict)
+        }
+    }, [fromDate, toDate])
+
+    const checkRentedDatesInRange = () => {
+        if (fromDate && toDate) {
+            for (const rentedDateRange of rentedDates) {
+                const startDate = new Date(rentedDateRange.start_date);
+                const endDate = new Date(rentedDateRange.end_date);
+
+                // Check if any rented date range overlaps with the selected date range
+                if (
+                    (startDate >= fromDate && startDate <= toDate) ||
+                    (endDate >= fromDate && endDate <= toDate) ||
+                    (fromDate >= startDate && fromDate <= endDate) ||
+                    (toDate >= startDate && toDate <= endDate)
+                ) {
+                    return { overlap: true, dateConflict: rentedDateRange }; // There is a rented date within the selected range
+                }
+            }
+        }
+        return { overlap: false, dateConflict: null }; // No rented dates found within the selected range
+    };
+
+    const filterPastAndRentedDatesFrom = (date) => {
+        const currentDate = new Date();
+        // filter out past dates
+        if (date < currentDate) {
+            return false;
+        }
+
+        // filter out before available date (if any)
+        if (property?.available_date && date < new Date(property?.available_date)) {
+            return false
+        }
+
+        // filter out rented dates
+        for (const rentedDateRange of rentedDates) {
+            const startDate = new Date(rentedDateRange.start_date).setHours(0, 0, 0, 0)
+            const endDate = new Date(rentedDateRange.end_date);
+
+
+            if (date >= startDate && date <= endDate) {
+                return false;
+            } else if (date === startDate || date === endDate) {
+                return false; // Filter out if the date is the start or end date of any rented date range
+            }
+        }
+
+        return true;
+    }
 
     const filterPastAndRentedDatesTo = (date) => {
         const currentDate = new Date();
@@ -76,11 +132,11 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
 
         // filter out rented dated
         for (const rentedDateRange of rentedDates) {
-            const startDate = new Date(rentedDateRange.start_date);
+            const startDate = new Date(rentedDateRange.start_date).setHours(0, 0, 0, 0);
             const endDate = new Date(rentedDateRange.end_date);
 
-            // Check if the date is within the rented date range (if any)
-            if (date >= startDate && date <= endDate) {
+            // Check if the date falls within the rented date range or is the end date of the rented range
+            if (date >= startDate && date <= endDate || date === endDate) {
                 return false;
             }
         }
@@ -97,42 +153,20 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
             // Filter out any days where the difference between fromDate and toDate is not divisible by 7
             return daysDifference % 7 === 0;
         } else if (paymentFrequency === "monthly" && fromDate) {
+            const months = differenceInCalendarMonths(new Date(date), new Date(fromDate))
             const daysDifference = differenceInDays(new Date(date), new Date(fromDate));
-            console.log(daysDifference)
+
             // Filter out any days where the difference isn't divisible by 30
-            return daysDifference % 30 === 0;
+            if (property?.min_months) {
+                return (months === property?.min_months && daysDifference % 30 === 0)
+            }
+            return (daysDifference % 30) === 0;
         }
 
         // If the date is in the future, not within any rented date range, and following rules per payment frequency, allow it
         return true;
     };
 
-
-    const filterPastAndRentedDatesFrom = (date) => {
-        const currentDate = new Date();
-
-        // filter out past dates
-        if (date < currentDate) {
-            return false;
-        }
-
-        // filter out before available date (if any)
-        if (property?.available_date && date < new Date(property?.available_date)) {
-            return false
-        }
-
-        // filter out rented dates
-        for (const rentedDateRange of rentedDates) {
-            const startDate = new Date(rentedDateRange.start_date);
-            const endDate = new Date(rentedDateRange.end_date);
-
-            if (date >= startDate && date <= endDate) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 
     useEffect(() => {
         if (toDate !== null) {
@@ -194,6 +228,13 @@ const FromToDatePicker = ({ property, onDateChange, paymentFrequency }) => {
                     </div>
                 </div>
             </div>
+            {overlapError &&
+                <p className='text-error text-center'>
+                    {`Property is rented within your selected range, 
+                    from ${format(new Date(overlap.dateConflict.start_date), "dd/MM/yyyy")} 
+                    to ${format(new Date(overlap.dateConflict.end_date), "dd/MM/yyyy")}.
+                    Please change your dates`}
+                </p>}
         </>
     );
 }

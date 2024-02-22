@@ -65,7 +65,7 @@ function ReservationBox({ property }) {
     const decideSubmitButtonLinkHref = () => {
         if (property?.payment_type === "rent") {
             if (confirmedUser) {
-                return `/application?id=${property?._id}`
+                return `/application/${property?._id}`
             } else {
                 return "/login/confirm"
             }

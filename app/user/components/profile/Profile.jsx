@@ -11,6 +11,7 @@ import { axiosClient as axios } from "@/app/services/axiosClient"
 import { toast } from "react-toastify"
 import "../tabs.css"
 import { useGetUser } from "../../userApi";
+import { prettifyError } from "@/app/utils/utils";
 
 const Profile = () => {
   const { data: session } = useSession();
@@ -95,6 +96,7 @@ const Profile = () => {
 
   const onSubmitProfile = async (data) => {
     console.log(data)
+    const { profileImage, ...rest } = data
     const formData = new FormData();
     if (file) {
       formData.append('image', file);
@@ -106,24 +108,36 @@ const Profile = () => {
             "Content-Type": "multipart/form-data"
           }
         })
-        console.log(res)
+        toast.success("Image updated successfully")
       } catch (e) {
-        console.error(e)
+        let message = e?.data?.response?.errors[0]?.msg
+        if (message) {
+          toast.error(prettifyError(message))
+        } else {
+          toast.error("Error while uploading image!")
+        }
       }
     }
-    const updateProfileBody = { ...data }
-    try {
-      const response = await axios.put('/users', updateProfileBody, {
-        headers: {
-          "auth-token": `Bearer ${session?.user?.accessToken}`
+    if (Object.keys(rest).length > 0) {
+      const updateProfileBody = { ...rest }
+      try {
+        const response = await axios.put('/users', updateProfileBody, {
+          headers: {
+            "auth-token": `Bearer ${session?.user?.accessToken}`
+          }
+        });
+        if (response.status === 200) {
+          toast.success("Profile updated successfully")
+          refetch()
         }
-      });
-      if (response.status === 200) {
-        toast.success("Profile updated successfully")
-        refetch()
+      } catch (error) {
+        let message = error?.data?.response?.errors[0]?.msg
+        if (message) {
+          toast.error(prettifyError(message))
+        } else {
+          toast.error("Error while updating profile!")
+        }
       }
-    } catch (error) {
-      console.error('Error updating profile:', error);
     }
   }
 
@@ -153,7 +167,7 @@ const Profile = () => {
             Personal Information
           </Typography>
 
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <div className={`mr-4 w-[100px] min-w-[69px] min-h-[69px] items-center ${(profileImg.src !== profile.src) ? "bg-white" : "bg-main-200"} justify-center rounded-full border-r-[50%] flex`}>
               <Image src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
             </div>
@@ -176,9 +190,15 @@ const Profile = () => {
                 Remove
               </Button>
             </div>
-          </div>
+          </div> */}
 
-          <PersonalInfoForm defaultValues={formDefaultValuesPersonal} onFormSubmit={onSubmitProfile} />
+          <PersonalInfoForm
+            profileImg={profileImg}
+            setProfileImg={setProfileImg}
+            defaultValues={formDefaultValuesPersonal}
+            onFormSubmit={onSubmitProfile}
+            setFile={setFile}
+          />
         </>
         :
         <>

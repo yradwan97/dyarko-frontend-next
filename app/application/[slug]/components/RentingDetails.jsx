@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { axiosClient as axios } from "../../services/axiosClient"
+import { axiosClient as axios } from "../../../services/axiosClient"
 
 import Button from '@/app/components/Shared/Button'
 import Typography from '@/app/components/Shared/Typography'
@@ -18,6 +18,7 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
   const [showTents, setShowTents] = useState(false)
   const [selectedServices, setSelectedServices] = useState([])
   const [paymentFrequency, setPaymentFrequency] = useState("daily")
+  const [overlapError, setOverlapError] = useState(false)
   const [validationError, setValidationError] = useState('');
   const [caravanLocation, setCaravanLocation] = useState('')
   const { data: session } = useSession()
@@ -84,6 +85,9 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
       setValidationError('Please select start and end dates.');
       return;
     }
+    if (overlapError) {
+      return
+    }
 
     rentingInfo = {
       start_date: fromToDates.fromDate,
@@ -117,13 +121,18 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
         {(!isTentGroup && isRent) &&
           <PaymentFrequency property={property} onChange={(value) => setPaymentFrequency(value)} />
         }
-        {isRent && <FromToDatePicker paymentFrequency={paymentFrequency} property={property}
-          onDateChange={(values) => {
-            if (values.fromDate !== null && values.toDate !== null) {
-              setFromToDates(values)
-            }
-          }}
-        />}
+        {isRent &&
+          <FromToDatePicker
+            paymentFrequency={paymentFrequency}
+            overlapError={overlapError}
+            setOverlapError={setOverlapError}
+            property={property}
+            onDateChange={(values) => {
+              if (values.fromDate !== null && values.toDate !== null) {
+                setFromToDates(values)
+              }
+            }}
+          />}
         {showTents &&
           <TentsSelector
             options={availableTents}

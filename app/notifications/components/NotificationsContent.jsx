@@ -28,7 +28,7 @@ const NotificationsContent = () => {
 
     const handleNotificationClick = async (id, type) => {
         let notification = notifications.find(n => n._id === id)
-
+        console.log(notification)
         switch (type) {
             case "installment":
                 router.push(`/user?request=installment`)
@@ -37,6 +37,9 @@ const NotificationsContent = () => {
                 router.push(`/user?my-real-estates=true`)
                 break;
             case "disclaimer":
+                router.push(`/user?my-real-estates=true`)
+                break;
+            case "extend_invoice":
                 router.push(`/user?my-real-estates=true`)
                 break;
             case "tour":

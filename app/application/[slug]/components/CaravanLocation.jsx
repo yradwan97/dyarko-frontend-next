@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Map from '../../components/UI/Map';
+import Map from '../../../components/UI/Map';
 
 
 const CaravanLocation = ({ isSelectable, onChange }) => {

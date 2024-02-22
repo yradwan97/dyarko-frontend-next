@@ -9,11 +9,12 @@ import { useGetSingleProperty } from '@/app/property-listing/propertiesApis';
 import { useRouter } from 'next/navigation';
 import AgreementTerms from './AgreementTerms';
 import OTP from './OTP';
-import { axiosClient as axios } from '../../services/axiosClient';
+import { axiosClient as axios } from '../../../services/axiosClient';
 import PaymentMethod from './PaymentMethod';
 import { toast } from 'react-toastify';
 import PaymentInvoice from './PaymentInvoice';
 import { prettifyError } from '@/app/utils/utils';
+import scrollToTop from '@/app/utils/scrollToTop';
 
 
 const ApplicationContents = ({ id }) => {
@@ -33,6 +34,11 @@ const ApplicationContents = ({ id }) => {
   }, [data])
 
   useEffect(() => {
+    console.log(property)
+  }, [property])
+
+  useEffect(() => {
+    scrollToTop()
     if (step > 5) {
       router.push("/")
     }
@@ -60,7 +66,7 @@ const ApplicationContents = ({ id }) => {
       setStep(step => step + 1)
     } catch (e) {
       console.error(e)
-      if (e.response.data.errors[0].msg) {
+      if (e.response?.data?.errors[0]?.msg) {
         toast.error(prettifyError(e.response.data.errors[0].msg))
       } else {
         toast.error("Something went wrong.")

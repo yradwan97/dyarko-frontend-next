@@ -4,7 +4,7 @@ import visa from "@/public/assets/payment-method/visa.png";
 import fatoorah from "@/public/assets/payment-method/fatoorah.png";
 import point from "@/public/assets/payment-method/points.png";
 import link from "@/public/assets/payment-method/link.png";
-import {axiosClient as axios} from "../../services/axiosClient"
+import {axiosClient as axios} from "../../../services/axiosClient"
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
 

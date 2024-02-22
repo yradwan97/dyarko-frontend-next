@@ -20,7 +20,7 @@ import Button from "../../../components/Shared/Button"
 import Line from "@/app/property-search/components/Line";
 
 function RealEstateProperty({ property, onShowInvoices, }) {
-  console.log(property)
+
   const [anchorEl, setAnchorEl] = useState(null);
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)

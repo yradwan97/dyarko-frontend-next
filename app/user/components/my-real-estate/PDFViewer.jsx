@@ -1,26 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typography from "../../../components/Shared/Typography"
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import Button from "../../../components/Shared/Button"
 import Modal from '@/app/components/Shared/Modal';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import menuImage from "@/public/assets/menu.png";
 import { Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import Image from "next/image"
 import ChevronDown from '@/app/components/UI/icons/ChevronDown';
 import ChevronRight from '@/app/components/UI/icons/ChevronRight';
+import { DayPicker } from 'react-day-picker';
+import { differenceInDays, differenceInCalendarMonths, format } from "date-fns"
+import 'react-day-picker/dist/style.css';
+import { axiosClient as axios } from '@/app/services/axiosClient';
 
 const PDFViewer = ({ invoice, setShowInvoice }) => {
+    console.log(invoice)
     const [showExtendModal, setShowExtendModal] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null);
     const [invoiceActionsMenuAnchor, setInvoiceActionsMenuAnchor] = useState(null);
+    const [dayPickerFooter, setDayPickerFooter] = useState(<p className='text-main-400'>Please pick a day!</p>)
     const router = useRouter()
 
     const handleClick = (event) => {
         setInvoiceActionsMenuAnchor(event.currentTarget);
     };
+
+    const cancelExtension = () => {
+        setSelectedDate(null)
+        setShowExtendModal(false)
+    }
 
     const handleDateChange = (date) => {
         setSelectedDate(date);
@@ -36,13 +43,45 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
         rent_type,
         userPdf
     } = invoice
+    console.log(status)
 
-    const handleExtensionRequest = () => {
+    const handleExtensionRequest = async () => {
         // TODO: implement extension
+
+        setDayPickerFooter(<p>Please pick a day!</p>)
+        const difference = differenceInDays(new Date(selectedDate), new Date(invoice?.date).setHours(0, 0, 0, 0))
+        console.log(difference)
+        // if (difference > 30) {
+        //     setDayPickerFooter(<p className='text-error'>Must be 30 days or less!</p>)
+        //     return
+        // }
+        try {
+            let extendInvoiceBody = {
+                "date": `${format(new Date(selectedDate), "MM/dd/yyyy")}`
+            }
+            let response = await axios.put(`/invoices/${invoice?._id}`, extendInvoiceBody)
+            console.log(response)
+        } catch (e) {
+            console.error(e)
+        }
+    }
+    const handleExtendSelected = () => {
+        setShowExtendModal(true)
+        setInvoiceActionsMenuAnchor(null)
     }
 
-    const srcUrl = new URL(installment_type ? pdf : userPdf);
-    srcUrl.searchParams.set('zoom', 62);
+    const toggleShowExtendActionItem = () => {
+        return (invoice?.rent_type && !invoice?.extendRequestStatus)
+    }
+
+    let srcUrl;
+    if (status === "PAID") {
+        srcUrl = new URL(rent_type ? userPdf : pdf);
+        srcUrl.searchParams.set('zoom', 62);
+    }
+    let paymentType = invoice?.rent_type ? "rents" : "installments"
+
+
     return (
         <div className="p-3">
             <div className='flex flex-row items-center justify-between'>
@@ -69,40 +108,50 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
                 }
                 {/* TODO: invoice comes with date field, check if date is before or after today to hide or show extend */}
                 <Menu anchorEl={invoiceActionsMenuAnchor} title='Actions' open={Boolean(invoiceActionsMenuAnchor)} onClose={() => setInvoiceActionsMenuAnchor(null)}>
-                    {invoice?.rent_type && <MenuItem onClick={() => setShowExtendModal(true)}>Extend Invoice</MenuItem>}
-                    <MenuItem onClick={() => router.push(`/payment/${invoice._id}`)}>Pay Invoice</MenuItem>
+                    {toggleShowExtendActionItem() && <MenuItem onClick={handleExtendSelected}>Extend Invoice</MenuItem>}
+                    <MenuItem onClick={() => router.push(`/payment/${paymentType}/${invoice._id}`)}>Pay Invoice</MenuItem>
                 </Menu>
 
             </div>
             <Typography className='text-center mb-4 mt-8' as="h3" variant='h3'>
                 Invoice #{ID ? ID : invoice_no}
             </Typography>
-            {status === "PAID" ? <div className='h-2/3 md:h-[600px]'>
-                <iframe
-                    title="Invoice"
-                    src={srcUrl.toString()}
-                    width="100%"
-                    height="100%"
-                />
-            </div>
+            {status === "PAID" ?
+                <div className='h-2/3 md:h-[600px]'>
+                    <iframe
+                        title="Invoice"
+                        src={srcUrl?.toString()}
+                        width="100%"
+                        height="100%"
+                    />
+                </div>
                 :
                 <Typography as='h4' variant="h4" className='text-center mt-8'>
                     Invoice not available yet.
                     <p className='text-sm mt-2 !font-regular'>Kindly pay the invoice amount from the actions above to view your invoice.</p>
-                </Typography>}
-            <Modal className='!h-[450px] mt-4' isOpen={showExtendModal} onClose={setShowExtendModal}>
-                <Typography as='h4' variant='h4' className='mb-2'>
+                </Typography>
+            }
+            <Modal className='!h-[470px] mt-24' isOpen={showExtendModal} onClose={setShowExtendModal}>
+                <Typography as='h4' variant='h4' className='text-main-600 mb-2'>
                     Request extension on invoice.
                 </Typography>
-                <DatePicker
+                {/* <DatePicker
                     selected={selectedDate}
                     onChange={handleDateChange}
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Select a date"
+                /> */}
+                <DayPicker
+                    selected={selectedDate}
+                    required
+                    captionLayout='dropdown'
+                    fromDate={new Date()}
+                    onDayClick={handleDateChange}
+                    footer={dayPickerFooter}
                 />
                 <div className="flex space-x-2 flex-row">
-                    <Button variant="primary" onClick={handleExtensionRequest}>Request</Button>
-                    <Button variant="primary" onClick={() => setShowExtendModal(false)}>Cancel</Button>
+                    <Button variant={selectedDate ? "primary" : "primary-outline"} disabled={!selectedDate} onClick={handleExtensionRequest}>Request</Button>
+                    <Button variant="primary" onClick={cancelExtension}>Cancel</Button>
                 </div>
             </Modal>
         </div>
