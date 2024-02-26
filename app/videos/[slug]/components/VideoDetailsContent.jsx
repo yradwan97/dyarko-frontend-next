@@ -5,15 +5,16 @@ import { useRouter, useParams } from 'next/navigation';
 import PlayVideoSolid from '@/app/components/UI/icons/PlayVideoSolid';
 import Button from '@/app/components/Shared/Button';
 import Typography from '@/app/components/Shared/Typography';
+import LinkIcon from "@/app/components/UI/icons/LinkIcon";
 import SendSolid from "@/app/components/UI/icons/SendSolid";
 import VideoUser from './VideoUser';
 import Comment from './Comment';
 import VideoItem from '../../VideoItem';
 import { addComment, useGetVideo, useGetVideoComments } from '../../videoService';
-import Loader from '@/app/components/Shared/Loader';
 import { useSession } from 'next-auth/react';
 import Link from "next/link";
 import { useGetOwnerVideos } from '@/app/companies/ownersApi';
+import { toast } from "react-toastify"
 
 const VideoDetailsContent = () => {
   const { slug } = useParams();
@@ -24,10 +25,9 @@ const VideoDetailsContent = () => {
   const {
     video: currentVideo,
     refetch: refetchSingleVideo,
-    isFetching: isSingleVideoFetching,
   } = useGetVideo(slug);
 
-  const { data: videos, isFetching: isVideosFetching } = useGetOwnerVideos(currentVideo?.user);
+  const { data: videos } = useGetOwnerVideos(currentVideo?.user);
 
   const {
     comments,
@@ -45,6 +45,23 @@ const VideoDetailsContent = () => {
     refetchSingleVideo();
   }, [slug, refetchSingleVideo]);
 
+  const handleShareClicked = (e) => {
+    console.log(e)
+    e.preventDefault()
+
+    const textToCopy = window?.location.href
+    console.log(textToCopy)
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => {
+        console.log('URL copied to clipboard successfully:', textToCopy);
+        toast.success("Video link copied to clipboard")
+      })
+      .catch(err => {
+        console.error('Could not copy URL: ', err);
+        toast.error('Could not copy URL. Please try again.');
+      });
+  }
+
   const handleCommentSubmit = async () => {
     if (!session?.user?.accessToken) {
       router.push("/login");
@@ -60,15 +77,25 @@ const VideoDetailsContent = () => {
     <div className="container py-20">
       {currentVideo && (
         <>
-          <Typography as='h2' variant='h2' className='mb-3'>
-            {currentVideo?.title}
-          </Typography>
+          <div className='flex flex-col sm:flex-row sm:justify-between my-2'>
+            <Typography as='h2' variant='h2' className='mb-3'>
+              {currentVideo?.title}
+            </Typography>
+            <Button
+              variant="primary-outline"
+              onClick={handleShareClicked}
+              className="flex flex-1 items-center justify-center stroke-main-600 leading-6 hover:stroke-white sm:flex-none sm:justify-start"
+            >
+              <LinkIcon className="stroke-inherit mr-1 h-4 w-4" />
+              <span className="">Share Video</span>
+            </Button>
+          </div>
           <div className="flex flex-col md:flex-row">
             <div className="relative h-auto w-full bg-cover bg-center md:w-1/2">
               <Link href={currentVideo.video_name} legacyBehavior passHref>
                 <a href={currentVideo.video_name} target="_blank" rel="noopener noreferrer">
                   <div className="relative">
-                    <Image src={currentVideo.thumbnail} alt="" height={600} width={600} />
+                    <Image src={currentVideo.thumbnail} alt="" height={700} width={700} />
                     <div className="absolute -translate-x-7 inset-0 flex justify-center items-center">
                       <PlayVideoSolid className="h-16 w-16 relative cursor-pointer stroke-white stroke-2 fill-black z-999" />
                     </div>

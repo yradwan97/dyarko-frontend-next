@@ -15,7 +15,7 @@ function FeatureComponent({ property }) {
             <div className='flex flex-col md:flex-row md:space-x-20'>
                 <div className='md:w-1/2'>
                     <ul className='space-y-5'>
-                        <FeatureItem firstText="Listed on " secondText={`${weeksDiff} ${weeksDiff === 1 ? "week" : "weeks"} `} companyName={true} />
+                        <FeatureItem firstText="Listed on " secondText={`${weeksDiff} ${weeksDiff === 1 ? "week" : "weeks"} ago`} companyName={true} />
                         <FeatureItem firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(new Date(property?.available_date), "dd/MM/yyyy")}`} />
                         <FeatureItem firstText="Year Built" secondText={getYear(new Date(property?.createdAt)).toString()} />
                         <FeatureItem firstText="Type" secondText={capitalizeFirst(property.type)} />

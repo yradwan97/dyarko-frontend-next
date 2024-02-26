@@ -80,8 +80,7 @@ function Footer() {
               as="p"
               className="mb-3 text-gray-600"
             >
-              {/* TODO: Add Privacy Policy Link */}
-              <Link href="/">Privacy Policy </Link>
+              <Link href="/privacy-policy">Privacy Policy </Link>
             </Typography>
             <Typography
               variant="body-sm-medium"

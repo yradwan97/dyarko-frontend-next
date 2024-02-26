@@ -66,7 +66,7 @@ const AgreementTerms = ({ property, onContinue }) => {
             onChange={() => setPrivacyPolicy(!privacyPolicy)}
           />
           <label htmlFor="privacyPolicy">
-            <Link href={"/settings/privacy_policy"} legacyBehavior passHref>
+            <Link href={"/privacy_policy"} legacyBehavior passHref>
               <a target="_blank" rel="noopener noreferrer">
                 Privacy Policy
               </a>

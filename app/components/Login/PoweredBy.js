@@ -1,15 +1,57 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Typography from "../Shared/Typography";
 import Link from "next/link";
 import Image from "next/image";
+import loginPic1 from "../../../public/assets/login/login-1.png"
+import loginPic2 from "../../../public/assets/login/login-2.png"
+import loginPic3 from "../../../public/assets/login/login-3.png"
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from 'react-responsive-carousel';
 
-const PoweredBy = (props) => {
+const PoweredBy = () => {
   
   return (
     <section className="hidden flex-1 bg-gradient-to-b from-main-100 lg:block">
       <div className="container flex h-full flex-col items-center justify-center gap-y-20 px-14 py-10 lg:flex">
-        <Image src={props.img} width={200} height={200} alt="login-pic" priority />
+      <Carousel
+  autoPlay
+  interval={2000}
+  infiniteLoop
+  showArrows={false}
+  showStatus={false}
+  renderIndicator={(onClickHandler, isSelected, index, label) => {
+    const defStyle = {
+      marginLeft: 20,
+      cursor: "pointer",
+      display: "inline-block",
+      width: 10,
+      height: 10,
+      borderRadius: "50%",
+      backgroundColor: isSelected ? "black" : "white",
+      boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
+      border: "2px solid black",
+    };
+
+    return (
+      <span
+        style={defStyle}
+        onClick={onClickHandler}
+        onKeyDown={onClickHandler}
+        value={index}
+        key={index}
+        role="button"
+        tabIndex={0}
+        aria-label={`${label} ${index + 1}`}
+      />
+    );
+  }}
+>
+          {[loginPic1.src, loginPic2.src, loginPic3.src].map((image, index) => (
+            <div key={index}>
+              <Image src={image} width={500} height={500} alt="login-pic" priority />
+            </div>
+          ))}
+        </Carousel>
         <div>
           <Typography variant="body-sm-medium" as="p" className="mb-6">
             Powered by
@@ -26,10 +68,6 @@ const PoweredBy = (props) => {
       </div>
     </section>
   );
-};
-
-PoweredBy.propTypes = {
-  img: PropTypes.string.isRequired,
 };
 
 export default PoweredBy;

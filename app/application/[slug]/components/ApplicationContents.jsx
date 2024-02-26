@@ -33,9 +33,9 @@ const ApplicationContents = ({ id }) => {
     }
   }, [data])
 
-  useEffect(() => {
-    console.log(property)
-  }, [property])
+  // useEffect(() => {
+  //   console.log(property)
+  // }, [property])
 
   useEffect(() => {
     scrollToTop()

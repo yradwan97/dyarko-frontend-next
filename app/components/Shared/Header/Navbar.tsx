@@ -10,7 +10,7 @@ const Navbar = (props: any) => {
   const navLinks = [
     { to: "/property-listing/rent", text: "Rent" },
     { to: "/property-listing/buy", text: "Buy", hasSubMenu: true },
-    { to: "/property-listing/shared", text: "Shared" },
+    { to: "/property-listing/share", text: "Shared" },
     { to: "/property-listing/replacement", text: "Replacement" },
     { to: "/categories", text: "Categories" },
     { to: "/companies", text: "Companies" },

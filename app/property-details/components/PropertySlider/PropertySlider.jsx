@@ -33,8 +33,8 @@ function PropertySlider({ property }) {
       </Overlay>
 
       <div className='flex flex-col md:flex-row mt-2 md:h-[270px] h-[500px]'>
-        <div className='h-full'>
-          <Image src={property?.image} width={350} height={350} alt='Main Image' />
+        <div className='h-3/4'>
+          <Image src={property?.image} width={180} height={180} alt='Main Image' />
         </div>
         <div className='relative max-h-[16rem] mt-2 md:mt-0 md:ml-2' >
           <Swiper

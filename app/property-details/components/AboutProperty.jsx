@@ -82,8 +82,8 @@ function AboutProperty({ property }) {
                   <Typography variant='body-md-medium' as="p" className="text-main-secondary">Listed by property owner</Typography>
                   <div className='flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mt-6'>
                      <div className='flex items-center'>
-                        <Image className='w-12 h-12 mr-4' width={150} height={150} src={ownerImage ? `https://api.dyarko.com/users_images/files/${ownerImage}` : profile} alt='' />
-                        <Typography variant='body-lg-bold' as="p">{capitalizeFirst(ownerName) || "Company Name"}</Typography>
+                        <Image className='w-12 h-12 mr-4' width={150} height={150} src={ownerImage ? ownerImage : profile} alt='' />
+                        <Typography variant='body-lg-bold' className='capitalize' as="p">{ownerName || "Company Name"}</Typography>
                      </div>
                      <Button variant='primary-outline'
                         className="stroke-main-600 hover:stroke-white w-full sm:w-auto flex justify-center items-center leading-6"

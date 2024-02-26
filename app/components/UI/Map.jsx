@@ -28,15 +28,16 @@ const Map = ({ latitude, longitude, isSelectable, onSelect }) => {
     }, [latitude, longitude]);
 
     return (
-
-        <GoogleMap mapContainerStyle={mapStyles} zoom={11} center={defaultCenter}>
-            <Marker
-                position={selectedPosition}
-                draggable={isSelectable}
-                onDragEnd={handleMarkerDragEnd}
-            />
-        </GoogleMap>
-
+        <>
+            {isSelectable && <p className='mb-2'>Drag the pin and drop to select a location.</p>}
+            <GoogleMap mapContainerStyle={mapStyles} zoom={11} center={defaultCenter}>
+                <Marker
+                    position={selectedPosition}
+                    draggable={isSelectable}
+                    onDragEnd={handleMarkerDragEnd}
+                />
+            </GoogleMap>
+        </>
     );
 };
 

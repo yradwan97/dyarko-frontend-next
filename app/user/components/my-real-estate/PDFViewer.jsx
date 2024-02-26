@@ -41,6 +41,7 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
         pdf,
         installment_type,
         rent_type,
+        date,
         userPdf
     } = invoice
     console.log(status)
@@ -71,7 +72,7 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
     }
 
     const toggleShowExtendActionItem = () => {
-        return (invoice?.rent_type && !invoice?.extendRequestStatus)
+        return (status === "UNPAID" && new Date(invoice?.date) < new Date() && !invoice?.extendRequestStatus)
     }
 
     let srcUrl;

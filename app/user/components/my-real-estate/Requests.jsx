@@ -1,14 +1,12 @@
 'use client'
 import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 import React, { useEffect, useState } from "react";
-import Button from "../../../components/Shared/Button"
 import Typography from "../../../components/Shared/Typography"
 import Select from "@/app/components/Shared/Form/Select";
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { format } from "date-fns"
 import Paginator from "@/app/components/Shared/pagination/Pagination"
 import { capitalizeFirst } from "@/app/utils/utils";
-import { toast } from "react-toastify"
 import PDFViewer from "./PDFViewer";
 
 const values = [
@@ -57,7 +55,6 @@ function Requests({ setShowRequest, id, type }) {
 
   if (showInvoice) {
     return <PDFViewer setShowInvoice={setShowInvoice} invoice={selectedInvoice} />
-    // return <DetailedInvoice invoice={selectedInvoice} setShowInvoice={setShowInvoice} />
   }
 
   return (
@@ -94,7 +91,7 @@ function Requests({ setShowRequest, id, type }) {
                 Invoice No:
               </th>
               <th className="text-md flex-1 text-center font-bold text-black">
-                Created At
+                {selected.name === "paid" ? "Paid On" : "Due on"}
               </th>
               <th className="text-md flex-1 text-right font-bold text-black">
                 Amount
@@ -124,7 +121,7 @@ function Requests({ setShowRequest, id, type }) {
                     {invoice?.invoice_no}
                   </td>
                   <td className="flex-1 capitalize text-center text-sm font-medium text-black">
-                    {format(new Date(invoice?.createdAt), "dd/MM/yyyy")}
+                    {invoice?.status === "PAID" ? format(new Date(invoice?.updatedAt), "dd/MM/yyyy") : format(new Date(invoice?.date), "dd/MM/yyyy")}
                   </td>
                   <td className="flex-1 text-right text-sm font-medium text-main-yellow-500">
                     KWD {Math.abs(invoice?.amount)}

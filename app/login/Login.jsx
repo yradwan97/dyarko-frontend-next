@@ -3,7 +3,6 @@ import React from 'react'
 import SimpleNavbar from "../components/Login/SimpleNavbar"
 import Typography from '../components/Shared/Typography'
 import Link from 'next/link'
-import loginPic from "../../public/assets/login/login-pic.png"
 import PoweredBy from '../components/Login/PoweredBy'
 import LoginForm from '../components/Login/LoginForm'
 import { useRouter } from 'next/navigation'
@@ -61,7 +60,7 @@ const LoginPage = () => {
                             </Typography>
                         </div>
                     </div>
-                    <PoweredBy img={loginPic.src} />
+                    <PoweredBy />
                 </div>
             </div>
         </>

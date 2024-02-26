@@ -2,7 +2,7 @@ import CalenderOutline from '@/app/components/UI/icons/CalenderOutline';
 import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { differenceInDays, differenceInCalendarMonths, format } from "date-fns"
+import { differenceInDays, getDaysInMonth, format, intervalToDuration } from "date-fns"
 import { axiosClient as axios } from "../../../services/axiosClient"
 import { useSession } from 'next-auth/react';
 
@@ -13,7 +13,6 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
     const [fromDateVisible, setFromDateVisible] = useState(false);
     const [toDateVisible, setToDateVisible] = useState(false);
     const [rentedDates, setRentedDates] = useState([])
-
     const [overlap, setOverlap] = useState(null)
     const { data: session } = useSession()
 
@@ -33,6 +32,7 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
                     }
                 })
                 if (response.status === 200) {
+                    // console.log("rentedDuring", response.data.data)
                     setRentedDates(response.data.data)
                 }
             } catch (e) {
@@ -62,6 +62,9 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
 
     useEffect(() => {
         if (fromDate && toDate) {
+            const duration = intervalToDuration({ start: new Date(toDate), end: new Date(fromDate) })
+            const daysInMonth = getDaysInMonth(toDate)
+            console.log({ months: duration.months, days: duration.days, daysInMonth })
             let conflict = checkRentedDatesInRange()
             setOverlap(conflict)
             setOverlapError(conflict.overlap)
@@ -119,17 +122,14 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
 
     const filterPastAndRentedDatesTo = (date) => {
         const currentDate = new Date();
-
         // Check if the date is in the future
         if (date <= currentDate) {
             return false;
         }
-
         // filter out before available date (if any)
         if (property?.available_date && date < new Date(property?.available_date)) {
             return false
         }
-
         // filter out rented dated
         for (const rentedDateRange of rentedDates) {
             const startDate = new Date(rentedDateRange.start_date).setHours(0, 0, 0, 0);
@@ -145,24 +145,22 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
         if (fromDate && date <= fromDate) {
             return false;
         }
-
         // Check payment frequency
         if (paymentFrequency === "weekly" && fromDate) {
             const daysDifference = differenceInDays(new Date(date), new Date(fromDate));
-
             // Filter out any days where the difference between fromDate and toDate is not divisible by 7
             return daysDifference % 7 === 0;
         } else if (paymentFrequency === "monthly" && fromDate) {
-            const months = differenceInCalendarMonths(new Date(date), new Date(fromDate))
-            const daysDifference = differenceInDays(new Date(date), new Date(fromDate));
-
-            // Filter out any days where the difference isn't divisible by 30
-            if (property?.min_months) {
-                return (months === property?.min_months && daysDifference % 30 === 0)
-            }
-            return (daysDifference % 30) === 0;
+            // const duration = intervalToDuration({ start: new Date(date), end: new Date(fromDate) })
+            // const daysInMonth = getDaysInMonth(date)
+            // console.log({ months: duration.months, days: duration.days, daysInMonth })
+            // if (duration.months > 0 && duration.days === 0) {
+            //     return (duration.months > 0 && duration.days === 0)
+            // } else {
+            //     return (duration.months === 0 && duration.days === 30)
+            // }
+            return true
         }
-
         // If the date is in the future, not within any rented date range, and following rules per payment frequency, allow it
         return true;
     };
