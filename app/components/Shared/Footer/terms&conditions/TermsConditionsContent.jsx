@@ -25,8 +25,8 @@ const TermsConditionsContent = () => {
         {parts.length > 0 && <div className='flex flex-col md:flex-row md:justify-between gap-6'>
           <Typography variant='h3' as='h3' className="text-black">Terms</Typography>
           <div className='w-full md:w-6/12 lg:w-5/12 space-y-8'>
-            {parts?.map(part => (
-              <Typography variant='body-md-medium' as='p' className="text-gray-500">
+            {parts?.map((part, index) => (
+              <Typography key={index} variant='body-md-medium' as='p' className="text-gray-500">
                 {part}
               </Typography>
             ))}
