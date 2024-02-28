@@ -21,8 +21,9 @@ const Wallet = () => {
     <Typography variant="h4" as="h4" className="mb-4 text-center text-black">
       Wallet
     </Typography>
-      <div className="flex justify-center ">
+      <div className="flex flex-col items-center justify-center">
         <MainWalletBalance user={data?.data[0].user} />
+        
       </div>
         {data?.data?.map((item, index) => {
           return (

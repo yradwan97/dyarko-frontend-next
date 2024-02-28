@@ -93,13 +93,7 @@ export const useGetRealEstates = (endpoint) => {
 
 export const useGetNotifications = (page, accessToken) => {
         const {data, isSuccess, isFetching, refetch} = useQuery(["notifications", page],
-            async () => await axios.get(`/notifications?page=${page}`, {
-                headers: {
-                    "auth-token": `Bearer ${accessToken}`,
-                    "Accept": "*/*",
-                    "Content-Type": "application/json",
-                },
-            }).then(response => {
+            async () => await axios.get(`/notifications?page=${page}`).then(response => {
                 response.data.data = response.data?.data?.sort((a, b) => a.is_read - b.is_read)
                 return response
             }), 
