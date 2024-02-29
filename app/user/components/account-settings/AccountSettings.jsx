@@ -1,5 +1,5 @@
 'use client'
-import React, { Suspense, useEffect, useState, Fragment } from "react";
+import React, { Fragment, Suspense, useEffect, useState } from "react";
 import Header from "../../../components/Shared/Header/Header"
 import Profile from "../profile/Profile"
 import Wallet from "../wallet/Wallet"
@@ -8,7 +8,6 @@ import MyRequests from '../my-requests/MyRequests'
 import MyRealEstates from "../my-real-estate/MyRealEstates"
 import Transactions from "../Transactions/Transactions"
 import ChangePassword from "../change-password/ChangePassword"
-import { useSearchParams } from "next/navigation";
 import UserMenu from './UserMenu'
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
 import Fab from '@mui/material/Fab';
@@ -17,50 +16,60 @@ import logo2 from "../../../../public/assets/DYARKO LOGO PNG-01.png";
 import Image from "next/image"
 
 const AccountSettings = () => {
-  const searchParams = useSearchParams()
+  const [selectedTab, setSelectedTab] = useState("profile");
   const [visible, setVisible] = useState(false)
 
-  const childrenMap = [
-    { endpoint: "/user/profile", child: <Profile /> },
-    { endpoint: "/user/wallet", child: <Wallet /> },
-    { endpoint: "/user/saved", child: <SavedProperties /> },
-    { endpoint: "/user/my-requests", child: <MyRequests request={searchParams.get("request")} /> },
-    { endpoint: "/user/my-real-estates", child: <MyRealEstates /> },
-    { endpoint: "/user/transactions", child: <Transactions /> },
-    { endpoint: "/user/change-password", child: <ChangePassword /> }
-  ]
-
-  const [selectedEndpoint, setSelectedEndpoint] = useState("/user/wallet");
   useEffect(() => {
-    if (searchParams.get("request")) {
-      setSelectedEndpoint("/user/my-requests")
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab) {
+      setSelectedTab(tab);
     }
-    if (searchParams.get("my-real-estates")) {
-      setSelectedEndpoint("/user/my-real-estates")
+  }, []);
+
+  const renderTab = () => {
+    switch (selectedTab) {
+      case "profile":
+        return <Profile />;
+      case "wallet":
+        return <Wallet />;
+      case "saved":
+        return <SavedProperties />;
+      case "my-requests":
+        return <MyRequests />;
+      case "my-real-estates":
+        return <MyRealEstates />;
+      case "transactions":
+        return <Transactions />;
+      case "change-password":
+        return <ChangePassword />;
+      default:
+        return null;
     }
-  }, [searchParams])
+  };
 
   useEffect(() => {
     if (visible) {
       setVisible(false)
+      window.history.replaceState({}, '', window.location.pathname);
     }
-  }, [selectedEndpoint])
+  }, [selectedTab])
 
   return (
     <Suspense>
       <div className="flex flex-col">
         <Header />
-        <div onClick={() => setVisible(true)} className="absolute z-10 top-36 lg:hidden left-3 text-center text-black">
+        <div onClick={() => setVisible(!visible)} className="absolute z-10 top-36 lg:hidden left-3 text-center text-black">
           <Fab color="warning" variant="extended" size="medium">
             Menu
             <DoubleArrowIcon />
           </Fab>
         </div>
         <div className="lg:px-15 relative flex bg-gradient-to-b from-main-100 to-white ml-2 mt-10 sm:mt-0 sm:mx-0 px-2 py-6 md:from-white md:px-10">
-          <UserMenu selectedEndpoint={selectedEndpoint} setSelectedEndpoint={setSelectedEndpoint} />
+          <UserMenu visible={false} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
           <div className={`container`}>
             <div className="rounded-xl border border-main-100 p-6">
-              {childrenMap.find(c => c.endpoint === selectedEndpoint)?.child}
+              {renderTab()}
             </div>
           </div>
         </div>
@@ -94,7 +103,7 @@ const AccountSettings = () => {
                     bg-white bg-gradient-to-b from-main-100 to-white p-5 text-start`}
               >
                 <Image className="mx-auto" width={150} height={150} src={logo2} alt="logo" />
-                <UserMenu visible={visible} selectedEndpoint={selectedEndpoint} setSelectedEndpoint={setSelectedEndpoint} />
+                <UserMenu visible={visible} selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
               </Dialog.Panel>
             </Transition.Child>
           </div>

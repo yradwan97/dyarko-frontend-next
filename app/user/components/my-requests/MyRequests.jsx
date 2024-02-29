@@ -53,7 +53,7 @@ const MyRequests = ({ request }) => {
     <>
       <div>
         <Typography variant="body-xl-bold" as="h2" className="mb-6 text-black">
-          Your Requests
+          My Requests
         </Typography>
         <div className="tabs-container mb-5">
           <div

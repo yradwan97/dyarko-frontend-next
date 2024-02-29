@@ -31,19 +31,22 @@ const NotificationsContent = () => {
         console.log(notification)
         switch (type) {
             case "installment":
-                router.push(`/user?request=installment`)
+                router.push(`/user?tab=my-requests`)
                 break;
             case "end_contract":
-                router.push(`/user?my-real-estates=true`)
+                router.push(`/user?tab=my-real-estates`)
                 break;
             case "disclaimer":
-                router.push(`/user?my-real-estates=true`)
+                router.push(`/user?tab=my-real-estates`)
                 break;
             case "extend_invoice":
-                router.push(`/user?my-real-estates=true`)
+                router.push(`/user?tab=my-real-estates`)
                 break;
             case "tour":
-                router.push(`/user?request=tour`)
+                router.push(`/user?tab=my-requests`)
+                break;
+            case "prizes":
+                router.push(`/user?tab=wallet`)
                 break;
 
         }

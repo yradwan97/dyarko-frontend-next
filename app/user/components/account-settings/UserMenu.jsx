@@ -8,16 +8,16 @@ import { logout } from "../../../services/api/auth";
 import localforage from "localforage";
 
 const navLinks = [
-    { to: "/user/profile", text: "profile" },
-    { to: "/user/wallet", text: "wallet" },
-    { to: "/user/saved", text: "saved properties" },
-    { to: "/user/my-requests", text: "my requests" },
-    { to: "/user/my-real-estates", text: "my real estate" },
-    { to: "/user/transactions", text: "transactions" },
-    { to: "/user/change-password", text: "change password" }
+    { to: "profile", text: "profile" },
+    { to: "wallet", text: "wallet" },
+    { to: "saved", text: "saved properties" },
+    { to: "my-requests", text: "my requests" },
+    { to: "my-real-estates", text: "my real estate" },
+    { to: "transactions", text: "transactions" },
+    { to: "change-password", text: "change password" }
 ];
 
-const UserMenu = ({ visible, selectedEndpoint, setSelectedEndpoint }) => {
+const UserMenu = ({ visible, selectedTab, setSelectedTab }) => {
 
     const { data: session } = useSession()
     const defaultLinkClass =
@@ -53,11 +53,11 @@ const UserMenu = ({ visible, selectedEndpoint, setSelectedEndpoint }) => {
                             id={link.to}
                             href={link.to}
                             className={
-                                link.to === selectedEndpoint ? activeClass : defaultLinkClass
+                                link.to === selectedTab ? activeClass : defaultLinkClass
                             }
                             onClick={(e) => {
                                 e.preventDefault()
-                                setSelectedEndpoint(link.to)
+                                setSelectedTab(link.to)
                             }}
                         >
                             <Typography variant="body-md-medium" as="span" className="">
