@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/swiper-bundle.css';
 import CloseOutline from '../../../components/UI/icons/CloseOutline';
 import Overlay from '../Overlay';
-import { Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/pagination";
-import './style.css'
-
+import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Carousel } from "react-responsive-carousel";
 
 function PropertySlider({ property }) {
   const [visible, setVisible] = useState(false);
@@ -32,30 +27,56 @@ function PropertySlider({ property }) {
         </div>
       </Overlay>
 
-      <div className='flex flex-col md:flex-row mt-2 md:h-[270px] h-[500px]'>
-        <div className='h-3/4'>
-          <Image src={property?.image} width={180} height={180} alt='Main Image' />
+      <div className='flex flex-col md:flex-row mt-2'>
+        <div className='h-1/2 lg:h-full'>
+          <Image src={property?.image} width={400} height={400} alt='Main Image' />
         </div>
-        <div className='relative max-h-[16rem] mt-2 md:mt-0 md:ml-2' >
-          <Swiper
-            direction={'vertical'}
-            pagination={{
-              clickable: true,
+        <div className='h-1/2 lg:h-auto mt-2 md:mt-0 md:ml-2'>
+          <Carousel
+            autoPlay
+            interval={2000}
+            axis='vertical'
+            infiniteLoop
+            showArrows={false}
+            showStatus={false}
+            renderIndicator={(onClickHandler, isSelected, index, label) => {
+              const defStyle = {
+                marginLeft: 20,
+                cursor: "pointer",
+                display: "inline-block",
+                width: 4,
+                height: 4,
+                borderRadius: "50%",
+                backgroundColor: isSelected ? "black" : "white",
+                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
+                border: "1px solid black",
+              };
+
+              return (
+                <span
+                  style={defStyle}
+                  onClick={onClickHandler}
+                  onKeyDown={onClickHandler}
+                  value={index}
+                  key={index}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${label} ${index + 1}`}
+                />
+              );
             }}
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-            }}
-            modules={[Pagination, Autoplay]}
-            className="mySwiper"
-            style={{ height: "85%", width: "100%" }}
           >
             {property?.images && property?.images.length > 0 && property.images.map((image, index) => (
-              <SwiperSlide key={index} onClick={() => openOverlay(image)}>
-                <Image className='cursor-pointer object-cover object-center' width={350} height={350} src={image} alt={`Image ${index + 1}`} />
-              </SwiperSlide>
+              <div key={index} className='cursor-pointer' onClick={() => openOverlay(image)}>
+                <Image
+                  src={image}
+                  width={370}
+                  height={370}
+                  alt={`property-pic ${index + 1}`}
+                />
+              </div>
             ))}
-          </Swiper>
+          </Carousel>
         </div>
       </div>
     </>

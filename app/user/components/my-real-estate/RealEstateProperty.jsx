@@ -19,8 +19,7 @@ import Input from "../../../components/Shared/Form/Input"
 import Button from "../../../components/Shared/Button"
 import Line from "@/app/property-search/components/Line";
 
-function RealEstateProperty({ property, onShowInvoices, }) {
-
+function RealEstateProperty({ property, onShowInvoices, contract }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)
@@ -67,7 +66,6 @@ function RealEstateProperty({ property, onShowInvoices, }) {
     }
     try {
       let response = await axios.post("/additional_service_requests", body)
-      console.log(response)
       if (response.data.success) {
         toast.success(`Service: ${service.name} requested successfully. Pending confirmation.`)
         setShowServicesModal(false)
@@ -106,6 +104,10 @@ function RealEstateProperty({ property, onShowInvoices, }) {
     }
   }
 
+  const handleCloseReasonModal = () => {
+    setReason("")
+    setShowReason(false)
+  }
   const handleMenuItemClick = async (event) => {
 
     if (event.target.textContent === "Financial Discharge") {
@@ -136,14 +138,13 @@ function RealEstateProperty({ property, onShowInvoices, }) {
       console.error(e)
       toast.error(`Something went wrong: ${e}`)
     } finally {
-      setShowReason(false)
+      handleCloseReasonModal()
     }
   }
 
   return (
 
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
-      {/* <StatusButton /> */}
       <div className="relative">
         {property?.payment_type === "rent" && <TopBadge />}
         <Link href={`/property-details/${property?._id}`}>
@@ -179,6 +180,11 @@ function RealEstateProperty({ property, onShowInvoices, }) {
           <MenuItem onClick={(e) => handleMenuItemClick(e)}>Invoices</MenuItem>
           {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>Services</MenuItem>}
           {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>Terminate Contract</MenuItem>}
+          {contract && <MenuItem onClick={(e) => handleMenuItemClick(e)}>
+            <Link href={contract} passHref legacyBehavior>
+              <a target="_blank" rel="noopener noreferrer">Show Contract</a>
+            </Link>
+          </MenuItem>}
         </Menu>
         <Typography variant="h4" as="h4" className="mt-1">
           {capitalizeFirst(property?.title)}
@@ -193,7 +199,7 @@ function RealEstateProperty({ property, onShowInvoices, }) {
           <Input type="text" className="!text-black" placeholder="Enter Termination Reason." value={reason} onChange={e => setReason(e.target.value)} />
           <div className="flex space-x-2 flex-row">
             <Button variant={!reason ? 'primary-outline' : "primary"} disabled={!reason} onClick={() => confirmSubmit("Terminate")}>Submit</Button>
-            <Button variant="primary" onClick={() => setShowReason(false)}>Cancel</Button>
+            <Button variant="primary" onClick={handleCloseReasonModal}>Cancel</Button>
           </div>
         </div>
       </Modal>

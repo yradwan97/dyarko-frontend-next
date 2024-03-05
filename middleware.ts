@@ -9,6 +9,7 @@ export const config = {
         '/application/:path*', 
         '/property-details/:path*',
         '/login/confirm',
-        '/payment/:path*'
+        '/payment/:path*',
+        '/notifications'
     ]
 }

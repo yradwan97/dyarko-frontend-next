@@ -1,7 +1,7 @@
 import { useQuery } from "react-query"
 import {axiosClient as axios} from "../services/axiosClient"
 
-export const useGetWalletData = (accessToken, page = 1) => {
+export const useGetWalletData = (page = 1) => {
     const {data, isLoading, isError, isSuccess, refetch} = useQuery(
         ["user-wallet", page],
         async () => await axios.get(`/wallet?page=${page}`),
@@ -10,13 +10,28 @@ export const useGetWalletData = (accessToken, page = 1) => {
             refetchOnReconnect: true
         }
     )
-
     return {
         data: isSuccess ? data?.data : null,
         isSuccess,
         isError,
         isLoading,
         refetch 
+    }
+}
+
+export const useGetPrizesData = () => {
+    const {data, isSuccess} = useQuery(
+        "static-prizes",
+        async () => await axios.get("/static/prizes"),
+        {
+            refetchOnWindowFocus: false,
+            refetchOnReconnect: true
+        }
+    )
+
+    return {
+        prizes: isSuccess ? data?.data?.data : null,
+        isSuccess
     }
 }
 

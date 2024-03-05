@@ -12,7 +12,7 @@ import TopBadge from "./TopBadge";
 import { getPropertyAddress, getPropertyPeriod, getPropertyPrice } from "../../utils/utils"
 
 const SingleProperty = ({ property, className, location, listView, onTriggerRefetch }) => {
-  // console.log(property)
+
   return (
     <Link href={`/property-details/${property?._id}`}>
       <div className={`flex-1 hover:border-main-600 ${className || ""}`}>

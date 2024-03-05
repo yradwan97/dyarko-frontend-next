@@ -79,7 +79,6 @@ export const getPropertyPrice = (property: any) => {
 
 export const useUrlSearchParams = (searchParams: ReadonlyURLSearchParams) => {
     const urlSearchParams = new URLSearchParams()
-    console.log(searchParams.toString())
     if (searchParams.get("date")!) urlSearchParams.append("date", searchParams.get("date")!.toString())
     if (searchParams.get("location")!) urlSearchParams.append("city", searchParams.get("location")!)
     if (searchParams.get("type")!) urlSearchParams.append("type", searchParams.get("type")!)

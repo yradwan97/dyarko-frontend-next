@@ -34,15 +34,13 @@ const useFcmToken = () => {
                     setToken(currentToken);
                     return
                     } else {
-                    console.log(
-                        'No registration token available. Request permission to generate one.'
-                    );
+                    
                     }
                 }
             }
         }
       } catch (error) {
-        console.log('An error occurred while retrieving token:', error);
+        console.error('An error occurred while retrieving token:', error);
       }
     };
 

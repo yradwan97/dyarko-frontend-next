@@ -13,7 +13,6 @@ const SignUp = () => {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const signUpSubmitHandler = async (data: any) => {
-    console.log(data);
     try {
       const response = await signup(data);
       if (response.success) {

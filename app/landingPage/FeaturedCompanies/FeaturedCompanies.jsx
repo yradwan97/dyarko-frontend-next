@@ -39,7 +39,7 @@ function FeaturedCompanies() {
   })
 
   let images = [...companyImages]
-  console.log(images)
+
   return (
     <Suspense>
       <div className="bg-main-100 py-20 ">

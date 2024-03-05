@@ -14,7 +14,7 @@ import useFcmToken from "@/app/utils/hooks/useFcmToken";
 const LoginForm = () => {
   const router = useRouter()  
   const searchParams = useSearchParams().toString()
-  let callBack = decodeURIComponent(searchParams.substring(searchParams.indexOf("=") + 1))
+  // let callBack = decodeURIComponent(searchParams.substring(searchParams.indexOf("=") + 1))
   
   const {data:session, update} = useSession()
   const {
@@ -60,17 +60,15 @@ const LoginForm = () => {
     e.preventDefault()
     try {
       const response = await signIn("credentials", {...data, role: "user", redirect: false})
-      console.log(response.data)
+      
       if (response.error) {
         toast.error("Invalid credentials. Try again!")
         return
       } else if (response.ok) {
         await update()
-        if (callBack) {
-          router.push(callBack)
-        } else {
-          router.push("/")
-        }
+        let url = new URL(decodeURIComponent(response.url.substring(response.url.indexOf("=") + 1)))
+        router.push(url.pathname ? url.pathname : "/")
+        
       }
     } catch (error) {
       console.error(error)

@@ -3,7 +3,6 @@ import Typography from "../../components/Shared/Typography";
 import { RadioGroup } from "@headlessui/react";
 
 const plans = ["Any", "1 - 12 months", "13 - 24 months", "24+ months"];
-// TODO: remove dummy data
 function RentalPeriod() {
   const [plan, setPlan] = useState(plans[0]);
 

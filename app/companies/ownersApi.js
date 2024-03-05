@@ -54,10 +54,10 @@ export const sendFollowRequest = async (id, accessToken) => {
 
     try {
         const response = await axios.post(`/follow`, followRequestBody)
-        console.log(response)
+        
         return response
     } catch (e) {
-        console.log(e)
+        console.error(e)
     }
 }
 

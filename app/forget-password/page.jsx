@@ -20,7 +20,7 @@ const ForgetPassword = () => {
   const handleResetPassword = async (data) => {
     try {
       let res = await axios.post("/forget_password", { "email": data.email })
-      console.log(res)
+
       if (res.status === 200) {
         toast.success(res.data.message)
       }

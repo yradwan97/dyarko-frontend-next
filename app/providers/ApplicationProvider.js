@@ -47,12 +47,9 @@ const ApplicationProvider = ({
       const axiosInterceptor = axios.interceptors.request.use(
         async (config) => {
           const currentAccessToken = session?.user?.accessToken;
-      
           if (session && currentAccessToken && !isExpired(currentAccessToken)) {
             // Case 1: Valid access token, not expired
-            config.headers = {
-              "auth-token": `Bearer ${currentAccessToken}`,
-            };
+            config.headers['auth-token'] = `Bearer ${currentAccessToken}`;
             return config;
           }
       
@@ -69,12 +66,10 @@ const ApplicationProvider = ({
               refresh_token: refreshToken,
             });
       
-            console.log("app provider", { session, refreshToken, response });
       
             config.headers["auth-token"] = `Bearer ${response.data.accessToken}`;
           } catch (error) {
             if (axios.isAxiosError(error) && (error.response?.status === 401 || error.response?.status === 403)) {
-              console.log("expired refresh token");
               // Handle the case where refresh token is expired or invalid
               // You might want to redirect the user to login or take appropriate action
               router.push("/login")

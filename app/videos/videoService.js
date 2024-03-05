@@ -58,7 +58,6 @@ export const useGetVideoComments = (id, accessToken) => {
             refetchOnReconnect: true
         }
     )
-    console.log(data?.data?.data)
     return {
         comments: isSuccess ? data?.data?.data : null,
         isFetching,
@@ -75,7 +74,6 @@ export const likeVideo = async (id, isLiked) => {
     } else {
         try {
             let res = await axios.post(`/videos/${id}/likes`)
-            console.log("liked", res)
             return res
         } catch (e) {
             console.error(e)
@@ -95,15 +93,12 @@ export const addComment = async (comment, id) => {
 
 export const likeVideoComment = async (id, isLiked) => {
     
-    console.log(isLiked)
     try {
         let res;
         if (isLiked) {
             res = await axios.delete(`/videos/comments/${id}/likes`)
-            console.log("unliked", res.data.data)
         } else {
             res = await axios.post(`/videos/comments/${id}/likes`)
-            console.log("liked", res.data.data)  
         }
         return res  
     } catch (e) {

@@ -47,7 +47,6 @@ const logout = async (refreshToken) => {
 
 const verifyAuth = async () => {
   const res = await axiosClient.get(VERIFY_AUTH_API_URI);
-  console.log("verify auth", res)
   return res.data;
 };
 

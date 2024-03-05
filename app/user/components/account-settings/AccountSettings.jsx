@@ -51,8 +51,8 @@ const AccountSettings = () => {
   useEffect(() => {
     if (visible) {
       setVisible(false)
-      window.history.replaceState({}, '', window.location.pathname);
     }
+    window.history.replaceState({}, '', window.location.pathname);
   }, [selectedTab])
 
   return (

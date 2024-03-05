@@ -12,7 +12,6 @@ import { toast } from "react-toastify"
 
 const ResetPasswordForm = () => {
     const { slug: tempToken } = useParams()
-    console.log(tempToken)
     const [visible, setVisible] = useState(false)
     const mutation = useMutation({
         mutationFn: async (params) => {

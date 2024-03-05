@@ -8,7 +8,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import SingleTent from "./SingleTent"
 
 const TentInformation = ({ tents }) => {
-    console.log(tents)
+
     const [value, setValue] = React.useState('0');
 
     const handleChange = (event, newValue) => {

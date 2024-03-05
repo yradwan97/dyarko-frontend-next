@@ -1,9 +1,6 @@
-import { verifyAuth } from "@/app/services/api/auth";
 import { noAuthAxios } from "@/app/services/axiosClient";
-import { cookieClient } from "@/app/services/cookieClient";
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
 
 export const options: NextAuthOptions = {
     session: {
@@ -32,7 +29,7 @@ export const options: NextAuthOptions = {
                     return response.data
                 }
             } catch (e) { 
-                console.log(e)
+                console.error(e)
             }
                 return null
             }

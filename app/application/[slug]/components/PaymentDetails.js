@@ -54,7 +54,6 @@ function PaymentDetails({onChange}) {
 
   useEffect(() => {
     if (selected) {
-      console.log(selected)
       onChange(selected)
     }
   }, [selected, onChange])

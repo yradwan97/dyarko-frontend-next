@@ -46,14 +46,11 @@ const VideoDetailsContent = () => {
   }, [slug, refetchSingleVideo]);
 
   const handleShareClicked = (e) => {
-    console.log(e)
     e.preventDefault()
 
     const textToCopy = window?.location.href
-    console.log(textToCopy)
     navigator.clipboard.writeText(textToCopy)
       .then(() => {
-        console.log('URL copied to clipboard successfully:', textToCopy);
         toast.success("Video link copied to clipboard")
       })
       .catch(err => {

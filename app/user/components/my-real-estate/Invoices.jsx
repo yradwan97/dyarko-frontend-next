@@ -13,7 +13,7 @@ const values = [
   { name: "paid", icon: "Paid" },
   { name: "unpaid", icon: "Unpaid" }
 ];
-function Requests({ setShowRequest, id, type }) {
+const Invoices = ({ setShowRequest, id, type }) => {
   const [selected, setSelected] = useState(type && type === "installment" ? values[1] : values[0]);
   const [page, setPage] = useState(1)
   const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
@@ -33,7 +33,6 @@ function Requests({ setShowRequest, id, type }) {
       return selectedInvoice;
     });
   };
-
 
 
   useEffect(() => {
@@ -174,4 +173,4 @@ function Requests({ setShowRequest, id, type }) {
   );
 }
 
-export default Requests;
+export default Invoices;

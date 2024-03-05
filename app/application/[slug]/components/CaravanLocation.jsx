@@ -14,7 +14,7 @@ const CaravanLocation = ({ isSelectable, onChange }) => {
             geocoder.geocode({ location: latLng }, (results, status) => {
                 if (status === 'OK') {
                     const address = results[0].formatted_address;
-                    console.log(`Address: ${address}`);
+
                     setDisplayLocation(address)
                 } else {
                     console.error('Reverse geocode was not successful for the following reason:', status);

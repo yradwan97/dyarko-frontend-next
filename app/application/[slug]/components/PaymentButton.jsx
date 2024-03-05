@@ -14,7 +14,7 @@ const PaymentButton = (props) => {
 
     useEffect(() => {
         const paymentChannel = new BroadcastChannel('paymentChannel');
-
+        // TODO: find a way to close the new tab as soon as the api reponse is sent back
         paymentChannel.onmessage = (event) => {
             console.log(event)
             if (event.data === 'paymentSuccess') {

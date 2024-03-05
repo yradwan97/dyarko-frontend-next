@@ -49,14 +49,13 @@ const PropertyDetails = ({ slug }) => {
   }, [slug, refetch])
 
   const handleShareClicked = (e) => {
-    console.log(e)
+
     e.preventDefault()
 
     const textToCopy = window?.location.href
-    console.log(textToCopy)
+
     navigator.clipboard.writeText(textToCopy)
       .then(() => {
-        console.log('URL copied to clipboard successfully:', textToCopy);
         toast.success("Property link copied to clipboard")
       })
       .catch(err => {
@@ -81,7 +80,7 @@ const PropertyDetails = ({ slug }) => {
       }
       return response
     } catch (e) {
-      console.log(e)
+      console.error(e)
       return
     }
   }

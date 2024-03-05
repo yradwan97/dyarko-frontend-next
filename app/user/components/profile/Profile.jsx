@@ -77,7 +77,6 @@ const Profile = () => {
   };
 
   const onSubmitBanking = async (data) => {
-    console.log(data)
     const updateBankingBody = { ...data }
     try {
       const response = await axios.put('/users', updateBankingBody, {
@@ -95,12 +94,10 @@ const Profile = () => {
   }
 
   const onSubmitProfile = async (data) => {
-    console.log(data)
     const { profileImage, ...rest } = data
     const formData = new FormData();
     if (file) {
       formData.append('image', file);
-      console.log([...formData.entries()])
       try {
         const res = await axios.put("/users/image", formData, {
           headers: {

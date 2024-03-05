@@ -7,7 +7,7 @@ import Button from "../components/Shared/Button";
 import InputGroup from "../components/Shared/Form/InputGroup";
 import { useForm } from "react-hook-form";
 
-
+// TODO: find endpoint for this
 const ContactUs = () => {
   const {
     register,

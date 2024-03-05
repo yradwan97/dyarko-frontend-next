@@ -14,7 +14,7 @@ const RentPayment = () => {
     const { slug } = useParams()
     const router = useRouter()
     const { invoice, refetch, isFetching } = useGetInvoice(slug, "rent")
-    console.log(invoice)
+
     const { data: session } = useSession()
     const [paymentsDetails, setPaymentDetails] = useState({})
     const [paymentStatus, setPaymentStatus] = useState(null);
@@ -26,7 +26,7 @@ const RentPayment = () => {
         const getPaymentDetails = async () => {
             try {
                 let res = await payInvoice(slug, "rent", session?.user?.accessToken)
-                console.log(res)
+
                 if (res.success) {
                     setPaymentDetails(res.data)
                     setShowPaymentButton(true)

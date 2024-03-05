@@ -33,10 +33,6 @@ const ApplicationContents = ({ id }) => {
     }
   }, [data])
 
-  // useEffect(() => {
-  //   console.log(property)
-  // }, [property])
-
   useEffect(() => {
     scrollToTop()
     if (step > 5) {
@@ -45,21 +41,30 @@ const ApplicationContents = ({ id }) => {
   }, [step])
 
   const onComplete = async (otp) => {
-    let response = await axios.post(`/otp/${otp}`, null);
-    response?.data?.success && setStep((step) => step + 1);
-    !response?.data?.success && toast('Incorrect OTP! Please confirm and try again');
-    return;
+    try {
+      let response = await axios.post(`/otp/${otp}`, null);
+
+      console.log(response.data)
+      response?.data?.success && setStep((step) => step + 1);
+      !response?.data?.success && toast('Incorrect OTP! Please confirm and try again');
+      return;
+    } catch (e) {
+      console.error(e)
+      if (e.response?.data?.errors[0]?.msg) {
+        toast.error(prettifyError(e.response?.data?.errors[0]?.msg))
+      } else {
+        toast.error("Incorrect OTP. Try again!")
+      }
+    }
   };
 
 
 
   const onCheckOut = async () => {
     let rentObject = { ...rentingInfo, payment_method: selectedMethod.key };
-    console.log(rentObject);
+
     try {
       let response = await axios.post('/rents', rentObject);
-
-      console.log(response.data.data);
 
       // Save the response for later use
       setResponse(response?.data?.data);

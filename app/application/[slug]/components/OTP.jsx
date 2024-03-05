@@ -2,24 +2,22 @@ import React, { useEffect, useState } from 'react';
 import Typography from '@/app/components/Shared/Typography';
 import OTPInput from './OTPInput';
 import { axiosClient as axios } from "../../../services/axiosClient";
-import { useSession } from 'next-auth/react';
 import { toast } from "react-toastify";
 import Button from '@/app/components/Shared/Button';
 
 const OTP = ({ onComplete }) => {
-    const { data: session } = useSession();
-    const [otpGeneratedOnce, setOtpGeneratedOnce] = useState(false);
     const length = 6
     const [otp, setOTP] = useState(Array(length).fill(''));
-
+    const [allowSubmit, setAllowSubmit] = useState(false)
+    useEffect(() => {
+        setAllowSubmit(otp.every(o => o))
+    }, [otp])
     const generateOTP = async () => {
         try {
             let response = await axios.post("/otp");
 
             console.log(response?.data.data.code);
 
-            // Set otpGeneratedOnce to true after successfully generating OTP
-            response?.data?.success && setOtpGeneratedOnce(true);
         } catch (error) {
             console.error("Error generating OTP:", error);
 
@@ -42,7 +40,6 @@ const OTP = ({ onComplete }) => {
         try {
             let response = await axios.post(`/otp/${parseInt(otp)}`);
 
-            console.log(response);
             response?.data?.success && onComplete(otp);
             if (!response?.data?.success) {
                 toast('Incorrect OTP! Please confirm and try again');
@@ -70,7 +67,7 @@ const OTP = ({ onComplete }) => {
             </Typography>
             <OTPInput otp={otp} setOTP={setOTP} length={length} onComplete={handleComplete} />
             <div className='flex items-center justify-center space-x-2 p-1 mt-2'>
-                <Button variant='primary' onClick={() => onComplete(otp.join(''))}>Submit</Button>
+                <Button variant='primary' disabled={!allowSubmit} onClick={() => onComplete(otp.join(''))}>Submit</Button>
                 <Button variant='primary' onClick={() => generateOTP()}>Generate OTP</Button>
             </div>
         </div>

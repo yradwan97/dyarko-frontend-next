@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Typography from "../../../components/Shared/Typography"
 import RealEstateProperty from "./RealEstateProperty";
-import Requests from "./Requests";
+import Invoices from "./Invoices";
 import Select from "@/app/components/Shared/Form/Select";
 import { useGetRealEstates } from "../../userApi";
 import Paginator from "@/app/components/Shared/pagination/Pagination"
@@ -25,8 +25,6 @@ const MyRealEstates = () => {
     refetch()
   }, [page, refetch, selectedValue])
 
-
-
   const onShowInvoices = (id, type) => {
     setSelectedId(id)
     setPropertyType(type)
@@ -40,7 +38,7 @@ const MyRealEstates = () => {
     <>
       {isLoading && <Loader />}
       {showRequest ? (
-        <Requests setShowRequest={setShowRequest} type={propertyType} id={selectedId} />
+        <Invoices setShowRequest={setShowRequest} type={propertyType} id={selectedId} />
       ) : (
         <>
           <div className="mb-6 flex items-center">
@@ -59,9 +57,9 @@ const MyRealEstates = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            {data?.data?.map((f, i) => {
-              return <RealEstateProperty onShowInvoices={onShowInvoices} key={i} property={f.property} />
-            })}
+            {data?.data?.map((f, i) => (
+              <RealEstateProperty onShowInvoices={onShowInvoices} key={i} property={f.property} contract={f.contract} />
+            ))}
           </div>
           <Paginator page={page} lastPage={data?.pages || 1} onChange={e => setPage(e)} />
         </>

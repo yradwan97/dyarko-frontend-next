@@ -10,12 +10,6 @@ export const noAuthAxios = axios.create({
 export const axiosClient = axios.create({
   baseURL: API_URI,
   timeout: 3000,
-  // headers: {
-  //   "Content-Type": "application/json",
-  //   'Access-Control-Allow-Credentials': "true",
-  //   'Access-Control-Allow-Methods': 'GET,OPTIONS,PATCH,DELETE,POST,PUT',
-  //   'Access-Control-Allow-Headers': 'X-Requested-With, Content-Type, Accept' 
-  // }
 });
 
 

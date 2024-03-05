@@ -7,7 +7,6 @@ import { getYear, format } from "date-fns"
 function FeatureComponent({ property }) {
     const weeksDiff = calculateDifference(property?.createdAt ? new Date(property?.createdAt) : new Date(property?.updatedAt), true)
     const isAvailable = calculateDifference(property?.available_date, false) >= 0
-    console.log(weeksDiff)
 
     return (
         <div className='py-12 border-b  border-gray-200'>

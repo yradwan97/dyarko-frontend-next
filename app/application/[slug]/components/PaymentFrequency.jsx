@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const PaymentFrequency = ({ property, onChange }) => {
-  const [selectedFrequency, setSelectedFrequency] = useState("daily");
-
+const PaymentFrequency = ({ property, onChange, paymentFrequency }) => {
+  const [selectedFrequency, setSelectedFrequency] = useState(paymentFrequency);
+  useEffect(() => {
+    setSelectedFrequency(paymentFrequency)
+  }, [paymentFrequency])
   const handleFrequencyChange = (event) => {
 
     onChange(event.target.value)

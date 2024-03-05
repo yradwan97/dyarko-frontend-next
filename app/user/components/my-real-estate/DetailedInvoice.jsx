@@ -21,7 +21,6 @@ const DetailedInvoice = ({ invoice, setShowInvoice }) => {
         amount,
     } = invoice;
 
-    console.log(invoice)
 
     let displayDetails = details?.filter(d => {
         if (d.description !== "commission" && d.description !== "Commission" && d.amount > 0) {

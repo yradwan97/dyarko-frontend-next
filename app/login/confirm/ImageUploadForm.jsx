@@ -20,7 +20,7 @@ const ImageUploadForm = () => {
             !formData.get("id_image_back") ||
             !formData.get("image") ||
             (isMarried && !formData.get("mariage_document"));
-        console.log(isSubmitDisabled)
+
         return isSubmitDisabled
     }
 
@@ -33,11 +33,8 @@ const ImageUploadForm = () => {
         setSubmitDisabled(isSubmitDisabled);
 
         // Log the FormData object to see the selected files
-        console.log([...formData.entries()]);
+
     };
-    useEffect(() => {
-        console.log(submitDisabled)
-    }, [submitDisabled])
 
     const handleSubmit = async () => {
         // Create a new FormData object to include additional form fields if needed
@@ -54,7 +51,7 @@ const ImageUploadForm = () => {
                 },
             });
 
-            console.log("Response from the server:", response.data);
+
             toast.success("Documents uploaded successfully, pending admin confirmation")
             setTimeout(() => router.push("/"), 3000)
         } catch (error) {

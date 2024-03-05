@@ -15,10 +15,6 @@ const AvailableServices = ({ property, onChange }) => {
     onChange(updatedServices);
   };
 
-  useEffect(() => {
-    console.log(selectedServices)
-  }, [selectedServices])
-
   return (
     <div className='flex flex-col border p-2 border-main-300 rounded-lg'>
       <div className='flex p-1'>

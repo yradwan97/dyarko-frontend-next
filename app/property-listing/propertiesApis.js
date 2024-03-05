@@ -52,7 +52,7 @@ export const useGetSingleProperty = (id) => {
 }
 
 export const useGetProperties = (searchParams = "") => {
-    console.log(searchParams)
+    
     const {isLoading, data, refetch} = useQuery(
         ["properties", searchParams],
         async () => await axios.get(`/properties?${searchParams}`),
@@ -61,7 +61,6 @@ export const useGetProperties = (searchParams = "") => {
             refetchOnReconnect: true
         }
     )
-    // console.log(data)
 
     return {data: data?.data, totalCount: data?.data.itemsCount || 0, isLoading, refetch}
 }

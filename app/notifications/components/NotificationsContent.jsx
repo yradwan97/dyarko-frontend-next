@@ -7,12 +7,32 @@ import { axiosClient as axios } from "../../services/axiosClient"
 import { useRouter } from 'next/navigation';
 import { useGetNotifications } from "../../user/userApi"
 import Paginator from "@/app/components/Shared/pagination/Pagination"
+import { toast } from "react-toastify"
+import DisplayRentRequestModal from "./DisplayRentRequestModal"
 
 const NotificationsContent = () => {
     const { data: session } = useSession();
     const [notifications, setNotifications] = useState([]);
     const router = useRouter()
     const [page, setPage] = useState(1)
+    const [approveRent, setApproveRent] = useState(false)
+    const [hasARenterProperty, setHasARenterProperty] = useState({
+        "_id": "65e74cbea1c98250f5547d52",
+        "auto_no": "6677754312",
+        "rent_details": {
+            "user": "65b39865d4f024c43e3a556e",
+            "start_date": "2024-03-01T00:00:00.000Z",
+            "end_date": "2024-07-31T00:00:00.000Z",
+            "rent_type": "monthly",
+            "_id": "65e74cbea1c98250f5547d53"
+        },
+        "title": "gghdg",
+        "code": "dk_83",
+        "__t": "propertyRentHouse",
+        "image": null,
+        "contract": null,
+        "interior_design": null
+    })
     const { data, refetch } = useGetNotifications(page, session?.user?.accessToken)
 
     useEffect(() => {
@@ -20,7 +40,7 @@ const NotificationsContent = () => {
     }, [session, page, refetch])
 
     useEffect(() => {
-        console.log(data)
+
         if (data?.data.length > 0) {
             setNotifications(data?.data)
         }
@@ -48,7 +68,16 @@ const NotificationsContent = () => {
             case "prizes":
                 router.push(`/user?tab=wallet`)
                 break;
-
+            case "property":
+                if (!notification.is_read) {
+                    setApproveRent(prev => {
+                        setHasARenterProperty(notification?.property)
+                        return true
+                    })
+                } else {
+                    router.push("/user?tab=my-real-estates")
+                }
+                break;
         }
         if (!notification.is_read) {
             let body = {
@@ -66,31 +95,49 @@ const NotificationsContent = () => {
     }
 
     return (
-        <div className='flex flex-col items-center'>
-            <Typography
-                variant="body-lg-bold"
-                as="h4"
-                className="px-5 my-4 capitalize text-gray-900"
-            >
-                All Notifications
-            </Typography>
-            <div className="border border-gray-200 rounded-lg w-[330px] md:w-[500px] min-h-[200px] space-y-3 px-2 py-3 overflow-y-auto">
-                {notifications && notifications.length ?
-                    notifications.map((n, i) => (
-                        <SingleNotification key={i} notification={n} onClickNotification={(id, type) => handleNotificationClick(id, type)} />
-                    ))
-                    :
-                    <Typography variant='body-md-bold' as='h4' className='text-center text-gray-500'>
-                        You don&apos;t have any new notifications
-                    </Typography>
-                }
+        <>
+            <div className='flex flex-col items-center'>
+                <Typography
+                    variant="body-lg-bold"
+                    as="h4"
+                    className="px-5 my-4 capitalize text-gray-900"
+                >
+                    All Notifications
+                </Typography>
+                <div className="border border-gray-200 rounded-lg w-[330px] md:w-[500px] min-h-[200px] space-y-3 px-2 py-3 overflow-y-auto">
+                    {notifications && notifications.length ?
+                        notifications.map((n, i) => (
+                            <SingleNotification key={i} notification={n} onClickNotification={(id, type) => handleNotificationClick(id, type)} />
+                        ))
+                        :
+                        <Typography variant='body-md-bold' as='h4' className='text-center text-gray-500'>
+                            You don&apos;t have any new notifications
+                        </Typography>
+                    }
+                </div>
+                <Paginator
+                    lastPage={data?.pages}
+                    page={page}
+                    onChange={(e) => setPage(e)}
+                />
             </div>
-            <Paginator
-                lastPage={data?.pages || 1}
-                page={page}
-                onChange={(e) => setPage(e)}
+            <DisplayRentRequestModal
+                hasARenterProperty={hasARenterProperty}
+                setApproveRent={setApproveRent}
+                approveRent={approveRent}
+                onSuccess={() => {
+                    toast.success("Rent status updated successfully!")
+                    setApproveRent(false)
+                    setTimeout(() => {
+                        router.push("/user?tab=my-real-estates")
+                    }, 3000)
+                }}
+                onFail={() => {
+                    toast.error("Something went wrong!")
+                    setApproveRent(false)
+                }}
             />
-        </div>
+        </>
     )
 }
 

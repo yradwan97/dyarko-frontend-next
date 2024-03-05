@@ -13,7 +13,6 @@ import 'react-day-picker/dist/style.css';
 import { axiosClient as axios } from '@/app/services/axiosClient';
 
 const PDFViewer = ({ invoice, setShowInvoice }) => {
-    console.log(invoice)
     const [showExtendModal, setShowExtendModal] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null);
     const [invoiceActionsMenuAnchor, setInvoiceActionsMenuAnchor] = useState(null);
@@ -33,7 +32,6 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
         setSelectedDate(date);
     };
 
-    console.log(invoice)
     const {
         ID,
         invoice_no,
@@ -44,14 +42,12 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
         date,
         userPdf
     } = invoice
-    console.log(status)
 
     const handleExtensionRequest = async () => {
-        // TODO: implement extension
+        // TODO: uncomment 30 day validation after testing
 
         setDayPickerFooter(<p>Please pick a day!</p>)
         const difference = differenceInDays(new Date(selectedDate), new Date(invoice?.date).setHours(0, 0, 0, 0))
-        console.log(difference)
         // if (difference > 30) {
         //     setDayPickerFooter(<p className='text-error'>Must be 30 days or less!</p>)
         //     return
@@ -61,7 +57,6 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
                 "date": `${format(new Date(selectedDate), "MM/dd/yyyy")}`
             }
             let response = await axios.put(`/invoices/${invoice?._id}`, extendInvoiceBody)
-            console.log(response)
         } catch (e) {
             console.error(e)
         }
@@ -107,7 +102,6 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
                         }
                     </div>
                 }
-                {/* TODO: invoice comes with date field, check if date is before or after today to hide or show extend */}
                 <Menu anchorEl={invoiceActionsMenuAnchor} title='Actions' open={Boolean(invoiceActionsMenuAnchor)} onClose={() => setInvoiceActionsMenuAnchor(null)}>
                     {toggleShowExtendActionItem() && <MenuItem onClick={handleExtendSelected}>Extend Invoice</MenuItem>}
                     <MenuItem onClick={() => router.push(`/payment/${paymentType}/${invoice._id}`)}>Pay Invoice</MenuItem>

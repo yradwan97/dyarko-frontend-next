@@ -50,7 +50,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
             }
           });
 
-          console.log("schedule", response.data.data)
+
           setAvailableTimeSlots(response.data.data);
         } catch (error) {
           console.error("Error fetching unavailable time slots:", error);
@@ -88,7 +88,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
       });
 
       // Handle success
-      console.log("Tour added successfully:", response.data);
+      
       if (response.data.success) {
         toast.success("Tour added successfully, pending owner confirmation.")
       }

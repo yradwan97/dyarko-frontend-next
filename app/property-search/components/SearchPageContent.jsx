@@ -97,10 +97,8 @@ function SearchPageContent() {
       })
     );
 
-    console.log(filteredSearchParams['type'])
     let filteredString = new URLSearchParams(filteredSearchParams).toString()
     let final = [filteredString].join("&")
-    console.log(final)
     setFinalSearchParams(final)
   };
 

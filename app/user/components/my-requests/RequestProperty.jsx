@@ -46,7 +46,6 @@ function RequestProperty({ badge, request, activeTab }) {
     }
     try {
       let res = await axios.put(`/installments/${request?._id}/user`, body)
-      console.log(res)
       if (res.data.success) {
         setShowInstallmentPlanModal(false)
         toast.success(`Installment plan ${e.target.textContent === "Accept" ? "accepted" : "rejected"} successfully.`)

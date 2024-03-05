@@ -12,12 +12,13 @@ import AvailableServices from "./AvailableSevices"
 import { useSession } from 'next-auth/react'
 
 const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
+
   const [fromToDates, setFromToDates] = useState({})
   const [availableTents, setAvailableTents] = useState([])
   const [selectedTents, setSelectedTents] = useState([])
   const [showTents, setShowTents] = useState(false)
   const [selectedServices, setSelectedServices] = useState([])
-  const [paymentFrequency, setPaymentFrequency] = useState("daily")
+  const [paymentFrequency, setPaymentFrequency] = useState('daily')
   const [overlapError, setOverlapError] = useState(false)
   const [validationError, setValidationError] = useState('');
   const [caravanLocation, setCaravanLocation] = useState('')
@@ -27,7 +28,9 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
   let isTentGroup = property?.category === "tent_group"
   let isRent = property?.payment_type === "rent"
   let hasServices = property?.services?.length > 0
-
+  useEffect(() => {
+    setPaymentFrequency(property?.is_daily ? "daily" : property?.is_weekly ? "weekly" : "monthly")
+  }, [property])
   useEffect(() => {
     const getTents = async () => {
       let datesBody = {
@@ -82,7 +85,7 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
 
 
     if (!fromToDates.fromDate || !fromToDates.toDate) {
-      setValidationError('Please select start and end dates.');
+      setValidationError('Please select valid start and end dates.');
       return;
     }
     if (overlapError) {
@@ -119,7 +122,7 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
 
         {/* PaymentFrequency selector not rendered in tent_group, frequency fixed to daily */}
         {(!isTentGroup && isRent) &&
-          <PaymentFrequency property={property} onChange={(value) => setPaymentFrequency(value)} />
+          <PaymentFrequency paymentFrequency={paymentFrequency} property={property} onChange={(value) => setPaymentFrequency(value)} />
         }
         {isRent &&
           <FromToDatePicker
@@ -146,7 +149,7 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
         }
 
         <div className='my-2 py-2 pl-4 pr-6' />
-        {validationError && <p className="text-red-500">{validationError}</p>}
+        {validationError && <p className="text-error">{validationError}</p>}
         <div className='w-full flex justify-center items-center'>
           <Button
             variant="primary"

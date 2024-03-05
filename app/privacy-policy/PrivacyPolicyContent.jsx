@@ -10,7 +10,7 @@ const PrivacyPolicyContent = () => {
         const getPrivacyPolicy = async () => {
             const res = await axios.get("/settings/privacy_policy")
             const userPriv = res.data.data.find(d => d.type === "user")
-            console.log(userPriv.content)
+
             if (userPriv) {
                 setUserPrivacy(userPriv.content)
             }

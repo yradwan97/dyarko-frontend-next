@@ -25,7 +25,7 @@ const SingleCompany = ({ owner, onTriggerRefetch }) => {
             return
         }
         let res = await sendFollowRequest(owner._id)
-        console.log(res)
+
         if (res.data.success) {
             setFollowed(!followed)
             onTriggerRefetch()

@@ -21,7 +21,7 @@ function Banner({id}) {
             return
         }
         let res = await sendFollowRequest(id)
-        console.log(res)
+        
         res.data?.success && refetch()
     }
 
