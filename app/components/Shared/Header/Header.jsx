@@ -25,7 +25,7 @@ const Header = () => {
   const { data: session } = useSession()
   const [user, setUser] = useState({})
   const [notificationCount, setNotificationCount] = useState(0)
-  const { data, isSuccess, refetch } = useGetNotifications(1, session?.user?.accessToken)
+  const { data, isSuccess, refetch } = useGetNotifications()
 
   useEffect(() => {
     refetch()
@@ -38,6 +38,20 @@ const Header = () => {
       setNotificationCount(unreadNotifications?.length || 0)
     }
   }, [data, isSuccess])
+
+  const handleReadAllNotifications = async () => {
+    let readAllBody = {
+      "is_read": true
+    }
+    try {
+      let res = await axios.put("/notifications/update_all", readAllBody)
+      if (res.data.success) {
+        refetch()
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
 
   useEffect(() => {
     const getLoggedInUser = async () => {
@@ -87,7 +101,7 @@ const Header = () => {
                 )}
               </Menu.Button>
 
-              <NotificationDropdown notifications={notifications} />
+              <NotificationDropdown onReadAll={handleReadAllNotifications} notifications={notifications} />
             </Menu>
             <Link className="flex items-center space-x-2" href="/user">
               <Typography

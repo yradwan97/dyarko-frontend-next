@@ -1,12 +1,11 @@
 import React from 'react'
 import Modal from '@/app/components/Shared/Modal';
 import { format } from 'date-fns';
-import Link from "next/link"
 import Button from '@/app/components/Shared/Button';
 import Typography from "@/app/components/Shared/Typography"
 import { axiosClient as axios } from "../../services/axiosClient"
 
-const DisplayRentRequestModal = ({ hasARenterProperty, onSuccess, onFail, setApproveRent, approveRent }) => {
+const RentRequestModal = ({ hasARenterProperty, onSuccess, onFail, setApproveRent, approveRent }) => {
 
     const handleAcceptPropertyRent = async () => {
         const userStatusBody = {
@@ -58,7 +57,7 @@ const DisplayRentRequestModal = ({ hasARenterProperty, onSuccess, onFail, setApp
                 </div>
                 <div className='flex flex-row justify-between'>
                     <p>Property Code: </p>
-                    <p>{hasARenterProperty?.code.replace("_", " ")}</p>
+                    <p>{hasARenterProperty?.code}</p>
                 </div>
             </div>
             <hr style={{ "background-color": "black", "height": "1px", "border": "none" }} />
@@ -70,4 +69,4 @@ const DisplayRentRequestModal = ({ hasARenterProperty, onSuccess, onFail, setApp
     )
 }
 
-export default DisplayRentRequestModal
+export default RentRequestModal

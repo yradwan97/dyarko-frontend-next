@@ -10,10 +10,10 @@ const Select = (props) => {
     <Listbox value={selected} onChange={(value) => setSelected(value)}>
       <div className="relative">
         <Listbox.Button className={`flex h-full items-center justify-center gap-x-5 border border-gray focus:border-main-yellow-600 ${containerClass || ""}`}>
-          <div>{selected && selected.icon}</div>
+          <div className="hidden sm:flex">{selected && selected.icon}</div>
           <span className="pointer-events-none">
             <ChevronDownIcon
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 stroke-black sm:stroke-none"
               aria-hidden="true"
             />
           </span>
@@ -24,7 +24,7 @@ const Select = (props) => {
           leaveFrom="opacity-100 -translate-10"
           leaveTo="opacity-0 translate-0"
         >
-          <Listbox.Options className="absolute top-full left-0 right-0 p-1 z-10 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-0 ring-black ring-opacity-5 focus:outline-none">
+          <Listbox.Options className="absolute top-full -left-10 sm:left-0 right0 p-1 z-10 mt-1 max-h-60 w-[250%] sm:w-full overflow-auto rounded-md bg-white py-1 shadow-lg ring-0 ring-black ring-opacity-5 focus:outline-none">
             {values.map((value, index) => (
               <Listbox.Option
                 key={index}

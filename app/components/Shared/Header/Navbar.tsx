@@ -29,6 +29,7 @@ const Navbar = (props: any) => {
   const [buyMenuAnchor, setBuyMenuAnchor] = useState<null | HTMLElement>(null);
 
   const determinePathName = (path: string) => {
+    console.log(path);
     return path.split("/")[2] ? path.split("/")[2] : path.split("/")[1];
   };
 
@@ -58,7 +59,10 @@ const Navbar = (props: any) => {
                 id={navLink.text}
                 onClick={(e) => handleSubMenuOpen(e, navLink.text)}
                 className={
-                  determinePathName(pathname) === determinePathName(navLink.to)
+                  [
+                    "/property-listing/cash",
+                    "/property-listing/installment",
+                  ].indexOf(pathname) > -1
                     ? activeClass
                     : linkStyle
                 }

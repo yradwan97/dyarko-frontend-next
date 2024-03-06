@@ -6,7 +6,6 @@ import { Suspense, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { format as formatCurrency } from "../../utils/utils";
-import { useSession } from "next-auth/react";
 import { useGetPropertyTypes } from "../propertiesApis";
 import Select from "@/app/components/Shared/Form/Select";
 import { useSearchParams } from "next/navigation";
@@ -16,7 +15,7 @@ import { filterPropertyTypes } from "../../utils/utils";
 const PRICES = [
   {
     priceFrom: 0,
-    priceTo: 0
+    priceTo: 0,
   },
   {
     priceFrom: 500,
@@ -36,9 +35,9 @@ const PRICES = [
   },
 ];
 
-const getDisplayablePriceRange = (priceRange: typeof PRICES[0]): string => {
+const getDisplayablePriceRange = (priceRange: (typeof PRICES)[0]): string => {
   if (priceRange.priceFrom === 0 && priceRange.priceTo === 0) {
-    return "Any price"
+    return "Any price";
   }
   return (
     formatCurrency(priceRange.priceFrom) +
@@ -49,7 +48,7 @@ const getDisplayablePriceRange = (priceRange: typeof PRICES[0]): string => {
 
 export interface SearchControlProps {
   slug?: string;
-  onReset: () => void
+  onReset: () => void;
   onSearch: (filters: any) => void;
   // searchParams? : ReadonlyURLSearchParams
 }
@@ -57,9 +56,7 @@ export interface SearchControlProps {
 type Governerate = {
   id: string;
   icon: string;
-}
-
-
+};
 
 const governerates: Governerate[] = [
   { id: "al ahmadi", icon: "Al Ahmadi" },
@@ -68,69 +65,69 @@ const governerates: Governerate[] = [
   { id: "hawalli", icon: "Hawalli" },
   { id: "al jahra", icon: "Jahra" },
   { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
-  { id: "kuwait city", icon: "Kuwait City" }
-]
+  { id: "kuwait city", icon: "Kuwait City" },
+];
 
 function SearchControl({ slug, onSearch, onReset }: SearchControlProps) {
   const [date, setDate] = useState<Date | null>(null);
-  const [selectedGov, setSelectedGov] = useState<Governerate>(governerates[0])
+  const [selectedGov, setSelectedGov] = useState<Governerate>(governerates[0]);
   const [priceRange, setPriceRange] = useState(PRICES[0]);
-
-  const {data: session} = useSession()
-  // @ts-ignore
-  const {data: propertyTypes, isSuccess} = useGetPropertyTypes(session?.user?.accessToken)
-  const [propertyType, setPropertyType] = useState<PropertyType>()
+  const { data: propertyTypes, isSuccess } = useGetPropertyTypes();
+  const [propertyType, setPropertyType] = useState<PropertyType>();
   const searchParameters = useSearchParams();
-  const [filteredTypes, setFilteredTypes] = useState<PropertyType[] | undefined>([])
-  
+  const [filteredTypes, setFilteredTypes] = useState<
+    PropertyType[] | undefined
+  >([]);
+
   useEffect(() => {
-  if (searchParameters.get("city") !== null) {
-    let city = searchParameters!.get("city")
-    let gov = governerates.find((gov: Governerate) => gov.id === city)
-    setSelectedGov(gov!)
-  }
-}, [searchParameters])
+    if (searchParameters.get("city") !== null) {
+      let city = searchParameters!.get("city");
+      let gov = governerates.find((gov: Governerate) => gov.id === city);
+      setSelectedGov(gov!);
+    }
+  }, [searchParameters]);
 
-useEffect(() => {
-  if (filteredTypes!) {
-    setPropertyType(filteredTypes![0])
-  }
-}, [filteredTypes])
+  useEffect(() => {
+    if (filteredTypes!) {
+      setPropertyType(filteredTypes![0]);
+    }
+  }, [filteredTypes]);
 
-useEffect(() => {
-  if (searchParameters.get("category") !== null) {
-    let final = filterPropertyTypes(searchParameters.get("category")!, propertyTypes)
-    setFilteredTypes(final)
-  } else if (searchParameters.get("category") === null && propertyTypes) {
-    setFilteredTypes(propertyTypes)
-    setPropertyType(propertyTypes[0]!)
-  }
-}, [searchParameters, propertyTypes])
+  useEffect(() => {
+    if (searchParameters.get("category") !== null) {
+      let final = filterPropertyTypes(
+        searchParameters.get("category")!,
+        propertyTypes
+      );
+      setFilteredTypes(final);
+    } else if (searchParameters.get("category") === null && propertyTypes) {
+      setFilteredTypes(propertyTypes);
+      setPropertyType(propertyTypes[0]!);
+    }
+  }, [searchParameters, propertyTypes]);
 
   const getTitleText = () => {
     switch (slug) {
       case "rent":
         return "rent";
-      case "installment": 
-        return `buy (${slug})`
-      case "cash": 
-        return "buy"
-      case "shared": 
-        return "share"
-      case "replacement": 
-        return "replace"
-      
+      case "installment":
+        return `buy (${slug})`;
+      case "cash":
+        return "buy";
+      case "share":
+        return "share";
+      case "replacement":
+        return "replace";
     }
-  }
+  };
   const handleResetFilters = () => {
-    setDate(null)
-    setSelectedGov(governerates[0])
-    setPriceRange(PRICES[0])
-    setPropertyType(filteredTypes![0])
+    setDate(null);
+    setSelectedGov(governerates[0]);
+    setPriceRange(PRICES[0]);
+    setPropertyType(filteredTypes![0]);
 
-    onReset()
-  }
-
+    onReset();
+  };
 
   return (
     <Suspense>
@@ -149,11 +146,11 @@ useEffect(() => {
             Location
           </Typography>
           <Select
-              containerClass="py-3 px-5 w-full rounded-lg !justify-between"
-              values={governerates}
-              selected={selectedGov}
-              setSelected={(e) => setSelectedGov(e)}
-            />
+            containerClass="py-3 px-5 w-full rounded-lg !justify-between"
+            values={governerates}
+            selected={selectedGov}
+            setSelected={(e) => setSelectedGov(e)}
+          />
         </div>
         <div className="relative flex w-full flex-col gap-y-1 border-main-200 pl-6 pr-4 sm:w-1/2 md:border-r lg:w-1/2 ">
           <Typography
@@ -192,36 +189,44 @@ useEffect(() => {
           </div>
         </div>
         <div className="relative flex w-full flex-col gap-y-1 border-main-200 pl-6 pr-4 sm:w-1/2 md:border-r lg:w-1/2 ">
-        {isSuccess && <>
-          <Typography
-            variant="body-md-medium"
-            as="p"
-            className="text-main-secondary"
-          >
-            Property Type
-          </Typography>
-          <div className="relative w-full">
-          <DropDownSelect
-            list={filteredTypes ? filteredTypes.map((type: PropertyType) => type.name) : []}
-            onSelect={(indx) => setPropertyType(filteredTypes![indx])}
-            selectedValue={filteredTypes ? filteredTypes!.indexOf(propertyType!) : 0} // Pass the initially selected index as a prop
-          />
-
-          </div>
-          </>
-        }
+          {isSuccess && (
+            <>
+              <Typography
+                variant="body-md-medium"
+                as="p"
+                className="text-main-secondary"
+              >
+                Property Type
+              </Typography>
+              <div className="relative w-full">
+                <DropDownSelect
+                  list={
+                    filteredTypes
+                      ? filteredTypes.map((type: PropertyType) => type.name)
+                      : []
+                  }
+                  onSelect={(indx) => setPropertyType(filteredTypes![indx])}
+                  selectedValue={
+                    filteredTypes ? filteredTypes!.indexOf(propertyType!) : 0
+                  } // Pass the initially selected index as a prop
+                />
+              </div>
+            </>
+          )}
         </div>
         <div className="w-fit px-4 justify-center align-middle pt-1">
           <Button
             variant="primary"
             className="!px-9 text-base font-medium"
-            onClick={() => onSearch({
-              available_date: date,
-              city: selectedGov.id,
-              property_type: propertyType?.value,
-              price_to: priceRange.priceTo,
-              price_from: priceRange.priceFrom,
-            })}
+            onClick={() =>
+              onSearch({
+                available_date: date,
+                city: selectedGov.id,
+                property_type: propertyType?.value,
+                price_to: priceRange.priceTo,
+                price_from: priceRange.priceFrom,
+              })
+            }
           >
             Search
           </Button>

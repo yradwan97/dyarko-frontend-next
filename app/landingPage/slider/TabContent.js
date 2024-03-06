@@ -20,7 +20,7 @@ const governerates = [
 ]
 
  function TabContent({tab, session}) {
-   const {data: propertyTypes} = useGetPropertyTypes(session?.user?.accessToken)
+   const {data: propertyTypes} = useGetPropertyTypes()
   const [date, setDate] = useState("");
   const [selectedGov, setSelectedGov] = useState(governerates[0])
   const [selectedPropertyType, setSelectedPropertyType] = useState(propertyTypes ? propertyTypes[0] : undefined)

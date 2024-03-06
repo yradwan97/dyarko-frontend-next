@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Loader from "../Loader";
 import Button from "../Button";
 
-function NotificationDropdown({notifications}) {
+function NotificationDropdown({notifications, onReadAll}) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -87,7 +87,7 @@ function NotificationDropdown({notifications}) {
             </div>
           </div>
           
-          
+          <div className="flex flex-row justify-evenly">
           <Button
             to="/notifications"
             className="block text-center text-sm font-bold text-main-600"
@@ -95,6 +95,13 @@ function NotificationDropdown({notifications}) {
           >
             See All
           </Button>
+          {notifications.length > 0 && <Button
+            className="block text-center text-sm font-bold text-main-600"
+            onClick={onReadAll}
+          >
+            Read All
+          </Button>}
+          </div>
         </div>
       </Menu.Items>
     </Transition>

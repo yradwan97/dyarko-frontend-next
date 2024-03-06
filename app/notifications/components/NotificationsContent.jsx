@@ -8,31 +8,17 @@ import { useRouter } from 'next/navigation';
 import { useGetNotifications } from "../../user/userApi"
 import Paginator from "@/app/components/Shared/pagination/Pagination"
 import { toast } from "react-toastify"
-import DisplayRentRequestModal from "./DisplayRentRequestModal"
+import RentRequestModal from "./RentRequestModal"
+import Button from "../../components/Shared/Button"
 
 const NotificationsContent = () => {
     const { data: session } = useSession();
     const [notifications, setNotifications] = useState([]);
+    const [selectedNotification, setSelectedNotifiction] = useState()
     const router = useRouter()
     const [page, setPage] = useState(1)
     const [approveRent, setApproveRent] = useState(false)
-    const [hasARenterProperty, setHasARenterProperty] = useState({
-        "_id": "65e74cbea1c98250f5547d52",
-        "auto_no": "6677754312",
-        "rent_details": {
-            "user": "65b39865d4f024c43e3a556e",
-            "start_date": "2024-03-01T00:00:00.000Z",
-            "end_date": "2024-07-31T00:00:00.000Z",
-            "rent_type": "monthly",
-            "_id": "65e74cbea1c98250f5547d53"
-        },
-        "title": "gghdg",
-        "code": "dk_83",
-        "__t": "propertyRentHouse",
-        "image": null,
-        "contract": null,
-        "interior_design": null
-    })
+    const [hasARenterProperty, setHasARenterProperty] = useState({})
     const { data, refetch } = useGetNotifications(page, session?.user?.accessToken)
 
     useEffect(() => {
@@ -46,9 +32,37 @@ const NotificationsContent = () => {
         }
     }, [data])
 
+    const updateNotificationIsRead = async (id) => {
+        let body = {
+            "is_read": true
+        }
+        try {
+            let res = await axios.put(`/notifications/${id}`, body)
+            if (res.data.success) {
+                refetch()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    const handleReadAllNotifications = async () => {
+        let readAllBody = {
+            "is_read": true
+        }
+        try {
+            let res = await axios.put("/notifications/update_all", readAllBody)
+            if (res.data.success) {
+                refetch()
+            }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
     const handleNotificationClick = async (id, type) => {
         let notification = notifications.find(n => n._id === id)
-        console.log(notification)
+        setSelectedNotifiction(notification)
         switch (type) {
             case "installment":
                 router.push(`/user?tab=my-requests`)
@@ -79,31 +93,31 @@ const NotificationsContent = () => {
                 }
                 break;
         }
-        if (!notification.is_read) {
-            let body = {
-                "is_read": true
-            }
-            let res = await axios.put(`/notifications/${id}`, body, {
-                headers: {
-                    "auth-token": `Bearer ${session?.user?.accessToken}`
-                }
-            })
-            if (res.data.success) {
-                refetch()
-            }
+        if (!notification.is_read && notification.type !== "property") {
+            updateNotificationIsRead(id)
         }
     }
 
     return (
         <>
             <div className='flex flex-col items-center'>
-                <Typography
-                    variant="body-lg-bold"
-                    as="h4"
-                    className="px-5 my-4 capitalize text-gray-900"
-                >
-                    All Notifications
-                </Typography>
+                <div className='flex flex-row w-full my-2 items-center justify-evenly'>
+                    <div className='w-1/3' />
+                    <div className='w-1/2 justify-center'>
+                        <Typography
+                            variant="body-lg-bold"
+                            as="h4"
+                            className="px-4 ml-2 my-4 text-nowrap capitalize text-gray-900"
+                        >
+                            All Notifications
+                        </Typography>
+                    </div>
+                    <div className='w-1/6 items-end justify-end'>
+                        <Button variant='primary-outline' disabled={notifications?.every(n => n.is_read)} onClick={handleReadAllNotifications}>
+                            Read all
+                        </Button>
+                    </div>
+                </div>
                 <div className="border border-gray-200 rounded-lg w-[330px] md:w-[500px] min-h-[200px] space-y-3 px-2 py-3 overflow-y-auto">
                     {notifications && notifications.length ?
                         notifications.map((n, i) => (
@@ -121,13 +135,14 @@ const NotificationsContent = () => {
                     onChange={(e) => setPage(e)}
                 />
             </div>
-            <DisplayRentRequestModal
+            {approveRent && <RentRequestModal
                 hasARenterProperty={hasARenterProperty}
                 setApproveRent={setApproveRent}
                 approveRent={approveRent}
                 onSuccess={() => {
                     toast.success("Rent status updated successfully!")
                     setApproveRent(false)
+                    updateNotificationIsRead(selectedNotification._id)
                     setTimeout(() => {
                         router.push("/user?tab=my-real-estates")
                     }, 3000)
@@ -136,7 +151,7 @@ const NotificationsContent = () => {
                     toast.error("Something went wrong!")
                     setApproveRent(false)
                 }}
-            />
+            />}
         </>
     )
 }

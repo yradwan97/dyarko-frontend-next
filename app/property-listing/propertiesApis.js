@@ -5,15 +5,9 @@ import {useGetSavedProperties} from "@/app/user/userApi"
 
 const baseUrl = process.env.NEXT_PUBLIC_NEXT_APP_API_URI
 
-export const useGetPropertyTypes = (accessToken) => {
-    
-
+export const useGetPropertyTypes = () => {
     const {data, isLoading, isSuccess} = useQuery("property-types",  
-        async () => await axios.get(`/properties/types`, {
-            headers: {
-                "auth-token": `Bearer ${accessToken}`
-            }
-        }).then(response => {    
+        async () => await axios.get(`/properties/types`).then(response => {    
             if (response.status === 200) {
                 let finalTypes = response.data.data.map((type) => {
                     return {

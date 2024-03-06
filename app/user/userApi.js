@@ -106,7 +106,7 @@ export const useGetRealEstates = (endpoint) => {
     return {data: isSuccess ? data?.data : null, isLoading, isSuccess, refetch}
 }
 
-export const useGetNotifications = (page, accessToken) => {
+export const useGetNotifications = (page = 1) => {
         const {data, isSuccess, isFetching, refetch} = useQuery(["notifications", page],
             async () => await axios.get(`/notifications?page=${page}`).then(response => {
                 response.data.data = response.data?.data?.sort((a, b) => a.is_read - b.is_read)

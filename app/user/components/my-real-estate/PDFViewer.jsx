@@ -11,6 +11,7 @@ import { DayPicker } from 'react-day-picker';
 import { differenceInDays, differenceInCalendarMonths, format } from "date-fns"
 import 'react-day-picker/dist/style.css';
 import { axiosClient as axios } from '@/app/services/axiosClient';
+import Link from "next/link"
 
 const PDFViewer = ({ invoice, setShowInvoice }) => {
     const [showExtendModal, setShowExtendModal] = useState(false)
@@ -18,6 +19,22 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
     const [invoiceActionsMenuAnchor, setInvoiceActionsMenuAnchor] = useState(null);
     const [dayPickerFooter, setDayPickerFooter] = useState(<p className='text-main-400'>Please pick a day!</p>)
     const router = useRouter()
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(max-width: 600px)');
+
+        const handleMediaQueryChange = (e) => {
+            setIsSmallScreen(e.matches);
+        };
+
+        handleMediaQueryChange(mediaQuery); // Initial check
+        mediaQuery.addEventListener('change', handleMediaQueryChange);
+
+        return () => {
+            mediaQuery.removeEventListener('change', handleMediaQueryChange);
+        };
+    }, []);
 
     const handleClick = (event) => {
         setInvoiceActionsMenuAnchor(event.currentTarget);
@@ -79,7 +96,7 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
 
 
     return (
-        <div className="p-3">
+        <div className="p-2 sm:p-3 h-full">
             <div className='flex flex-row items-center justify-between'>
                 <div
                     className="flex cursor-pointer"
@@ -112,14 +129,26 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
                 Invoice #{ID ? ID : invoice_no}
             </Typography>
             {status === "PAID" ?
-                <div className='h-2/3 md:h-[600px]'>
-                    <iframe
-                        title="Invoice"
-                        src={srcUrl?.toString()}
-                        width="100%"
-                        height="100%"
-                    />
-                </div>
+                <>
+                    {isSmallScreen ?
+                        <Typography className='text-center text-main-500' as="p" variant='p'>
+                            <Link href={srcUrl.toString()} passHref legacyBehavior>
+                                <a target='_blank' rel="noopener noreferrer">
+                                    View Invoice
+                                </a>
+                            </Link>
+                        </Typography>
+                        :
+                        <div className='md:h-[600px]'>
+                            <iframe
+                                title="Invoice"
+                                src={srcUrl?.toString()}
+                                width="100%"
+                                height="100%"
+                                style={{ minHeight: '400px' }}
+                            />
+                        </div>}
+                </>
                 :
                 <Typography as='h4' variant="h4" className='text-center mt-8'>
                     Invoice not available yet.

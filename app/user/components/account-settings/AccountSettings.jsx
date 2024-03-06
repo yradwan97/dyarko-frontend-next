@@ -14,9 +14,10 @@ import Fab from '@mui/material/Fab';
 import { Dialog, Transition } from "@headlessui/react";
 import logo2 from "../../../../public/assets/DYARKO LOGO PNG-01.png";
 import Image from "next/image"
+import Footer from "@/app/components/Shared/Footer/Footer";
 
 const AccountSettings = () => {
-  const [selectedTab, setSelectedTab] = useState("profile");
+  const [selectedTab, setSelectedTab] = useState("my-real-estates");
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -73,6 +74,7 @@ const AccountSettings = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
       <Transition appear show={visible} as={Fragment}>
         <Dialog as="div" className="relative z-[9999]" onClose={() => setVisible(false)}>
@@ -109,6 +111,7 @@ const AccountSettings = () => {
           </div>
         </Dialog>
       </Transition>
+
     </Suspense>
   );
 }

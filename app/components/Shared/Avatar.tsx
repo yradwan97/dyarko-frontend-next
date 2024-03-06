@@ -1,6 +1,6 @@
 import React from "react";
 import Typography from "./Typography";
-import CheckOutline from "../UI/icons/CheckOutline"
+import CheckOutline from "../UI/icons/CheckOutline";
 import Image from "next/image";
 
 type AvatarProps = {
@@ -11,8 +11,12 @@ type AvatarProps = {
   isVerified?: boolean;
 };
 
-const Avatar = ({ userName, userImg, isVerified = false, className }: AvatarProps) => {
-  
+const Avatar = ({
+  userName,
+  userImg,
+  isVerified = false,
+  className,
+}: AvatarProps) => {
   const generateProfileImg = (name: string): string => {
     const names = name?.split(" ")?.slice(0, 2);
     return names?.reduce(
@@ -22,9 +26,9 @@ const Avatar = ({ userName, userImg, isVerified = false, className }: AvatarProp
   };
   return (
     <div
-      className={`relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-main-600 ${
-        className || ""
-      }`.trimEnd()}
+      className={`relative flex h-12 w-12 cursor-pointer items-center justify-center rounded-full ${
+        userImg ? "bg-white" : "bg-main-500"
+      } ${className || ""}`.trimEnd()}
     >
       {userImg ? (
         <Image

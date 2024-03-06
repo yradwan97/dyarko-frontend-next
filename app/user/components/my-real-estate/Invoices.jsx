@@ -68,14 +68,14 @@ const Invoices = ({ setShowRequest, id, type }) => {
         </span>
       </div>
 
-      <div className="mb-8 flex items-center justify-between">
-        <Typography variant="body-xl-bold" as="h2" className=" text-black">
+      <div className="mb-8 flex items-center flex-row justify-between space-y-2">
+        <Typography variant="body-xl-bold" as="h2" className="text-black">
           Transactions
         </Typography>
-        <div className="hidden items-center justify-end space-x-4 md:flex">
 
+        <div className="items-center justify-end space-x-4 flex">
           <Select
-            containerClass="py-3 px-5 w-full rounded-lg !justify-between"
+            containerClass="py-1 sm:py-3 px-2 sm:px-5 w-full rounded-lg !justify-between"
             values={values}
             selected={selected}
             setSelected={e => setSelected(e)}
