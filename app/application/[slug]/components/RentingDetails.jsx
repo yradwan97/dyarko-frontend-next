@@ -29,7 +29,9 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
   let isRent = property?.payment_type === "rent"
   let hasServices = property?.services?.length > 0
   useEffect(() => {
-    setPaymentFrequency(property?.is_daily ? "daily" : property?.is_weekly ? "weekly" : "monthly")
+    if (!isTentGroup && !isCaravanMovable) {
+      setPaymentFrequency(property?.is_daily ? "daily" : property?.is_weekly ? "weekly" : "monthly")
+    }
   }, [property])
   useEffect(() => {
     const getTents = async () => {
