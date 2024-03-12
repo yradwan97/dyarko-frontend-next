@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/components/Login/PoweredBy.js", "app/login/Login.jsx", "store/slices/authSlice.js", "app/components/Login/ClientFormWrapper.jsx", "app/property-listing/useGetProperties.js", "app/landingPage/videos/RelatedVideos.jsx", "app/landingPage/FeaturedCompanies/FeaturedCompanies.jsx", "app/contact-us/page.jsx", "app/components/Shared/Header/Header.jsx", "middleware.ts", "app/categories/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/login/components/PoweredBy.js", "app/login/Login.jsx", "store/slices/authSlice.js", "app/components/Login/ClientFormWrapper.jsx", "app/property-listing/useGetProperties.js", "app/landingPage/videos/RelatedVideos.jsx", "app/landingPage/FeaturedCompanies/FeaturedCompanies.jsx", "app/contact-us/page.jsx", "app/components/Shared/Header/Header.jsx", "middleware.ts", "app/categories/page.jsx"],
   "exclude": ["node_modules"]
 }

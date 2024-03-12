@@ -48,9 +48,9 @@ function Aboutus() {
           <Button
             variant="primary"
             to={activeTab === "1" ? "/property-listing/rent" : "/companies"}
-            className="mt-8 flex items-center !py-2 !px-6 w-[50%]"
+            className="mt-8 flex items-center !py-2 !px-6 w-2/5 sm:w-1/3 lg:w-2/3 xl:w-1/3"
           >
-            See more <ArrowRightOutline className="ml-3 stroke-white" />
+            See more <ArrowRightOutline className="ml-auto stroke-white" />
           </Button>
         </div>
       </div>

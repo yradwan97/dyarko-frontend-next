@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Typography from "../components/Shared/Typography";
-import SimpleNavbar from "../components/Login/SimpleNavbar";
+import SimpleNavbar from "../login/components/SimpleNavbar";
 import SignUpForm from "./SignUpForm";
-import PoweredBy from "../components/Login/PoweredBy";
+import PoweredBy from "../login/components/PoweredBy";
 import { signup } from "../services/api/auth";
 import SignUpSuccessful from "./SignUpSuccessful";
 import { prettifyError } from "../utils/utils";

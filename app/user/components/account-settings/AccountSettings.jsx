@@ -17,7 +17,7 @@ import Image from "next/image"
 import Footer from "@/app/components/Shared/Footer/Footer";
 
 const AccountSettings = () => {
-  const [selectedTab, setSelectedTab] = useState("my-real-estates");
+  const [selectedTab, setSelectedTab] = useState("profile");
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {

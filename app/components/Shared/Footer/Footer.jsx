@@ -5,10 +5,12 @@ import FacebookSolid from "../../../components/UI/icons/FacebookSolid";
 import InstagramOutline from "../../../components/UI/icons/InstagramOutline";
 import LinkedInSolid from "../../../components/UI/icons/LinkedInSolid";
 import TwitterSolid from "../../../components/UI/icons/TwitterSolid";
+import TiktokSolid from "../../../components/UI/icons/TiktokSolid"
 import Typography from "../../../components/Shared/Typography";
 import Link from "next/link";
 import Image from "next/image";
 import { axiosClient as axios } from "@/app/services/axiosClient"
+import echosoftLogo from "../../../../public/assets/echo soft.png"
 
 function Footer() {
   const [links, setLinks] = useState()
@@ -122,12 +124,19 @@ function Footer() {
             >
               <Link href={links?.twitter ? links?.twitter : "/"}>Twitter</Link>
             </Typography>
+            <Typography
+              variant="body-sm-medium"
+              as="p"
+              className="mb-3 text-gray-600"
+            >
+              <Link href={links?.tiktok ? links?.tiktok : "/"}>Tiktok</Link>
+            </Typography>
           </div>
         </div>
       </div>
       <div className="border-t border-main-100">
         <div className="container mx-auto py-5">
-          <div className="flex flex-col md:flex-row md:justify-between">
+          <div className="flex flex-col md:flex-row md:justify-between items-center">
             <Typography
               variant="body-sm-medium"
               as="p"
@@ -135,18 +144,38 @@ function Footer() {
             >
               ©2024 Dyarko. All rights reserved
             </Typography>
+            <div className="flex items-center">
+              <Typography
+                variant="body-sm-medium"
+                as="p"
+                className="mb-6 text-left text-gray-400 md:mb-0 md:text-left"
+              >
+                Developed by
+              </Typography>
+              <Image src={echosoftLogo.src} height={40} width={40} alt="echosoft logo" />
+              <Typography
+                variant="body-sm-medium"
+                as="p"
+                className="mb-6 text-left text-gray-400 md:mb-0 md:text-left"
+              >
+                Echosoft
+              </Typography>
+            </div>
             <div className="flex justify-center md:justify-end">
+              <Link href={links?.instagram ? links?.instagram : "/"}>
+                <InstagramOutline className="mr-12 fill-gray-400" />
+              </Link>
               <Link href={links?.facebook ? links?.facebook : "/"}>
                 <FacebookSolid className="mr-12 fill-gray-400" />
               </Link>
-              <Link href={links?.instagram ? links?.instagram : "/"}>
-                <InstagramOutline className="mr-12 fill-gray-400" />
+              <Link href={links?.linkedin ? links?.linkedin : "/"}>
+                <LinkedInSolid className="mr-12 fill-gray-400" />
               </Link>
               <Link href={links?.twitter ? links?.twitter : "/"}>
                 <TwitterSolid className="mr-12 fill-gray-400" />
               </Link>
-              <Link href={links?.linkedin ? links?.linkedin : "/"}>
-                <LinkedInSolid className="fill-gray-400" />
+              <Link href={links?.tiktok ? links?.tiktok : "/"}>
+                <TiktokSolid className="fill-gray-400" />
               </Link>
             </div>
           </div>

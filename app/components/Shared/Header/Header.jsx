@@ -16,9 +16,11 @@ import Typography from "../Typography"
 import Avatar from "../Avatar"
 import { axiosClient as axios } from "@/app/services/axiosClient"
 import { useGetNotifications } from "@/app/user/userApi";
+import { useRouter } from "next/navigation";
 
 
 const Header = () => {
+  const router = useRouter()
   const pathname = usePathname()
   const [visible, setVisible] = useState(false)
   const [notifications, setNotifications] = useState([]);
@@ -80,7 +82,7 @@ const Header = () => {
   return (
     <>
       <header className="sm:sticky top-0 z-20 shadow-md rounded-lg bg-white">
-        <div className="mx-auto flex items-center px-2 py-4 lg:px-10">
+        <div className="mx-auto flex items-center px-2 py-[6px] lg:px-10">
           <div>
             <Link href={'/'}>
               <Image src={logo} height={80} width={80} alt="menu image" priority />

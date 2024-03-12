@@ -1,10 +1,10 @@
 'use client'
 import React from 'react'
-import SimpleNavbar from "../components/Login/SimpleNavbar"
+import SimpleNavbar from "./components/SimpleNavbar"
 import Typography from '../components/Shared/Typography'
 import Link from 'next/link'
-import PoweredBy from '../components/Login/PoweredBy'
-import LoginForm from '../components/Login/LoginForm'
+import PoweredBy from './components/PoweredBy'
+import LoginForm from './components/LoginForm'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 

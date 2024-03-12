@@ -61,19 +61,19 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
     } = invoice
 
     const handleExtensionRequest = async () => {
-        // TODO: uncomment 30 day validation after testing
 
         setDayPickerFooter(<p>Please pick a day!</p>)
         const difference = differenceInDays(new Date(selectedDate), new Date(invoice?.date).setHours(0, 0, 0, 0))
-        // if (difference > 30) {
-        //     setDayPickerFooter(<p className='text-error'>Must be 30 days or less!</p>)
-        //     return
-        // }
+        if (difference > 30) {
+            setDayPickerFooter(<p className='text-error'>Must be 30 days or less!</p>)
+            return
+        }
         try {
             let extendInvoiceBody = {
                 "date": `${format(new Date(selectedDate), "MM/dd/yyyy")}`
             }
             let response = await axios.put(`/invoices/${invoice?._id}`, extendInvoiceBody)
+            console.log(response)
         } catch (e) {
             console.error(e)
         }
@@ -159,12 +159,6 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
                 <Typography as='h4' variant='h4' className='text-main-600 mb-2'>
                     Request extension on invoice.
                 </Typography>
-                {/* <DatePicker
-                    selected={selectedDate}
-                    onChange={handleDateChange}
-                    dateFormat="dd/MM/yyyy"
-                    placeholderText="Select a date"
-                /> */}
                 <DayPicker
                     selected={selectedDate}
                     required

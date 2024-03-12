@@ -10,7 +10,7 @@ import Paginator from "../../../components/Shared/pagination/Pagination"
 const Transactions = () => {
   const { data: session } = useSession()
   const [page, setPage] = useState(1)
-  const { data, isSuccess, isLoading, refetch } = useGetTransactions(session?.user?.accessToken, page)
+  const { data, isSuccess, isLoading, refetch } = useGetTransactions(page)
 
   useEffect(() => {
     if (!data) {
@@ -46,11 +46,10 @@ const Transactions = () => {
         </thead>
         <tbody>
           {data?.data && data?.data.wallet.map((t, i) => {
-            let date = new Date(t.paid_at)
             return (
               <tr key={i} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100">
                 <td className="flex-1 text-left text-sm font-medium text-gray-500">
-                  {format(date, "dd/MM/yyyy hh:mm a")}
+                  {format(new Date(t.paid_at), "dd/MM/yyyy hh:mm a")}
                 </td>
                 <td className="flex-1 text-center text-sm font-medium text-black">
                   {capitalizeFirst(t.title)}

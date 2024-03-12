@@ -2,7 +2,7 @@ import {axiosClient as axios} from "../services/axiosClient"
 import {useQuery} from "react-query"
 
 export const useGetInvoice = (id, type) => {
-    let endpoint = type === "rent" ? `/invoices/${id}` : `/installments_invoices/${id}`
+    const endpoint = type === "rent" ? `/invoices/${id}` : `/installments_invoices/${id}`
     const {data, isFetching, refetch, isSuccess} = useQuery(["single-invoice", id],
         async () => await axios.get(endpoint), 
         {

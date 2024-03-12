@@ -74,7 +74,6 @@ const Wallet = () => {
           Prize Packages
         </Typography>
         <div className="m-2 p-2 border rounded-lg overflow-y-auto max-h-44 border-main-500">
-          {/* TODO: remove temp packages when static prizes request is fixed */}
           {prizes?.map((p, i) => (
             <React.Fragment key={i}>
             <Typography as="p" variant="p" className="my-2">

@@ -69,6 +69,7 @@ export const getPropertyPeriod = (property: any) => {
 }
 
 export const getPropertyPrice = (property: any) => {
+    
     return property?.payment_type === "rent" ? 
             property?.is_daily ? 
                 property?.daily_price : property?.is_weekly ? 

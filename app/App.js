@@ -6,14 +6,12 @@ import Loader from "./components/Shared/Loader";
 
 const App = () => {
     return (
-      
-        <div className="App">
-          <ScrollToTop />
-          <Suspense fallback={<Loader/>}>
-            <Home />
-          </Suspense>
-        </div>  
-     
+      <div className="App">
+        <ScrollToTop />
+        <Suspense fallback={<Loader/>}>
+          <Home />
+        </Suspense>
+      </div>     
     );
   }
   

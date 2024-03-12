@@ -14,11 +14,13 @@ import { useRouter } from 'next/navigation'
 
 
 function ReservationBox({ property }) {
+    console.log(property)
     const [visible, setVisible] = useState(false)
     const { data: session } = useSession()
     const [confirmedUser, setConfirmedUser] = useState(false)
     const [isContactOwnerOpen, setIsContactOwnerOpen] = useState(false)
     const router = useRouter()
+    const isTentGroup = property?.category === "tent_group"
 
     useEffect(() => {
         if (session) {
@@ -113,11 +115,31 @@ function ReservationBox({ property }) {
         <>
             <ScheduleTour id={property?.owner?._id} propertyId={property?._id} visible={visible} setVisible={setVisible} />
             <div className='border-[1.5px] border-gray-200 rounded-md p-6 '>
-                <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" && "Rent"} Price</Typography>
-                <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">
-                    KWD {property && getPropertyPrice(property)}
-                    {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary">{property && getPropertyPeriod(property)}</Typography></sub>}
-                </Typography>
+                {isTentGroup ?
+                    <Typography variant='body-sm' as="h4" className="text-black text-center">
+                        Price based on tent selection.
+                    </Typography>
+                    :
+                    <div className='flex flex-row justify-between'>
+                        <div className='flex flex-col items-start'>
+                            <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" && "Rent"} Price</Typography>
+                            <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">
+                                KWD {property && getPropertyPrice(property)}
+                                {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary">{property && getPropertyPeriod(property)}</Typography></sub>}
+                            </Typography>
+                        </div>
+                        <div className='flex flex-col items-center'>
+                            {property?.min_months &&
+                                <>
+                                    <Typography variant='body-sm' as="span" className="text-main-secondary text-center">
+                                        Minimum months:
+                                    </Typography>
+                                    <p className='text-main-yellow-600'>{property?.min_months}</p>
+                                </>
+                            }
+                        </div>
+                    </div>
+                }
                 <Button
                     variant='primary'
                     className="stroke-white hover:stroke-main-600 my-6 flex justify-center items-center leading-6 w-full"

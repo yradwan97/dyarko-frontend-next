@@ -6,6 +6,7 @@ import { useQuery } from 'react-query'
 import { axiosClient as axios } from "../services/axiosClient"
 import { useSession } from 'next-auth/react'
 import SingleCategory from "./SingleCategory"
+import Footer from '../components/Shared/Footer/Footer'
 
 const Categories = () => {
     const { data: session } = useSession()
@@ -53,6 +54,7 @@ const Categories = () => {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     )
 }

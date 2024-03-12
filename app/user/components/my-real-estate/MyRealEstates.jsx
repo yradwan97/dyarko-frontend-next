@@ -7,6 +7,7 @@ import Select from "@/app/components/Shared/Form/Select";
 import { useGetRealEstates } from "../../userApi";
 import Paginator from "@/app/components/Shared/pagination/Pagination"
 import Loader from "@/app/components/Shared/Loader";
+import scrollToTop from "@/app/utils/scrollToTop";
 
 const values = [
   { name: "rents", icon: "Rented", id: 1 },
@@ -32,7 +33,9 @@ const MyRealEstates = () => {
       setShowRequest(true)
     }, 500)
   }
-
+  useEffect(() => {
+    scrollToTop()
+  }, [showRequest])
 
   return (
     <>

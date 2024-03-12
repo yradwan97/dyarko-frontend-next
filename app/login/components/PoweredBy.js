@@ -1,5 +1,5 @@
 import React from "react";
-import Typography from "../Shared/Typography";
+import Typography from "../../components/Shared/Typography";
 import Link from "next/link";
 import Image from "next/image";
 import loginPic1 from "../../../public/assets/login/login-1.png";

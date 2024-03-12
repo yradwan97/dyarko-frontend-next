@@ -1,22 +1,17 @@
 'use client'
-import React, { Suspense } from "react";
-import InputGroup from "../Shared/Form/InputGroup";
-import PasswordInput from "../Shared/Form/PasswordInput"
+import React from "react";
+import InputGroup from "../../components/Shared/Form/InputGroup";
+import PasswordInput from "../../components/Shared/Form/PasswordInput"
 import Link from "next/link";
 import Button from "../../components/Shared/Button";
 import { useForm } from "react-hook-form";
 import {signIn, useSession} from "next-auth/react"
-import { useRouter, useSearchParams } from "next/navigation";
-import { ToastContainer, toast } from 'react-toastify';
-import {axiosClient as axios} from "../../services/axiosClient"
-import useFcmToken from "@/app/utils/hooks/useFcmToken";
+import { useRouter } from "next/navigation";
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
   const router = useRouter()  
-  const searchParams = useSearchParams().toString()
-  // let callBack = decodeURIComponent(searchParams.substring(searchParams.indexOf("=") + 1))
-  
-  const {data:session, update} = useSession()
+  const {update} = useSession()
   const {
     register,
     handleSubmit,

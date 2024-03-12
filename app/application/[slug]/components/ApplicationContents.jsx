@@ -45,8 +45,11 @@ const ApplicationContents = ({ id }) => {
       let response = await axios.post(`/otp/${otp}`, null);
 
       console.log(response.data)
-      response?.data?.success && setStep((step) => step + 1);
-      !response?.data?.success && toast('Incorrect OTP! Please confirm and try again');
+      if (response?.data?.success) {
+        setStep((step) => step + 1);
+      } else {
+        toast('Incorrect OTP! Please confirm and try again');
+      }
       return;
     } catch (e) {
       console.error(e)

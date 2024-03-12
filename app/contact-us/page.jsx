@@ -89,7 +89,7 @@ const ContactUs = () => {
     },
   };
 
-  const signUpSubmitHandler = (data) => {
+  const contactFormSubmitHandler = async (data) => {
     console.log(data);
   };
   return (
@@ -101,7 +101,7 @@ const ContactUs = () => {
             Contact Us
           </Typography>
           <form
-            onSubmit={handleSubmit(signUpSubmitHandler)}
+            onSubmit={handleSubmit(contactFormSubmitHandler)}
             className="mx-auto max-w-xl"
           >
             <Typography variant="body-xl-md" as="p" className="mb-5">
@@ -110,16 +110,18 @@ const ContactUs = () => {
             <div className="flex space-x-3">
               <InputGroup
                 containerClass="flex-1"
+                className="!text-black"
                 {...contactFormSchema.firstName}
               />
               <InputGroup
                 containerClass="flex-1"
+                className="!text-black"
                 {...contactFormSchema.lastName}
               />
             </div>
-            <InputGroup {...contactFormSchema.email} />
-            <InputGroup {...contactFormSchema.phoneNumber} />
-            <InputGroup {...contactFormSchema.message} as="textarea" />
+            <InputGroup {...contactFormSchema.email} className="!text-black" />
+            <InputGroup {...contactFormSchema.phoneNumber} className="!text-black" />
+            <InputGroup {...contactFormSchema.message} className="!text-black" as="textarea" />
             <Button type="submit" variant="primary">
               Send Email
             </Button>

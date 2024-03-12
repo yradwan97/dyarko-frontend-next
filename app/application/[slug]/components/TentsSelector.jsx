@@ -49,7 +49,7 @@ const TentsSelector = ({ options, onChange, }) => {
   };
 
   return (
-    <FormControl required fullWidth>
+    <FormControl required fullWidth style={{ "marginTop": "8px" }}>
       <InputLabel id="dropdown-label">Select Tents</InputLabel>
       <Select
         labelId="dropdown-label"
@@ -77,10 +77,10 @@ const TentsSelector = ({ options, onChange, }) => {
       >
         {options.length > 0 ? options.map((item) => (
           <MenuItem key={item.code} value={item.code}>
-            {`Capacity: ${item.capacity} | Available Date: ${format(
+            {`Code: ${item.code} | Price: ${item.price} | Available Date: ${format(
               new Date(item?.available_date),
               'dd/MM/yyyy'
-            )} | Price: ${item.price} | Code: ${item.code}`}
+            )} | Capacity: ${item.capacity}`}
           </MenuItem>
         ))
           :

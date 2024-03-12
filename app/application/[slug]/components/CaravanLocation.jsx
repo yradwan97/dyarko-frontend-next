@@ -10,17 +10,17 @@ const CaravanLocation = ({ isSelectable, onChange }) => {
         if (window.google && window.google.maps) {
             const geocoder = new window.google.maps.Geocoder();
             const latLng = new window.google.maps.LatLng(selectedLocation.lat, selectedLocation.lng);
-
-            geocoder.geocode({ location: latLng }, (results, status) => {
-                if (status === 'OK') {
-                    const address = results[0].formatted_address;
-
-                    setDisplayLocation(address)
-                } else {
-                    console.error('Reverse geocode was not successful for the following reason:', status);
-                    setDisplayLocation("")
-                }
-            });
+            if (selectedLocation.lat && selectedLocation.lng) {
+                geocoder.geocode({ location: latLng }, (results, status) => {
+                    if (status === 'OK') {
+                        const address = results[0].formatted_address;
+                        setDisplayLocation(address)
+                    } else {
+                        console.error('Reverse geocode was not successful for the following reason:', status);
+                        setDisplayLocation("")
+                    }
+                });
+            }
         }
     }, [selectedLocation]);
 

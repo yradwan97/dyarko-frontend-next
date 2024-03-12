@@ -55,10 +55,22 @@ export const useGetSavedProperties = (page = 1) => {
     }
 }
 
-export const useGetTransactions = (accessToken, page = 1) => {
+export const useGetTransactions = (page = 1) => {
     const {data, isSuccess, isLoading, refetch} = useQuery(
         ["transactions", page],
-        async () => await axios.get(`/wallet/transactions?page=${page}`),
+        async () => await axios.get(`/wallet/transactions?page=${page}`).then(res => {
+            
+            if (res.status == 200) {
+                res.data.data.wallet = res.data.data.wallet.sort((a, b) => {
+                    const dateA = new Date(a.paid_at);
+                    const dateB = new Date(b.paid_at);
+                  
+                    // Compare the dates in descending order
+                    return dateB - dateA;
+                });
+            }
+            return res
+        }),
         {
             refetchOnWindowFocus: false,
             refetchOnReconnect: true

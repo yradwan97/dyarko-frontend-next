@@ -7,6 +7,7 @@ import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 import { usePopper } from 'react-popper';
 import FocusTrap from 'focus-trap-react';
+import InfoIcon from '@mui/icons-material/Info';
 
 const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChange, paymentFrequency }) => {
     const [fromDate, setFromDate] = useState(null);
@@ -27,10 +28,10 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
     const [isToPopperOpen, setIsToPopperOpen] = useState(false);
 
     const toPopper = usePopper(toPopperRef.current, toPopperElement, {
-        placement: 'bottom-start'
+        placement: 'auto'
     });
     const fromPopper = usePopper(fromPopperRef.current, fromPopperElement, {
-        placement: 'bottom-start'
+        placement: 'auto'
     });
 
     const closeFromPopper = () => {
@@ -45,6 +46,7 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
     useEffect(() => {
         if (paymentFrequency !== "daily") {
             setToDate(null)
+            setToInputValue("")
         }
     }, [paymentFrequency])
 
@@ -68,7 +70,7 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
         if (property?._id && property?.category !== "tent_group" && session) {
             getRentedDates(property?._id)
         }
-    }, [property, session,])
+    }, [property, session])
 
     const handleFromDateChange = (date) => {
         setFromDate(date);
@@ -111,7 +113,8 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
         const dateValidationBody = {
             "startDate": format(new Date(fromDate), "yyyy/MM/dd"),
             "endDate": format(new Date(date), "yyyy/MM/dd"),
-            "rentType": paymentFrequency
+            "rentType": paymentFrequency,
+            "property": property?._id
         }
         let res = await axios.post("/rents/validateTime", dateValidationBody)
         return res.data.data
@@ -188,9 +191,22 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
         <>
             {
                 (new Date(property?.available_date) > new Date()) &&
-                <p className='mt-3 m-2 text-main-yellow-600'>
-                    Available starting: {format(new Date(property?.available_date), "dd/MM/yyyy")}
-                </p>
+                <div className='flex items-center flex-row justify-start'>
+                    <InfoIcon color='info' fontSize='small' />
+                    <p className='mt-3 m-2 text-main-yellow-600'>
+                        Available starting: {format(new Date(property?.available_date), "dd/MM/yyyy")}
+                    </p>
+                </div>
+
+            }
+            {
+                property?.min_months &&
+                <div className='flex items-center flex-row justify-start'>
+                    <InfoIcon color='info' fontSize='small' />
+                    <p className='mt-3 m-2 text-black'>
+                        Minimum {property?.min_months} {property?.min_months === 1 ? "month" : "months"} in monthly renting.
+                    </p>
+                </div>
             }
             <div className="flex flex-col md:flex-row rounded-lg border my-2 border-main-300">
                 <div className='flex flex-col w-[50%] p-2 '>

@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {axiosClient as axios} from "../services/axiosClient"
 
-export const useGetCompanies = (page = "1", size = "12") => {
+export const useGetCompanies = (page = "1", size = "8") => {
     const { isLoading, isFetching, data, refetch, isSuccess } = useQuery("owners", 
         async () => await axios.get(`/owners?page=${page}&size=${size}`),
         {

@@ -117,7 +117,7 @@ const AgreementTerms = ({ property, onContinue }) => {
         </div>
       </div>
       <div className="w-full">
-        <div className="flex items-center mt-20 space-x-2">
+        <div className="flex items-center mt-20 mb-10 space-x-2">
           <input
             type="checkbox"
             id="selectAll"

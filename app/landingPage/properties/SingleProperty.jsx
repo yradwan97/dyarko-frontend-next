@@ -10,9 +10,10 @@ import PopularBadge from "./PopularBadge";
 import Price from "./Price";
 import TopBadge from "./TopBadge";
 import { getPropertyAddress, getPropertyPeriod, getPropertyPrice } from "../../utils/utils"
+import { useSession } from "next-auth/react";
 
 const SingleProperty = ({ property, className, location, listView, onTriggerRefetch }) => {
-
+  const { data: session } = useSession()
   return (
     <Link href={`/property-details/${property?._id}`}>
       <div className={`flex-1 hover:border-main-600 ${className || ""}`}>

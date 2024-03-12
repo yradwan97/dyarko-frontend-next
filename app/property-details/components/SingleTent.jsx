@@ -14,6 +14,9 @@ const SingleTent = ({ tent }) => {
                 Price: <span className='ml-1 lg:ml-3 text-main-yellow-500'>KWD {tent?.price}</span>
             </li>
             <li className='ml-4'>
+                Insurance: <span className='ml-1 lg:ml-3 text-main-yellow-500'>KWD {tent?.insurance}</span>
+            </li>
+            <li className='ml-4'>
                 Capacity: <span className='ml-1 lg:ml-3'>{tent?.capacity}</span>
             </li>
 

@@ -1,14 +1,7 @@
 'use client'
 import React, { Suspense } from "react";
-import Flickity from "react-flickity-component"
 import Title from "../components/Title";
-import company1 from "../../../public/assets/companies/company1.png";
-import company2 from "../../../public/assets/companies/company2.png";
-import company3 from "../../../public/assets/companies/company3.png";
-import company4 from "../../../public/assets/companies/company4.png";
-import company5 from "../../../public/assets/companies/company5.png";
-import company6 from "../../../public/assets/companies/company6.png";
-import company7 from "../../../public/assets/companies/company7.png";
+import companyPlaceholder from "../../../public/assets/companies/company placeholder.png";
 import Typography from "../../components/Shared/Typography";
 import Image from "next/image";
 import { useGetCompanies } from "@/app/companies/ownersApi";
@@ -17,26 +10,26 @@ import Link from "next/link"
 function FeaturedCompanies() {
 
   const { data } = useGetCompanies()
-  const staticImages = [company1, company2, company3, company4, company5, company6, company7, company1, company2, company3]
-  let companiesWithImages = data?.data?.filter(d => d.image !== null) || []
+
+  let sortedCompanies = data?.data.sort((a, b) => {
+    if (a.image !== null && b.image === null) {
+      return -1;
+    } else if (a.image === null && b.image !== null) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }) || []
+
+  let companiesWithImages = sortedCompanies?.filter(d => d.image !== null) || []
   let companyImages = companiesWithImages.length > 0 && companiesWithImages?.map(c => {
     return { src: c.image, name: c.name, id: c._id }
   }) || []
-
-  let testImages = []
   let i = companyImages.length
-  while (i < 12) {
-    testImages.push(companyImages[0])
+  while (i < 8) {
+    companyImages.push({ src: companyPlaceholder.src, name: data?.data[i].name, id: data?.data[i]._id })
     i++
   }
-
-  staticImages.length = 12 - companyImages?.length || 12
-  let finalStaticImages = staticImages.map(s => {
-    return {
-      src: s.src,
-      name: "Real Estate Company"
-    }
-  })
 
   let images = [...companyImages]
 
@@ -51,20 +44,12 @@ function FeaturedCompanies() {
               desc="We are working with 100+ companies from whome you can get your desired property."
             />
           </div>
-          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
             {images && images?.map((image, index) => (
               <div className="mx-5 flex flex-col h-full align-text-bottom justify-center rounded-full" key={index}>
-                {
-                  image?.id ?
-                    <Link className="flex justify-center" href={`/company-details/${image.id}`}>
-                      <Image className="rounded-full" width={100} height={100} src={image?.src} alt="company image" />
-                    </Link>
-                    :
-                    <div className="flex justify-center">
-                      <Image className="flex justify-center rounded-full " width={100} height={100} src={image?.src} alt="company image" />
-                    </div>
-                }
-
+                <Link className="flex justify-center" href={`/company-details/${image.id}`}>
+                  <Image className="rounded-full" width={100} height={100} src={image?.src} alt="company image" />
+                </Link>
                 <Typography
                   variant="body-sm"
                   as="p"

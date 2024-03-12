@@ -25,12 +25,13 @@ const RentingDetails = ({ rentingInfo, property, setStep, onChange }) => {
   const { data: session } = useSession()
 
   let isCaravanMovable = (property?.category === "caravan" && property?.type === "movable")
+  let isCaravanFixed = (property?.category === "caravan" && property?.type === "fixed")
   let isTentGroup = property?.category === "tent_group"
   let isRent = property?.payment_type === "rent"
   let hasServices = property?.services?.length > 0
   useEffect(() => {
-    if (!isTentGroup && !isCaravanMovable) {
-      setPaymentFrequency(property?.is_daily ? "daily" : property?.is_weekly ? "weekly" : "monthly")
+    if (property && !isTentGroup && !isCaravanMovable) {
+      setPaymentFrequency(property?.is_weekly ? "weekly" : property?.is_monthly ? "monthly" : "daily")
     }
   }, [property])
   useEffect(() => {

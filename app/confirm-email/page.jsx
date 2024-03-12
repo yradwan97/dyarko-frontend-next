@@ -1,16 +1,15 @@
 import React from 'react'
-import logo from "../../public/assets/logo2.png";
+import logo from "../../public/assets/DYARKO LOGO PNG-01.png";
 import Image from "next/image"
 import ConfirmPageContents from "./ConfirmPageContents"
 
 const ConfirmEmail = () => {
     return (
         <>
-            <div className="container hidden py-4 lg:block">
-                <Image src={logo} alt="logo" />
+            <div className="py-1 ml-8">
+                <Image src={logo} width={100} height={100} alt="logo" />
             </div>
             <ConfirmPageContents />
-            {/* <Footer /> */}
         </>
     )
 }

@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import Typography from "../../../components/Shared/Typography"
 import Select from "@/app/components/Shared/Form/Select";
 import { axiosClient as axios } from "@/app/services/axiosClient"
-import { format } from "date-fns"
 import Paginator from "@/app/components/Shared/pagination/Pagination"
-import { capitalizeFirst } from "@/app/utils/utils";
 import PDFViewer from "./PDFViewer";
+import RentsInvoicesTable from "./RentsInvoicesTable"
+import InstallmentInvoicesTable from "./InstallmentInvoicesTable"
 
 const values = [
   { name: "paid", icon: "Paid" },
@@ -52,6 +52,10 @@ const Invoices = ({ setShowRequest, id, type }) => {
     getInvoices()
   }, [id, page, type])
 
+  useEffect(() => {
+    console.log(invoices.data.filter(i => i.status === selected.name.toUpperCase()))
+  }, [invoices]);
+
   if (showInvoice) {
     return <PDFViewer setShowInvoice={setShowInvoice} invoice={selectedInvoice} />
   }
@@ -82,82 +86,18 @@ const Invoices = ({ setShowRequest, id, type }) => {
           />
         </div>
       </div>
-      {invoices.data.length > 0 ? <table className="w-full table-auto text-center">
-        <thead>
-          {type === "installment" ? (
-            <tr className="flex justify-between">
-              <th className="text-md flex-1 text-left font-bold text-black">
-                Invoice No:
-              </th>
-              <th className="text-md flex-1 text-center font-bold text-black">
-                {selected.name === "paid" ? "Paid On" : "Due on"}
-              </th>
-              <th className="text-md flex-1 text-right font-bold text-black">
-                Amount
-              </th>
-            </tr>
-          ) : (
-            <tr className="flex justify-between">
-              <th className="text-md flex-1 text-left font-bold text-black">
-                {selected.name === "paid" ? "Paid On" : "Due on"}
-              </th>
-              <th className="text-md flex-1 text-center font-bold text-black">
-                Purpose
-              </th>
-              <th className="text-md flex-1 text-right font-bold text-black">
-                Amount
-              </th>
-            </tr>
-          )}
-        </thead>
-        <tbody>
-          {type === "installment" ? (
-            <>
-              {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
-                <tr key={index} className={`flex ${invoice.pdf ? "cursor-pointer" : "cursor-default"} justify-between border-b border-main-100 px-2 py-7 hover:bg-main-100`}
-                  onClick={() => handleInvoiceSelection(invoice._id)}>
-                  <td className="flex-1 capitalize text-left text-sm font-medium text-black">
-                    {invoice?.invoice_no}
-                  </td>
-                  <td className="flex-1 capitalize text-center text-sm font-medium text-black">
-                    {invoice?.status === "PAID" ? format(new Date(invoice?.updatedAt), "dd/MM/yyyy") : format(new Date(invoice?.date), "dd/MM/yyyy")}
-                  </td>
-                  <td className="flex-1 text-right text-sm font-medium text-main-yellow-500">
-                    KWD {Math.abs(invoice?.amount)}
-                  </td>
-                </tr>
-              ))}
-            </>
-          ) : (
-            <>
-              {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
-                <tr key={index} className={`flex ${invoice.pdf ? "cursor-pointer" : "cursor-default"} justify-between border-b border-main-100 px-2 py-7 hover:bg-main-100`}
-                  onClick={() => handleInvoiceSelection(invoice._id)}>
-                  <td className="flex-1 text-left text-sm font-medium text-black">
-                    {format(selected.name === "paid" ?
-                      new Date(invoice?.paid_at)
-                      :
-                      (invoice?.extendRequestStatus && invoice?.extendRequestStatus === "APPROVED")
-                        ?
-                        new Date(invoice.extend_date) : new Date(invoice?.date), "dd/MM/yyyy")}
-                  </td>
-                  <td className="flex-1 capitalize text-center text-sm font-medium text-black">
-                    {invoice?.title} - {capitalizeFirst(invoice?.property[0]?.type)}
-                  </td>
-                  <td className="flex-1 text-right text-sm font-medium text-main-yellow-500">
-                    KWD {Math.abs(invoice?.amount)}
-                  </td>
-                </tr>
-              ))}
-            </>
-          )}
-
-        </tbody>
-      </table>
+      {invoices.data.filter(i => i.status === selected.name.toUpperCase()).length > 0 ?
+        <>
+          {type === "installment" ?
+            <InstallmentInvoicesTable selected={selected} type={type} invoices={invoices} onSelect={invoiceId => handleInvoiceSelection(invoiceId)} />
+            :
+            <RentsInvoicesTable selected={selected} invoices={invoices} type={type} onSelect={invoiceId => handleInvoiceSelection(invoiceId)} />
+          }
+        </>
         :
         <div className="mt-7 flex items-center justify-center">
           <Typography variant="body-xl-bold" as="h2" className=" text-black">
-            No Invoices Yet!
+            No {selected.icon} Invoices.
           </Typography>
         </div>
       }

@@ -4,7 +4,7 @@ import { SessionProvider } from "next-auth/react";
 import {QueryProvider} from "./providers";
 import {axiosClient as axios} from "../services/axiosClient"
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {jwtDecode} from "jwt-decode";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
@@ -26,19 +26,23 @@ const ApplicationProvider = ({
     const {data: session, update} = useSession()
     const router = useRouter()
     const {fcmToken} = useFcmToken()
+    const [currentDeviceToken, setCurrentDeviceToken] = useState(session?.user?.device_token)
 
     const updateDeviceToken = async () => {
-      await axios.put("/users/device_token", {device_token: fcmToken}, 
+      let res = await axios.put("/users/device_token", {device_token: fcmToken}, 
         {
           headers: {
             "auth-token": `Bearer ${session?.user?.accessToken}`
           }
         }
       )
+      if (res.data.success) {
+        setCurrentDeviceToken(res.data.data.device_token)
+      }
     }
 
     useEffect(() => {
-      if (session && fcmToken) {
+      if (session && fcmToken && fcmToken !== currentDeviceToken) {
         updateDeviceToken()
       }
     }, [fcmToken, session])

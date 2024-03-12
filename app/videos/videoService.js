@@ -1,7 +1,7 @@
 import { useQuery } from "react-query";
 import {axiosClient as axios} from "../services/axiosClient"
 
-export const useGetVideos = (page = 1, searchParams = "size=9") => {
+export const useGetVideos = (page = 1, searchParams = "size=9", isFromLandingPage = false) => {
     
     const {data, isLoading, isFetching, refetch, isRefetching} = useQuery("videos", 
         async () => await axios.get(`/videos?page=${page}&${searchParams?.toString()}`),

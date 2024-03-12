@@ -22,6 +22,10 @@ const RentPayment = () => {
     const [showPaymentButton, setShowPaymentButton] = useState(false)
 
     useEffect(() => {
+        console.log(invoice)
+    }, [invoice])
+
+    useEffect(() => {
 
         const getPaymentDetails = async () => {
             try {

@@ -7,7 +7,7 @@ import { useGetVideos } from "@/app/videos/videoService";
 import VideoItem from "@/app/videos/VideoItem";
 
 function RelatedVideos() {
-  const { videos } = useGetVideos(1, "size=3")
+  const { videos } = useGetVideos(1, "size=3", true)
   return (
     <div className="bg-main-100 py-20">
       <div className="container">
@@ -27,7 +27,6 @@ function RelatedVideos() {
           {videos?.map((video, index) => (
             <VideoItem
               key={index}
-              className="!p-3"
               videoData={video}
             />
           ))}

@@ -19,7 +19,7 @@ const Home = () => {
     
     return (
         <>
-            <Header />
+        <Header />
             <Slider />
             <Services />
             <Properties />

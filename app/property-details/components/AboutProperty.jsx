@@ -99,7 +99,7 @@ function AboutProperty({ property }) {
             {category && category === "tent_group" && tents_info?.length > 0 && <TentInformation tents={tents_info} />}
             {amenities && amenities.length > 0 && <AmenetiesComponent amenities={amenities} />}
             {services && services.length > 0 && <ServicesComponent services={services} />}
-            <InteriorDetails property={property} />
+            {property?.interior_design !== null && <InteriorDetails url={property?.interior_design} />}
             <Location coords={{ long, lat }} />
          </div>
          <div className='col-span-3 lg:col-span-1 order-1 lg:order-2'>

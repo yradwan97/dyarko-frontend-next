@@ -29,7 +29,6 @@ const Navbar = (props: any) => {
   const [buyMenuAnchor, setBuyMenuAnchor] = useState<null | HTMLElement>(null);
 
   const determinePathName = (path: string) => {
-    console.log(path);
     return path.split("/")[2] ? path.split("/")[2] : path.split("/")[1];
   };
 
