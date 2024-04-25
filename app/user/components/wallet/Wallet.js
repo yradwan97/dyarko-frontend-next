@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import Typography from "../../../components/Shared/Typography";
 import Button from "../../../components/Shared/Button";
 import { useGetPrizesData, useGetWalletData } from "../../userApi";
-import { useSession } from "next-auth/react";
 import Paginator from "../../../components/Shared/pagination/Pagination";
 import SingleWalletItem from "./SingleWalletItem";
 import MainWalletBalance from "./MainWalletBalance";
@@ -11,14 +10,10 @@ import WalletQuestionMark from "../../../components/UI/icons/WalletQuestionMark"
 import Modal from "../../../components/Shared/Modal";
 
 const Wallet = () => {
-  const { data: session } = useSession();
   const [page, setPage] = useState(1);
   const [showPrizes, setShowPrizes] = useState(false);
   const { data, isSuccess, refetch } = useGetWalletData(page);
   const {prizes, isSuccess: isPrizesSuccess} = useGetPrizesData()
-  useEffect(() => {
-    console.log(prizes)
-  }, [prizes])
 
   useEffect(() => {
     refetch();

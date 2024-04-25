@@ -9,12 +9,12 @@ import localforage from "localforage";
 
 const navLinks = [
     { to: "profile", text: "profile" },
+    { to: "change-password", text: "change password" },
     { to: "wallet", text: "wallet" },
     { to: "saved", text: "saved properties" },
     { to: "my-requests", text: "my requests" },
     { to: "my-real-estates", text: "my real estate" },
-    { to: "transactions", text: "transactions" },
-    { to: "change-password", text: "change password" }
+    { to: "transactions", text: "transactions" }
 ];
 
 const UserMenu = ({ visible, selectedTab, setSelectedTab }) => {

@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import CloseOutline from '../../../components/UI/icons/CloseOutline';
 import Overlay from '../Overlay';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import { Carousel } from "react-responsive-carousel";
+import Slider from "react-slick";
+import { Flex, Box } from "@chakra-ui/react"
 
 function PropertySlider({ property }) {
+  console.log(property?.images.length > 1, property)
   const [visible, setVisible] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
 
   const openOverlay = (image) => {
+    console.log(image)
     setActiveImage(image);
     setVisible(true);
   };
@@ -27,58 +29,61 @@ function PropertySlider({ property }) {
         </div>
       </Overlay>
 
-      <div className='flex flex-col md:flex-row mt-2'>
-        <div className='h-1/2 lg:h-full'>
-          <Image src={property?.image} width={400} height={400} alt='Main Image' />
-        </div>
-        <div className='h-1/2 lg:h-auto mt-2 md:mt-0 md:ml-2'>
-          <Carousel
-            autoPlay
-            interval={2000}
-            axis='vertical'
-            infiniteLoop
-            showArrows={false}
-            showStatus={false}
-            renderIndicator={(onClickHandler, isSelected, index, label) => {
-              const defStyle = {
-                marginLeft: 20,
-                cursor: "pointer",
-                display: "inline-block",
-                width: 4,
-                height: 4,
-                borderRadius: "50%",
-                backgroundColor: isSelected ? "black" : "white",
-                boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.3)",
-                border: "1px solid black",
-              };
-
-              return (
-                <span
-                  style={defStyle}
-                  onClick={onClickHandler}
-                  onKeyDown={onClickHandler}
-                  value={index}
+      <Flex flexWrap="wrap" className='overflow-hidden' mt={10}>
+        <Box
+          height="350px"
+          borderRadius={4}
+          border="1px solid"
+          borderColor="main.600"
+          padding={3}
+          pe={{ base: 0, md: 6 }}
+          width="50%"
+          mb={{ base: 4, md: 0 }}
+        >
+          <Image
+            src={property?.image}
+            height={400}
+            width={380}
+            className='object-cover w-full h-full'
+          />
+        </Box>
+        {(property?.images && property.images.length > 1) && (
+          <Box width="200px">
+            <Slider
+              dots={false}
+              arrows={false}
+              infinite
+              autoplay
+              speed={500}
+              slidesToScroll={1}
+              slidesToShow={2}
+              autoplaySpeed={3000}
+              vertical
+            >
+              {property?.images.map((img, index) => (
+                <Box
+                  onClick={() => openOverlay(img)}
+                  p={3}
+                  height="172px"
+                  borderRadius={4}
                   key={index}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${label} ${index + 1}`}
-                />
-              );
-            }}
-          >
-            {property?.images && property?.images.length > 0 && property.images.map((image, index) => (
-              <div key={index} className='cursor-pointer' onClick={() => openOverlay(image)}>
-                <Image
-                  src={image}
-                  width={370}
-                  height={370}
-                  alt={`property-pic ${index + 1}`}
-                />
-              </div>
-            ))}
-          </Carousel>
-        </div>
-      </div>
+                  marginLeft={3}
+                  width="200px"
+                  border="1px solid"
+                  borderColor="main.600"
+                >
+                  <Image
+                    src={img}
+                    height={100}
+                    width={200}
+                    className='object-cover h-full'
+                  />
+                </Box>
+              ))}
+            </Slider>
+          </Box>
+        )}
+      </Flex>
     </>
 
   );

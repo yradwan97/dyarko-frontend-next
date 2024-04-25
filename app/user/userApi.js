@@ -120,10 +120,7 @@ export const useGetRealEstates = (endpoint) => {
 
 export const useGetNotifications = (page = 1) => {
         const {data, isSuccess, isFetching, refetch} = useQuery(["notifications", page],
-            async () => await axios.get(`/notifications?page=${page}`).then(response => {
-                response.data.data = response.data?.data?.sort((a, b) => a.is_read - b.is_read)
-                return response
-            }), 
+            async () => await axios.get(`/notifications?sort=is_read&page=${page}`), 
             {
                 refetchOnWindowFocus: false,
                 refetchOnReconnect: true

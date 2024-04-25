@@ -92,8 +92,8 @@ const SignUpForm = (props) => {
         ...register("civilianId", {
           required: "Civilian ID is required",
           pattern: {
-            value: /^\d{11}$/,
-            message: "Please enter a valid Civilian ID (11 numbers)",
+            value: /^\d{12}$/,
+            message: "Please enter a valid Civilian ID (12 numbers)",
           },
         }),
       },

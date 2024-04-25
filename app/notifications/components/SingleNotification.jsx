@@ -4,7 +4,9 @@ import HomeSolid from "../../components/UI/icons/HomeSolid";
 
 
 const SingleNotification = ({ notification, onClickNotification }) => {
-
+    if (notification?.type === "property") {
+        console.log(notification)
+    }
     return (
         <div onClick={() => onClickNotification(notification._id, notification.type)} className={`flex flex-row space-x-4 hover:bg-main-100 ${!notification?.is_read ? `bg-main-200 cursor-pointer` : ""} border-b rounded-md mx-1 border-gray-300 px-5 py-3 last:border-b-0`}>
 

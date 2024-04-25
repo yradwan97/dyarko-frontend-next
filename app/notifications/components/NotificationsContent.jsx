@@ -85,7 +85,7 @@ const NotificationsContent = () => {
             case "property":
                 if (!notification.is_read) {
                     setApproveRent(prev => {
-                        setHasARenterProperty(notification?.property)
+                        setHasARenterProperty(notification)
                         return true
                     })
                 } else {

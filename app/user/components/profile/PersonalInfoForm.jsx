@@ -1,15 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import InputGroup from "@/app/components/Shared/Form/InputGroup";
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
 import profile from "../../../../public/assets/profile.png";
 import { useSession } from "next-auth/react";
+// import LocalizationDropdown from "@/app/components/Shared/Header/LocalizationDropdown";
+import Image from "next/image";
 
 const PersonalInfoForm = ({ defaultValues, onFormSubmit, profileImg, setFile, setProfileImg }) => {
 
     const { data: session } = useSession()
-
     const {
         register,
         formState: { errors },
@@ -71,13 +72,10 @@ const PersonalInfoForm = ({ defaultValues, onFormSubmit, profileImg, setFile, se
 
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
-            <Typography variant="h4" className="pb-5 font-extrabold capitalize text-black">
-                Update Profile
-            </Typography>
 
             <div className="flex items-center">
                 <div className={`mr-4 w-[100px] min-w-[69px] min-h-[69px] items-center ${(profileImg.src !== profile.src) ? "bg-white" : "bg-main-200"} justify-center rounded-full border-r-[50%] flex`}>
-                    <img src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
+                    <Image src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
                 </div>
                 <div className="flex flex-row gap-4">
                     <Button

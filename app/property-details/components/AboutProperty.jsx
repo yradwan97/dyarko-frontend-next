@@ -58,6 +58,21 @@ function AboutProperty({ property }) {
                      <Typography variant='body-lg-bold' as="p">{property.is_active ? "Active" : "Inactive"}</Typography>
                   </div>
                </div>
+               <div>
+                  <Typography variant='body-md-medium' as="p" className=" text-main-secondary">Is Finished</Typography>
+                  <div className='flex items-center space-x-2 mt-5'>
+                     {property.is_finished
+                        ? <CheckCircleIcon className='stroke-main-secondary w-6 h-6' />
+                        : <XCircleIcon className='stroke-main-secondary w-6 h-6' />}
+                     <Typography variant='body-lg-bold' as="p">{property.is_finished ? "Finished" : "Not Finished"}</Typography>
+                  </div>
+               </div>
+               {property?.is_finished && <div className='w-3/12 sm:w-auto'>
+                  <Typography variant='body-md-medium' as="p" className="text-main-secondary">Finishing</Typography>
+                  <div className='flex items-center space-x-2 mt-5'>
+                     <Typography className='capitalize' variant='body-lg-bold' as="p">{property?.finish_type}</Typography>
+                  </div>
+               </div>}
 
             </div>
             {property?.description && <div className='mt-12 flex flex-col space-y-4'>

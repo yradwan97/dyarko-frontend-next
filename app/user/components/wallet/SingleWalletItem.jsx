@@ -16,7 +16,7 @@ const SingleWalletItem = ({ item }) => {
             <p>{format(new Date(item.createdAt), "d/MM/yyyy")}</p>
           </div>
           <div className='lg:pl-36'>
-            <h2 className='text-red'> +{item.points} points</h2>
+            <h2 className='text-green'> +{item.points} points</h2>
           </div>
         </div>
       </div>

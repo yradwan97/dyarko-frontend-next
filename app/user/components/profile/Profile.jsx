@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
@@ -6,63 +5,64 @@ import profile from "../../../../public/assets/profile.png";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import PersonalInfoForm from "./PersonalInfoForm";
-import BankingInfoForm from "./BankingInfoForm"
-import { axiosClient as axios } from "@/app/services/axiosClient"
-import { toast } from "react-toastify"
-import "../tabs.css"
+import BankingInfoForm from "./BankingInfoForm";
+import { axiosClient as axios } from "@/app/services/axiosClient";
+import { toast } from "react-toastify";
+import "../tabs.css";
 import { useGetUser } from "../../userApi";
 import { prettifyError } from "@/app/utils/utils";
+import LocalizationDropdown from "@/app/components/Shared/Header/LocalizationDropdown";
 
 const Profile = () => {
   const { data: session } = useSession();
   const [activeTab, setActiveTab] = useState(1);
   const [profileImg, setProfileImg] = useState(profile.src);
-  const [file, setFile] = useState(null)
-  const [formDefaultValuesPersonal, setFormDefaultValuesPersonal] = useState({})
-  const [formDefaultValuesBanking, setFormDefaultValuesBanking] = useState({})
-  const [userProfile, setUserProfile] = useState()
+  const [file, setFile] = useState(null);
+  const [formDefaultValuesPersonal, setFormDefaultValuesPersonal] = useState({});
+  const [formDefaultValuesBanking, setFormDefaultValuesBanking] = useState({});
+  const [userProfile, setUserProfile] = useState();
+  const [selectedLanguage, setSelectedLanguage] = useState("en");
 
-  const { data, isFetching, refetch } = useGetUser(session?.user?.accessToken)
-
+  const { data, isFetching, refetch } = useGetUser(session?.user?.accessToken);
 
   useEffect(() => {
-    refetch()
-  }, [session, refetch])
+    refetch();
+  }, [session, refetch]);
 
   useEffect(() => {
     if (data) {
-      setUserProfile(data)
+      setUserProfile(data);
     }
-  }, [data])
+  }, [data]);
 
   useEffect(() => {
     if (userProfile) {
       const defaultValuesPersonal = {
         name: userProfile.name,
         phone: userProfile.phone,
-        email: userProfile.email
-      }
+        email: userProfile.email,
+      };
       const defaultValuesBanking = {
         bankAccount: userProfile?.bankAccount,
         IBAN: userProfile.IBAN,
-        swiftCode: userProfile.swiftCode
-      }
-      setFormDefaultValuesPersonal(defaultValuesPersonal)
-      setFormDefaultValuesBanking(defaultValuesBanking)
+        swiftCode: userProfile.swiftCode,
+      };
+      setFormDefaultValuesPersonal(defaultValuesPersonal);
+      setFormDefaultValuesBanking(defaultValuesBanking);
       if (userProfile?.image) {
-        setProfileImg(userProfile?.image)
+        setProfileImg(userProfile?.image);
       }
     }
-  }, [userProfile])
+  }, [userProfile]);
 
   const handleRemovePicture = () => {
-    setFile(null)
-    setProfileImg(session?.user?.image ? session?.user?.image : profile.src)
-  }
+    setFile(null);
+    setProfileImg(session?.user?.image ? session?.user?.image : profile.src);
+  };
 
   const handleTabClick = (tabNumber) => {
     setActiveTab(tabNumber);
-  }
+  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -77,84 +77,92 @@ const Profile = () => {
   };
 
   const onSubmitBanking = async (data) => {
-    const updateBankingBody = { ...data }
+    const updateBankingBody = { ...data };
     try {
-      const response = await axios.put('/users', updateBankingBody, {
+      const response = await axios.put("/users", updateBankingBody, {
         headers: {
-          "auth-token": `Bearer ${session?.user?.accessToken}`
-        }
+          "auth-token": `Bearer ${session?.user?.accessToken}`,
+        },
       });
       if (response.status === 200) {
-        toast.success("Banking information updated successfully.")
-        refetch()
+        toast.success("Banking information updated successfully.");
+        refetch();
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
     }
-  }
+  };
 
   const onSubmitProfile = async (data) => {
-    const { profileImage, ...rest } = data
+    const { profileImage, ...rest } = data;
     const formData = new FormData();
     if (file) {
-      formData.append('image', file);
+      formData.append("image", file);
       try {
         const res = await axios.put("/users/image", formData, {
           headers: {
             "auth-token": `Bearer ${session?.user?.accessToken}`,
-            "Content-Type": "multipart/form-data"
-          }
-        })
-        toast.success("Image updated successfully")
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        toast.success("Image updated successfully");
       } catch (e) {
-        let message = e?.data?.response?.errors[0]?.msg
+        let message = e?.data?.response?.errors[0]?.msg;
         if (message) {
-          toast.error(prettifyError(message))
+          toast.error(prettifyError(message));
         } else {
-          toast.error("Error while uploading image!")
+          toast.error("Error while uploading image!");
         }
       }
     }
     if (Object.keys(rest).length > 0) {
-      const updateProfileBody = { ...rest }
+      const updateProfileBody = { ...rest };
       try {
-        const response = await axios.put('/users', updateProfileBody, {
+        const response = await axios.put("/users", updateProfileBody, {
           headers: {
-            "auth-token": `Bearer ${session?.user?.accessToken}`
-          }
+            "auth-token": `Bearer ${session?.user?.accessToken}`,
+          },
         });
         if (response.status === 200) {
-          toast.success("Profile updated successfully")
-          refetch()
+          toast.success("Profile updated successfully");
+          refetch();
         }
       } catch (error) {
-        let message = error?.data?.response?.errors[0]?.msg
+        let message = error?.data?.response?.errors[0]?.msg;
         if (message) {
-          toast.error(prettifyError(message))
+          toast.error(prettifyError(message));
         } else {
-          toast.error("Error while updating profile!")
+          toast.error("Error while updating profile!");
         }
       }
     }
-  }
+  };
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="tabs-container mb-5">
-        <div
-          className={`tab ${activeTab === 1 && 'active'}`}
-          onClick={() => handleTabClick(1)}
-        >
-          Personal Info
+      <div className=" mb-5 flex justify-center items-center">
+        <div className="tabs-container flex flex-col sm:flex-row ">
+          <div
+            className={`tab ${activeTab === 1 && "active"}`}
+            onClick={() => handleTabClick(1)}
+          >
+            Personal Info
+          </div>
+          <div
+            className={`tab ${activeTab === 2 && "active"}`}
+            onClick={() => handleTabClick(2)}
+          >
+            Banking Info
+          </div>
         </div>
-        <div
-          className={`tab ${activeTab === 2 && 'active'}`}
-          onClick={() => handleTabClick(2)}
-        >
-          Banking Info
+        <div className="ml-auto">
+          <LocalizationDropdown
+            selectedLang={selectedLanguage}
+            onSelect={(lang) => setSelectedLanguage(lang)}
+          />
         </div>
       </div>
-      {activeTab === 1 ?
+      {activeTab === 1 ? (
         <>
           <Typography
             variant="h4"
@@ -163,32 +171,6 @@ const Profile = () => {
           >
             Personal Information
           </Typography>
-
-          {/* <div className="flex items-center">
-            <div className={`mr-4 w-[100px] min-w-[69px] min-h-[69px] items-center ${(profileImg.src !== profile.src) ? "bg-white" : "bg-main-200"} justify-center rounded-full border-r-[50%] flex`}>
-              <Image src={profileImg} className="rounded-full" alt="avatar" width={250} height={200} />
-            </div>
-            <div className="flex flex-row gap-4">
-              <Button
-                type="button"
-                variant="primary"
-                className="relative w-full text-black sm:w-auto"
-              >
-                Upload
-                <input
-                  id="profilePicture"
-                  type="file"
-                  className="absolute inset-0 opacity-0"
-                  onChange={handleFileChange}
-                />
-              </Button>
-
-              <Button type="button" onClick={handleRemovePicture} variant="primary-outline" className="w-full capitalize">
-                Remove
-              </Button>
-            </div>
-          </div> */}
-
           <PersonalInfoForm
             profileImg={profileImg}
             setProfileImg={setProfileImg}
@@ -197,7 +179,7 @@ const Profile = () => {
             setFile={setFile}
           />
         </>
-        :
+      ) : (
         <>
           <Typography
             variant="h4"
@@ -206,9 +188,13 @@ const Profile = () => {
           >
             Bank Information
           </Typography>
-          <BankingInfoForm defaultValues={formDefaultValuesBanking} onFormSubmit={onSubmitBanking} />
-        </>}
-    </div >
+          <BankingInfoForm
+            defaultValues={formDefaultValuesBanking}
+            onFormSubmit={onSubmitBanking}
+          />
+        </>
+      )}
+    </div>
   );
 };
 

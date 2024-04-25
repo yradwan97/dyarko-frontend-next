@@ -44,7 +44,6 @@ const ApplicationContents = ({ id }) => {
     try {
       let response = await axios.post(`/otp/${otp}`, null);
 
-      console.log(response.data)
       if (response?.data?.success) {
         setStep((step) => step + 1);
       } else {

@@ -1,4 +1,4 @@
-import propertyOne from "../../../public/assets/property-1.png";
+import propertyOne from "../../../public/assets/DYARKO LOGO PNG-01.png";
 import Typography from "../../components/Shared/Typography";
 import BathSolid from "../../components/UI/icons/BathSolid";
 import BedSolid from "../../components/UI/icons/BedSolid";
@@ -9,15 +9,15 @@ import AddWishlist from "./AddWishList";
 import PopularBadge from "./PopularBadge";
 import Price from "./Price";
 import TopBadge from "./TopBadge";
+import CategoryBadge from "./CategoryBadge"
 import { getPropertyAddress, getPropertyPeriod, getPropertyPrice } from "../../utils/utils"
-import { useSession } from "next-auth/react";
 
 const SingleProperty = ({ property, className, location, listView, onTriggerRefetch }) => {
-  const { data: session } = useSession()
   return (
     <Link href={`/property-details/${property?._id}`}>
       <div className={`flex-1 hover:border-main-600 ${className || ""}`}>
         <div className={`relative ${listView && "w-1/2"}`}>
+          {property && <CategoryBadge category={property?.category} />}
           {property?.payment_type === "rent" && <TopBadge />}
           {property?.popular && <PopularBadge />}
           <Image
@@ -50,6 +50,9 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
           <Typography variant="h4" as="h4" className="mt-1">
             {property?.title}
           </Typography>
+          {property?.payment_type === "replacement" && <Typography variant="p" as="p" className="capitalize mt-1">
+            replace with <span className="text-main-orange-600">{property?.replace_with}</span>
+          </Typography>}
 
           <Typography
             variant="body-sm-medium"

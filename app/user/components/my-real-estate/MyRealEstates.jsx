@@ -20,15 +20,18 @@ const MyRealEstates = () => {
   const [selectedValue, setSelectedValue] = useState(values[0])
   const [page, setPage] = useState(1)
   const [propertyType, setPropertyType] = useState()
+  const [selectedPropertyTerminated, setSelectedPropertyTerminated] = useState({ isTerminated: false, terminationReason: null });
 
   const { data, isLoading, refetch } = useGetRealEstates(`/${selectedValue.name}?page=${page}`)
+
   useEffect(() => {
     refetch()
   }, [page, refetch, selectedValue])
 
-  const onShowInvoices = (id, type) => {
+  const onShowInvoices = (id, type, isTerminatedProperty, terminationReason) => {
     setSelectedId(id)
     setPropertyType(type)
+    setSelectedPropertyTerminated({ isTerminated: isTerminatedProperty, terminationReason })
     setTimeout(() => {
       setShowRequest(true)
     }, 500)
@@ -41,7 +44,7 @@ const MyRealEstates = () => {
     <>
       {isLoading && <Loader />}
       {showRequest ? (
-        <Invoices setShowRequest={setShowRequest} type={propertyType} id={selectedId} />
+        <Invoices setShowRequest={setShowRequest} type={propertyType} id={selectedId} selectedPropertyTerminated={selectedPropertyTerminated} />
       ) : (
         <>
           <div className="mb-6 flex items-center">

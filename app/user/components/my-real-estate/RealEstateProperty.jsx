@@ -3,6 +3,7 @@ import Typography from "../../../components/Shared/Typography";
 import AddWishlist from "../../../landingPage/properties/AddWishList";
 import Price from "../../../landingPage/properties/Price";
 import TopBadge from "../../../landingPage/properties/TopBadge";
+import TerminatedBadge from "../../components/my-real-estate/TerminatedBadge";
 import Link from "next/link";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
@@ -26,10 +27,8 @@ function RealEstateProperty({ property, onShowInvoices, contract }) {
   const [reason, setReason] = useState("")
   const [selectedService, setSelectedService] = useState()
   const [showServicesModal, setShowServicesModal] = useState(false)
-
   const { data: session } = useSession()
-
-
+  console.log(property?.is_terminated, property?.terminated_reason)
 
   useEffect(() => {
     const getServices = async () => {
@@ -117,7 +116,7 @@ function RealEstateProperty({ property, onShowInvoices, contract }) {
     } else if (event.target.textContent === "Terminate Contract") {
       setShowReason(true)
     } else if (event.target.textContent === "Invoices") {
-      onShowInvoices(property?._id, property?.payment_type)
+      onShowInvoices(property?._id, property?.payment_type, property?.is_terminated, property?.terminated_reason)
     }
     handleClose()
   };
@@ -147,6 +146,7 @@ function RealEstateProperty({ property, onShowInvoices, contract }) {
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
       <div className="relative">
         {property?.payment_type === "rent" && <TopBadge />}
+        {property?.is_terminated && <TerminatedBadge />}
         <Link href={`/property-details/${property?._id}`}>
           <Image
             src={fixImageSource(property?.image) || propertyOne}

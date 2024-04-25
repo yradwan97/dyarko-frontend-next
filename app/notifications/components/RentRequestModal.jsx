@@ -6,7 +6,8 @@ import Typography from "@/app/components/Shared/Typography"
 import { axiosClient as axios } from "../../services/axiosClient"
 
 const RentRequestModal = ({ hasARenterProperty, onSuccess, onFail, setApproveRent, approveRent }) => {
-
+    // TODO: make sure rent amount is under name amount before submitting
+    console.log(hasARenterProperty)
     const handleAcceptPropertyRent = async () => {
         const userStatusBody = {
             "is_user_approved": true
@@ -41,26 +42,31 @@ const RentRequestModal = ({ hasARenterProperty, onSuccess, onFail, setApproveRen
             <div className='flex flex-col space-y-2 my-3'>
                 <div className='flex flex-row justify-between'>
                     <p>Property: </p>
-                    <p className='capitalize'>{hasARenterProperty?.title}</p>
-                </div>
-                <div className='flex flex-row justify-between'>
-                    <p>Start Date: </p>
-                    <p className='capitalize'>{format(new Date(hasARenterProperty?.rent_details.start_date), "dd/MM/yyyy")}</p>
-                </div>
-                <div className='flex flex-row justify-between'>
-                    <p>End Date: </p>
-                    <p className='capitalize'>{format(new Date(hasARenterProperty?.rent_details.end_date), "dd/MM/yyyy")}</p>
-                </div>
-                <div className='flex flex-row justify-between'>
-                    <p>Rent Type: </p>
-                    <p className='capitalize'>{hasARenterProperty?.rent_details.rent_type}</p>
+                    <p className='capitalize'>{hasARenterProperty?.property.title}</p>
                 </div>
                 <div className='flex flex-row justify-between'>
                     <p>Property Code: </p>
-                    <p>{hasARenterProperty?.code}</p>
+                    <p>{hasARenterProperty?.property.code}</p>
                 </div>
+                <div className='flex flex-row justify-between'>
+                    <p>Start Date: </p>
+                    <p className='capitalize'>{format(new Date(hasARenterProperty?.property.rent_details.start_date), "dd/MM/yyyy")}</p>
+                </div>
+                <div className='flex flex-row justify-between'>
+                    <p>End Date: </p>
+                    <p className='capitalize'>{format(new Date(hasARenterProperty?.property.rent_details.end_date), "dd/MM/yyyy")}</p>
+                </div>
+                <div className='flex flex-row justify-between'>
+                    <p>Rent Type: </p>
+                    <p className='capitalize'>{hasARenterProperty?.property.rent_details.rent_type}</p>
+                </div>
+                <div className='flex flex-row justify-between'>
+                    <p>Rent Amount: </p>
+                    <p className='capitalize'>{hasARenterProperty?.property.rent_details.amount}</p>
+                </div>
+
             </div>
-            <hr style={{ "background-color": "black", "height": "1px", "border": "none" }} />
+            <hr style={{ "backgroundColor": "black", "height": "1px", "border": "none" }} />
             <div className='flex justify-evenly mt-3'>
                 <Button variant='primary' onClick={handleAcceptPropertyRent}>Accept</Button>
                 <Button variant='primary' onClick={handleRejectPropertyRent}>Deny</Button>

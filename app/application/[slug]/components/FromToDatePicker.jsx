@@ -60,7 +60,6 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
                     }
                 })
                 if (response.status === 200) {
-                    console.log("rentedDuring", response.data.data)
                     setRentedDates(response.data.data)
                 }
             } catch (e) {
@@ -104,7 +103,6 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
 
     const validateRentDates = async (date) => {
         const months = differenceInCalendarMonths(new Date(date), new Date(fromDate))
-        console.log(months)
         if (property?.min_months) {
             if (months < property?.min_months) {
                 return { isValid: false, message: `Rent time should be greater than or equal to ${property?.min_months} months` }
@@ -190,7 +188,7 @@ const FromToDatePicker = ({ property, overlapError, setOverlapError, onDateChang
     return (
         <>
             {
-                (new Date(property?.available_date) > new Date()) &&
+                (new Date(property?.available_date) < new Date()) &&
                 <div className='flex items-center flex-row justify-start'>
                     <InfoIcon color='info' fontSize='small' />
                     <p className='mt-3 m-2 text-main-yellow-600'>

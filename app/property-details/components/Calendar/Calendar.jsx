@@ -6,7 +6,6 @@ import './style.css';
 function CalendarComponent({ onDateChange, dateRanges }) {
   // State to manage the selected date
   const [selectedDate, setSelectedDate] = useState(new Date());
-
   // State to store selectable dates based on dateRanges
   const [selectableDates, setSelectableDates] = useState([]);
 
@@ -25,7 +24,6 @@ function CalendarComponent({ onDateChange, dateRanges }) {
 
       return dates;
     });
-
     setSelectableDates(updatedSelectableDates);
   }, [dateRanges]);
 
@@ -37,7 +35,7 @@ function CalendarComponent({ onDateChange, dateRanges }) {
 
   // Function to disable tiles based on selectableDates
   const tileDisabled = ({ date }) => {
-    return selectableDates.every(d => d.toDateString() !== date.toDateString());
+    return selectableDates.length > 0 ? selectableDates.every(d => d.toDateString() !== date.toDateString()) : false;
   };
 
   return (

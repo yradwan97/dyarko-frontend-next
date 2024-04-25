@@ -18,9 +18,9 @@ export const useGetInvoice = (id, type) => {
     }
 }
 
-export const payInvoice = async (id, type, accessToken) => {
+export const payInvoice = async (id, type, paymentMethod, accessToken) => {
     let payBody = {
-        "payment_method": "KNET"
+        "payment_method": paymentMethod
     }
     let endpoint = type === "rent" ? `/invoices/${id}` : `/installments_invoices/${id}/pay`
     let res = await axios.post(endpoint, payBody,  {
@@ -28,6 +28,5 @@ export const payInvoice = async (id, type, accessToken) => {
             "auth-token": `Bearer ${accessToken}`
         }
     })
-
     return res.data
 }

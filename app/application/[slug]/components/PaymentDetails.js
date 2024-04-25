@@ -1,9 +1,4 @@
 import React, { Fragment, useEffect, useState } from "react";
-import masterCard from "@/public/assets/payment-method/masterCard.png";
-import visa from "@/public/assets/payment-method/visa.png";
-import fatoorah from "@/public/assets/payment-method/fatoorah.png";
-import point from "@/public/assets/payment-method/points.png";
-import link from "@/public/assets/payment-method/link.png";
 import {axiosClient as axios} from "../../../services/axiosClient"
 import Button from "@/app/components/Shared/Button";
 import Typography from "@/app/components/Shared/Typography";
@@ -13,19 +8,11 @@ import PlusOutline from "@/app/components/UI/icons/PlusOutline";
 
 import { Listbox, Transition } from "@headlessui/react";
 import AddCard from "./AddCard";
-import PaymentSuccessfuly from "./PaymentSuccessfuly";
 import Image from "next/image";
 import {useQuery} from "react-query"
 import { useSession } from "next-auth/react";
 
-const values = [
-  { name: "Credit Card", img: masterCard },
-  { name: "My Fatoorah", img: fatoorah },
-  { name: "**** 4275", img: visa },
-  { name: "My Points", img: point },
-];
-
-function PaymentDetails({onChange}) {
+function PaymentDetails({onChange, titleClass = "mt-16"}) {
   const [values, setValues] = useState([])
   const [selected, setSelected] = useState();
   const [visible, setVisible] = useState(false);
@@ -59,11 +46,11 @@ function PaymentDetails({onChange}) {
   }, [selected, onChange])
   return (
     <div>
-      <Typography variant="h4" as="h4" className={`mt-16 mb-2 text-black`}>
+      <Typography variant="h4" as="h4" className={`${titleClass} mb-2 text-black`}>
         Payment Details
       </Typography>
       <div className="mt-8">
-        <Typography variant="h4" as="h4" className={`mt-16 mb-2 text-black`}>
+        <Typography variant="h4" as="h4" className={`${titleClass} mb-2 text-black`}>
           Select payment method
         </Typography>
         <>

@@ -11,7 +11,7 @@ import PhoneInput from "../../components/Shared/Form/PhoneInput";
 import CloseOutline from "../../components/UI/icons/CloseOutline";
 import CalendarComponent from "./Calendar/Calendar";
 import { useSession } from "next-auth/react";
-import { toast, Bounce } from "react-toastify"
+import { toast } from "react-toastify"
 import { format } from "date-fns"
 
 function ScheduleTour({ visible, setVisible, id, propertyId }) {
@@ -50,7 +50,6 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
             }
           });
 
-
           setAvailableTimeSlots(response.data.data);
         } catch (error) {
           console.error("Error fetching unavailable time slots:", error);
@@ -88,7 +87,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
       });
 
       // Handle success
-      
+
       if (response.data.success) {
         toast.success("Tour added successfully, pending owner confirmation.")
       }

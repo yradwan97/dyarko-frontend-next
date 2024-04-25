@@ -68,6 +68,7 @@ const ApplicationProvider = ({
           try {
             const response = await axios.post(`/refresh_token`, {
               refresh_token: refreshToken,
+              role: session?.user?.role
             });
       
       

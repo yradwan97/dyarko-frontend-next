@@ -4,6 +4,7 @@ import * as firebase from "firebase/app";
 import "firebase/messaging";
 // import { firebaseCloudMessaging, onMessageListener } from "../../lib/firebase/firebase";
 import { toast } from "react-toastify";
+import logo from "@/public/assets/DYARKO LOGO PNG-01.png"
 import { useRouter } from "next/navigation";
 import { getMessaging, onMessage } from "firebase/messaging";
 import useFcmToken from "@/app/utils/hooks/useFcmToken"
@@ -41,7 +42,12 @@ function PushNotificationLayout({ children }) {
     
     if (messaging) {
         const unsubscribe = onMessage(messaging, (message) => {
-          
+          // let soundUri = new Audio(message.data["gcm.notification.sound2"])
+          // if (soundUri) {
+          //   console.log("sound available", message.data["gcm.notification.sound2"])
+          //   soundUri.play()
+          // }
+          // new Notification(message.notification.title, {body: message.notification.body, icon: logo})
           toast(
             <div className={message?.data?.url ? `cursor-pointer` : "cursor-default"} onClick={() => handleClickPushNotification(message?.data?.url)}>
               <h5>{message?.notification?.title}</h5>

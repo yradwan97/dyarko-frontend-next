@@ -13,7 +13,7 @@ const values = [
   { name: "paid", icon: "Paid" },
   { name: "unpaid", icon: "Unpaid" }
 ];
-const Invoices = ({ setShowRequest, id, type }) => {
+const Invoices = ({ setShowRequest, id, type, selectedPropertyTerminated }) => {
   const [selected, setSelected] = useState(type && type === "installment" ? values[1] : values[0]);
   const [page, setPage] = useState(1)
   const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
@@ -52,13 +52,10 @@ const Invoices = ({ setShowRequest, id, type }) => {
     getInvoices()
   }, [id, page, type])
 
-  useEffect(() => {
-    console.log(invoices.data.filter(i => i.status === selected.name.toUpperCase()))
-  }, [invoices]);
-
   if (showInvoice) {
     return <PDFViewer setShowInvoice={setShowInvoice} invoice={selectedInvoice} />
   }
+
 
   return (
     <div>
@@ -72,42 +69,55 @@ const Invoices = ({ setShowRequest, id, type }) => {
         </span>
       </div>
 
-      <div className="mb-8 flex items-center flex-row justify-between space-y-2">
-        <Typography variant="body-xl-bold" as="h2" className="text-black">
-          Transactions
-        </Typography>
-
-        <div className="items-center justify-end space-x-4 flex">
-          <Select
-            containerClass="py-1 sm:py-3 px-2 sm:px-5 w-full rounded-lg !justify-between"
-            values={values}
-            selected={selected}
-            setSelected={e => setSelected(e)}
-          />
-        </div>
-      </div>
-      {invoices.data.filter(i => i.status === selected.name.toUpperCase()).length > 0 ?
-        <>
-          {type === "installment" ?
-            <InstallmentInvoicesTable selected={selected} type={type} invoices={invoices} onSelect={invoiceId => handleInvoiceSelection(invoiceId)} />
-            :
-            <RentsInvoicesTable selected={selected} invoices={invoices} type={type} onSelect={invoiceId => handleInvoiceSelection(invoiceId)} />
-          }
-        </>
-        :
-        <div className="mt-7 flex items-center justify-center">
-          <Typography variant="body-xl-bold" as="h2" className=" text-black">
-            No {selected.icon} Invoices.
+      {selectedPropertyTerminated.isTerminated ? (
+        <div className="w-full space-y-3">
+          <Typography variant="body-xl-bold" as="h2" className="text-black text-center">
+            This property has been terminated
+          </Typography>
+          <Typography variant="body-xl-bold" as="h2" className="text-black text-center">
+            Reason: {selectedPropertyTerminated.terminationReason}
           </Typography>
         </div>
+      ) :
+        <>
+          <div className="mb-8 flex items-center flex-row justify-between space-y-2">
+            <Typography variant="body-xl-bold" as="h2" className="text-black">
+              Transactions
+            </Typography>
+
+            <div className="items-center justify-end space-x-4 flex">
+              <Select
+                containerClass="py-1 sm:py-3 px-2 sm:px-5 w-full rounded-lg !justify-between"
+                values={values}
+                selected={selected}
+                setSelected={e => setSelected(e)}
+              />
+            </div>
+          </div>
+          {invoices.data.filter(i => i.status === selected.name.toUpperCase()).length > 0 ?
+            <>
+              {type === "installment" ?
+                <InstallmentInvoicesTable selected={selected} type={type} invoices={invoices} onSelect={invoiceId => handleInvoiceSelection(invoiceId)} />
+                :
+                <RentsInvoicesTable selected={selected} invoices={invoices} type={type} onSelect={invoiceId => handleInvoiceSelection(invoiceId)} />
+              }
+            </>
+            :
+            <div className="mt-7 flex items-center justify-center">
+              <Typography variant="body-xl-bold" as="h2" className=" text-black">
+                No {selected.icon} Invoices.
+              </Typography>
+            </div>
+          }
+          <div className="mt-7 flex items-center justify-center">
+            <Paginator
+              lastPage={invoices?.pages}
+              page={page}
+              onChange={(e) => setPage(e)}
+            />
+          </div>
+        </>
       }
-      <div className="mt-7 flex items-center justify-center">
-        <Paginator
-          lastPage={invoices?.pages}
-          page={page}
-          onChange={(e) => setPage(e)}
-        />
-      </div>
 
     </div>
   );

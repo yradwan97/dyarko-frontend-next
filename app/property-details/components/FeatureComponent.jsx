@@ -18,14 +18,26 @@ function FeatureComponent({ property }) {
                         <FeatureItem firstText="Date available" secondText={isAvailable ? "Available now" : `Available from ${format(new Date(property?.available_date), "dd/MM/yyyy")}`} />
                         <FeatureItem firstText="Year Built" secondText={getYear(new Date(property?.createdAt)).toString()} />
                         <FeatureItem firstText="Type" secondText={capitalizeFirst(property.type)} />
-
+                        <FeatureItem firstText="City" secondText={capitalizeFirst(property.city)} />
                     </ul>
                 </div>
                 <div className='md:w-1/2 mt-5 md:mt-0'>
                     <ul className='space-y-5'>
-                        <FeatureItem firstText="City" secondText={capitalizeFirst(property.city)} />
                         {property.area && <FeatureItem firstText="Size" secondText={`${property.area} m2`} />}
-                        {property.area && <FeatureItem firstText="Lot Size" secondText={`${Math.floor(squareMetersToSquareFeet(property.area))} sqft`} />}
+                        {property?.payment_type === "share" && (
+                            <>
+                                <FeatureItem firstText='Capacity' secondText={property?.capacity} />
+                                <FeatureItem firstText='Available Capacity' secondText={property?.available_capacity} />
+                            </>
+                        )}
+                        {property?.category === "chalet" && (
+                            <>
+                                {property?.capacity && <FeatureItem firstText='Capacity' secondText={property?.capacity} />}
+                                <FeatureItem firstText='Has Garden' secondText={property?.has_garden ? "Yes" : "No"} />
+                                <FeatureItem firstText='Has Beach' secondText={property?.has_beach ? "Yes" : "No"} />
+                                <FeatureItem firstText='Has Pool' secondText={property?.has_pool ? "Yes" : "No"} />
+                            </>
+                        )}
                     </ul>
                 </div>
             </div>

@@ -73,7 +73,6 @@ const PDFViewer = ({ invoice, setShowInvoice }) => {
                 "date": `${format(new Date(selectedDate), "MM/dd/yyyy")}`
             }
             let response = await axios.put(`/invoices/${invoice?._id}`, extendInvoiceBody)
-            console.log(response)
         } catch (e) {
             console.error(e)
         }

@@ -90,7 +90,6 @@ const ContactUs = () => {
   };
 
   const contactFormSubmitHandler = async (data) => {
-    console.log(data);
   };
   return (
     <div>

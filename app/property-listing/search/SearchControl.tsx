@@ -59,6 +59,7 @@ type Governerate = {
 };
 
 const governerates: Governerate[] = [
+  { id: "", icon: "All" },
   { id: "al ahmadi", icon: "Al Ahmadi" },
   { id: "al asimah", icon: "Al-Asimah" },
   { id: "al farwaniyah", icon: "Farwaniya" },

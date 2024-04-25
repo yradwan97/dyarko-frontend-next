@@ -15,7 +15,7 @@ const OwnerProperties = ({ properties, totalCount, pages, page, setPage, activeT
                 <>
                     <div className="mt-9 flex items-center justify-between">
                         <Typography variant="h2" as="h2" className="text-black">
-                            {activeTab !== "all" ? `Properties to ${activeTab}` : "All properties"}
+                            {activeTab !== "all" ? `Properties to ${activeTab === "installment" ? 'buy (' : " "}${activeTab}${activeTab === "installment" ? ')' : " "}` : "All properties"}
                         </Typography>
                         <div className="hidden items-end sm:flex">
                             <BuildingSolid className="mr-3 h-5 w-5 fill-main-500" />

@@ -44,7 +44,7 @@ function CompanyDetailsContent() {
 
     const { properties, pages, totalCount, isFetching, refetch } = useGetOwnerProperties({
         owner: slug,
-        payment_type: activeTab === "rent" ? activeTab : activeTab === "buy" ? "installment" : undefined,
+        payment_type: activeTab === "rent" ? activeTab : activeTab === "installment" ? "installment" : undefined,
         page,
         size: isSmallScreen ? 2 : 4,
     });

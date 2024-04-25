@@ -11,10 +11,10 @@ const SingleTent = ({ tent }) => {
                 Available from: <span className='ml-1 lg:ml-3'>{format(new Date(tent?.available_date), "dd/MM/yyyy")}</span>
             </li>
             <li className='ml-4'>
-                Price: <span className='ml-1 lg:ml-3 text-main-yellow-500'>KWD {tent?.price}</span>
+                Price: <span className='ml-1 lg:ml-3 text-main-600 font-bold'>KWD {tent?.price}</span>
             </li>
             <li className='ml-4'>
-                Insurance: <span className='ml-1 lg:ml-3 text-main-yellow-500'>KWD {tent?.insurance}</span>
+                Insurance: <span className='ml-1 lg:ml-3 text-main-600 font-bold'>KWD {tent?.insurance}</span>
             </li>
             <li className='ml-4'>
                 Capacity: <span className='ml-1 lg:ml-3'>{tent?.capacity}</span>

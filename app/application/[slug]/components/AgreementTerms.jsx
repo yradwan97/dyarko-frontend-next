@@ -28,6 +28,7 @@ const AgreementTerms = ({ property, onContinue }) => {
   }, [termsAndConditions, privacyPolicy, refundPolicy, contract, ownerRules]);
 
   useEffect(() => {
+
     setShowRefundPolicy(property && property?.refund_policy !== null)
   }, [property])
 

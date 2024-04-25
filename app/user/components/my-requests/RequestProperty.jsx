@@ -27,7 +27,7 @@ const stylesMap = {
 function RequestProperty({ badge, request, activeTab }) {
   let { property, owner_status, user_status } = request
   const [showInstallmentPlanModal, setShowInstallmentPlanModal] = useState(false)
-
+  let startingDate = request?.start_date ? new Date(request?.start_date) : new Date()
   const showInstallmentButton = () => {
     // Check the conditions for showing the button
     return (
@@ -54,10 +54,6 @@ function RequestProperty({ badge, request, activeTab }) {
       toast.error(prettifyError(e.response.data.errors[0].msg))
     }
   }
-  let remaining = property?.price - property?.down_payment
-  let periods = property?.installment_type === "yearly" ? 1 : property?.installment_type === "monthly" ? 12 : property?.installment_type === "quarterly" ? 4 : 12
-  let startingDate = property?.start_date ? new Date(property?.start_date) : new Date()
-  let amount = request?.amount ? request?.amount : remaining / (property?.max_installment_period * periods)
 
   return (
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
@@ -136,28 +132,20 @@ function RequestProperty({ badge, request, activeTab }) {
         </Typography>
         <div className="flex flex-col mt-3 space-y-2">
           <div className="flex flex-row justify-between">
-            <label htmlFor="downPayment">Down Payment: </label>
-            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="downPayment" value={format(property?.down_payment)} />
+            <label htmlFor="amount">Amount per installment: </label>
+            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="amount" value={format(request.amount)} />
           </div>
           <div className="flex flex-row justify-between">
-            <label htmlFor="maxPeriod">Maximum Installment Period: </label>
-            <input className="w-1/3 bg-white" type="text" disabled id="maxPeriod" value={`${property?.max_installment_period} years`} />
+            <label htmlFor="maxPeriod">Maximum installment period: </label>
+            <input className="w-1/3 bg-white" type="text" disabled id="maxPeriod" value={`${request?.max_installment_period} months`} />
           </div>
           <div className="flex flex-row justify-between">
-            <label htmlFor="installmentType">Payment Frequency: </label>
-            <input className="w-1/3 bg-white capitalize" type="text" disabled id="installmentType" value={property?.installment_type || "monthly"} />
+            <label htmlFor="installmentType">Installment type: </label>
+            <input className="w-1/3 bg-white capitalize" type="text" disabled id="installmentType" value={request?.installment_type || "monthly"} />
           </div>
           <div className="flex flex-row justify-between">
-            <label htmlFor="startDate">Start Date: </label>
+            <label htmlFor="startDate">Start date: </label>
             <input className="w-1/3 bg-white" type="text" disabled id="startDate" value={formatDate(startingDate, "dd/MM/yyyy")} />
-          </div>
-          <div className="flex flex-row justify-between">
-            <label htmlFor="amount">Amount: </label>
-            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="amount" value={format(amount)} />
-          </div>
-          <div className="flex flex-row justify-between">
-            <label htmlFor="price">Total Price: </label>
-            <input className="w-1/3 bg-white text-main-yellow-400" type="text" disabled id="price" value={format(property?.price)} />
           </div>
           <div className="flex flex-row pt-4 justify-evenly">
             <Button variant="primary" onClick={handleUserAction}>

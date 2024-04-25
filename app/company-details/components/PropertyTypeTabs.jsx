@@ -4,8 +4,8 @@ import { Tab } from '@headlessui/react';
 const PropertyTypeTabs = ({ activeTab, setActiveTab }) => {
     return (
         <Tab.Group>
-            <Tab.List className="mt-8 flex w-[150px] justify-between md:mt-0">
-                {['All', 'Rent', 'Buy'].map((tab) => (
+            <Tab.List className="mt-8 flex w-1/5 justify-between md:mt-0">
+                {['All', 'Rent', 'Installment'].map((tab) => (
                     <Tab
                         key={tab}
                         className={

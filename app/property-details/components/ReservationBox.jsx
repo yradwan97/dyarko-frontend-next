@@ -14,13 +14,13 @@ import { useRouter } from 'next/navigation'
 
 
 function ReservationBox({ property }) {
-    console.log(property)
     const [visible, setVisible] = useState(false)
     const { data: session } = useSession()
     const [confirmedUser, setConfirmedUser] = useState(false)
     const [isContactOwnerOpen, setIsContactOwnerOpen] = useState(false)
     const router = useRouter()
     const isTentGroup = property?.category === "tent_group"
+    const isReplacement = property?.payment_type === "replacement"
 
     useEffect(() => {
         if (session) {
@@ -120,25 +120,30 @@ function ReservationBox({ property }) {
                         Price based on tent selection.
                     </Typography>
                     :
-                    <div className='flex flex-row justify-between'>
-                        <div className='flex flex-col items-start'>
-                            <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" && "Rent"} Price</Typography>
-                            <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">
-                                KWD {property && getPropertyPrice(property)}
-                                {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary">{property && getPropertyPeriod(property)}</Typography></sub>}
-                            </Typography>
+                    isReplacement ?
+                        <Typography variant='body-md' as="h2" className="text-black text-center">
+                            Replace this property with a {property?.replace_with}
+                        </Typography>
+                        :
+                        <div className='flex flex-row justify-between'>
+                            <div className='flex flex-col items-start'>
+                                <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" && "Rent"} Price</Typography>
+                                <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">
+                                    KWD {property && getPropertyPrice(property)}
+                                    {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary">{property && getPropertyPeriod(property)}</Typography></sub>}
+                                </Typography>
+                            </div>
+                            <div className='flex flex-col items-center'>
+                                {property?.min_months &&
+                                    <>
+                                        <Typography variant='body-sm' as="span" className="text-main-secondary text-center">
+                                            Minimum months:
+                                        </Typography>
+                                        <p className='text-main-yellow-600'>{property?.min_months}</p>
+                                    </>
+                                }
+                            </div>
                         </div>
-                        <div className='flex flex-col items-center'>
-                            {property?.min_months &&
-                                <>
-                                    <Typography variant='body-sm' as="span" className="text-main-secondary text-center">
-                                        Minimum months:
-                                    </Typography>
-                                    <p className='text-main-yellow-600'>{property?.min_months}</p>
-                                </>
-                            }
-                        </div>
-                    </div>
                 }
                 <Button
                     variant='primary'
