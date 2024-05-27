@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/login/components/PoweredBy.js", "app/login/Login.jsx", "store/slices/authSlice.js", "app/components/Login/ClientFormWrapper.jsx", "app/property-listing/useGetProperties.js", "app/landingPage/videos/RelatedVideos.jsx", "app/landingPage/FeaturedCompanies/FeaturedCompanies.jsx", "app/contact-us/page.jsx", "app/components/Shared/Header/Header.jsx", "middleware.ts", "app/categories/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/[locale]/login/components/PoweredBy.js", "src/app/[locale]/login/Login.jsx", "store/slices/authSlice.js", "src/app/components/Login/ClientFsrc/app/property-listing/useGetProperties.jsseGetProperties.js", "src/app/landingPage/videos/RelatedVideos.jsx", "src/app/landingPage/FeaturedCompanies/FeaturedCompanies.jsx", "src/app/[locale]/contact-us/page.jsx", "src/app/components/Shared/Header/Header.jsx", "src/middleware.ts", "src/app/[locale]/categories/page.jsx", "middleware.js"],
   "exclude": ["node_modules"]
 }
