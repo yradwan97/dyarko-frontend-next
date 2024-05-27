@@ -62,7 +62,7 @@ const OTP = ({ onComplete }) => {
             <OTPInput otp={otp} setOTP={setOTP} length={length} onComplete={handleComplete} />
             <div className='flex items-center justify-center space-x-2 p-1 mt-2'>
                 <Button variant='primary' disabled={!allowSubmit} onClick={() => onComplete(otp.join(''))}>{t("submit")}</Button>
-                <Button variant='primary' onClick={() => generateOTP()}>Generate OTP</Button>
+                {/* <Button variant='primary' onClick={() => generateOTP()}>Generate OTP</Button> */}
             </div>
         </div>
     );
