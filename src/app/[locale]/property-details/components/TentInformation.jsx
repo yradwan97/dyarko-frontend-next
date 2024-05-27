@@ -7,6 +7,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import SingleTent from "./SingleTent"
 import { useTranslations } from 'next-intl';
+import HeadTitle from './HeadTitle';
 
 const TentInformation = ({ tents }) => {
     const t = useTranslations("Properties.Details.Tents")

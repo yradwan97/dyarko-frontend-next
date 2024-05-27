@@ -86,7 +86,7 @@ function AboutProperty({ property }) {
 
             </div>
             {property?.description && <div className='mt-12 flex flex-col space-y-4'>
-               <Typography variant='h4' as='h4' className>{t("about-this")} {useLocale() === "en" && capitalizeFirst(property.category)}</Typography>
+               <Typography variant='h4' as='h4' className>{t("about-this")} {locale === "en" && capitalizeFirst(property.category)}</Typography>
                <Typography variant='body-md-medium' as='p' className='text-gray-500 line-clamp-3 md:line-clamp-none overflow-hidden'>
                   {property.description}
                </Typography>
