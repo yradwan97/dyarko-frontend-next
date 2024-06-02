@@ -640,7 +640,8 @@
       },
       "Tents": {
         "single-tent": "Code: {code} | Price: {price} | Available Date: {date} | Capacity: {capacity}",
-        "no-tents": "No available tents in your selected date range."
+        "no-tents": "No available tents in your selected date range.",
+        "title": "Select Tents"
       },
       "location": "Location",
       "title": "Renting Information",

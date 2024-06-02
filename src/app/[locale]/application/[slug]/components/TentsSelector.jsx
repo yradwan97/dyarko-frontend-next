@@ -5,6 +5,7 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Chip from '@mui/material/Chip';
 import { format } from 'date-fns';
+import { useTranslations } from 'next-intl';
 
 const CustomChip = ({ code, onDelete }) => (
   <Chip
@@ -24,6 +25,7 @@ const CustomChip = ({ code, onDelete }) => (
 
 const TentsSelector = ({ options, onChange, }) => {
   const [selectedTents, setSelectedTents] = useState([]);
+  const t = useTranslations("Application.RentingDetails.Tents")
 
   useEffect(() => {
     onChange(selectedTents)
@@ -50,7 +52,7 @@ const TentsSelector = ({ options, onChange, }) => {
 
   return (
     <FormControl required fullWidth style={{ "marginTop": "8px" }}>
-      <InputLabel id="dropdown-label">Select Tents</InputLabel>
+      <InputLabel id="dropdown-label">{t("title")}</InputLabel>
       <Select
         labelId="dropdown-label"
         id="dropdown"
