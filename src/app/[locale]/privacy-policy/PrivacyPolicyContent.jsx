@@ -4,6 +4,7 @@ import Typography from "../components/Shared/Typography"
 import { axiosClient as axios } from "../services/axiosClient"
 import React, { useEffect, useState } from 'react'
 import Link from "next/link"
+
 const PrivacyPolicyContent = () => {
     const [userPrivacy, setUserPrivacy] = useState(null)
     const t = useTranslations("HomePage.Footer.Privacy")
