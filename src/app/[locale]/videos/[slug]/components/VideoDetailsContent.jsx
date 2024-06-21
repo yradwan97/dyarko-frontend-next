@@ -10,7 +10,7 @@ import SendSolid from "@/src/app/[locale]/components/UI/icons/SendSolid";
 import VideoUser from './VideoUser';
 import Comment from './Comment';
 import VideoItem from '../../VideoItem';
-import { addComment, useGetVideo, useGetVideoComments } from '../../videoService';
+import { addComment, createVideoView, useGetVideo, useGetVideoComments } from '../../videoService';
 import { useSession } from 'next-auth/react';
 import Link from "next/link";
 import { useGetOwnerVideos } from '@/src/app/[locale]/companies/ownersApi';
@@ -23,11 +23,25 @@ const VideoDetailsContent = () => {
   const { data: session } = useSession();
   const [comment, setComment] = useState("");
   const t = useTranslations("Videos.Details")
+  const [video, setVideo] = useState(null)
 
   const {
     video: currentVideo,
     refetch: refetchSingleVideo,
   } = useGetVideo(slug);
+
+  useEffect(() => {
+    if (currentVideo) {
+      setVideo(currentVideo)
+    }
+  }, [currentVideo])
+
+  useEffect(() => {
+    if (video) {
+      createVideoView(slug)
+      console.count("video view")
+    }
+  }, [video]);
 
   const { data: videos } = useGetOwnerVideos(currentVideo?.user);
 
@@ -74,11 +88,11 @@ const VideoDetailsContent = () => {
 
   return (
     <div className="container py-20">
-      {currentVideo && (
+      {video && (
         <>
           <div className='flex flex-col sm:flex-row sm:justify-between my-2'>
             <Typography as='h2' variant='h2' className='mb-3'>
-              {currentVideo?.title}
+              {video?.title}
             </Typography>
             <Button
               variant="primary-outline"
@@ -91,10 +105,10 @@ const VideoDetailsContent = () => {
           </div>
           <div className="flex flex-col md:flex-row">
             <div className="relative h-auto w-full bg-cover bg-center md:w-1/2">
-              <Link href={currentVideo.video_name} legacyBehavior passHref>
-                <a href={currentVideo.video_name} target="_blank" rel="noopener noreferrer">
+              <Link href={video.video_name} legacyBehavior passHref>
+                <a href={video.video_name} target="_blank" rel="noopener noreferrer">
                   <div className="relative">
-                    <Image src={currentVideo.thumbnail} alt="" height={700} width={700} />
+                    <Image src={video.thumbnail} alt="" height={700} width={700} />
                     <div className="absolute -translate-x-7 inset-0 flex justify-center items-center">
                       <PlayVideoSolid className="h-16 w-16 relative cursor-pointer stroke-white stroke-2 fill-black z-999" />
                     </div>
@@ -104,7 +118,7 @@ const VideoDetailsContent = () => {
             </div>
             <div className="flex w-full flex-col overflow-hidden rounded-lg border border-main-200 md:w-1/2">
               <div className="bg-main-100 p-10">
-                <VideoUser videoData={currentVideo} onTriggerRefetch={onTriggerRefetch} />
+                <VideoUser videoData={video} onTriggerRefetch={onTriggerRefetch} />
               </div>
               <div>
                 <div className="p-5">

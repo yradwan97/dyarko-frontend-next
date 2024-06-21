@@ -15,13 +15,13 @@ import { getPropertyAddress } from "@/src/app/[locale]/utils/utils";
 import { useQuery } from "react-query";
 import { capitalizeFirst } from '@/src/app/[locale]/utils/utils';
 import { axiosClient as axios } from "@/src/app/[locale]/services/axiosClient"
-import { useIsPropertySaved } from "../../property-listing/propertiesApis"
+import { createPropertyView, useGetSingleProperty, useIsPropertySaved } from "../../property-listing/propertiesApis"
 import { toast } from "react-toastify"
 import { useLocale, useTranslations } from "next-intl";
 
 const PropertyDetails = ({ slug }) => {
 
-  const [property, setProperty] = useState()
+  const [property, setProperty] = useState(null)
   const isLiked = useIsPropertySaved(slug)
   const [liked, setLiked] = useState(isLiked)
   const t = useTranslations("Properties.Details")
@@ -32,20 +32,19 @@ const PropertyDetails = ({ slug }) => {
   }, [isLiked])
 
 
-  const { isLoading, data, refetch } = useQuery(
-    ["property-details", slug],
-    async () => await axios.get(`/properties/${slug}`),
-    {
-      refetchOnWindowFocus: false,
-      refetchOnReconnect: true
-    }
-  )
+  const { isLoading, data, refetch } = useGetSingleProperty(slug)
 
   useEffect(() => {
     if (data?.data?.success) {
       setProperty(data.data.data)
     }
   }, [data])
+
+  useEffect(() => {
+    if (property) {
+      createPropertyView(slug)
+    }
+  }, [property])
 
   useEffect(() => {
     refetch()
@@ -76,9 +75,9 @@ const PropertyDetails = ({ slug }) => {
       if (response.data.success) {
         setLiked(!liked)
         if (liked) {
-          toast.error("Property unsaved!")
+          toast.error(t("Save.unsaved"))
         } else {
-          toast.success("Property saved!")
+          toast.success(t("Save.saved"))
         }
       }
       return response

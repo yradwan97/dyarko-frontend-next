@@ -12,6 +12,7 @@ import { useSearchParams } from "next/navigation";
 import type { PropertyType } from "@/src/app/[locale]/types/types";
 import { filterPropertyTypes } from "../../utils/utils";
 import { useLocale, useTranslations } from "next-intl";
+import { governerates, Governerate } from "../../utils/utils";
 
 const PRICES = [
   {
@@ -43,21 +44,21 @@ export interface SearchControlProps {
   // searchParams? : ReadonlyURLSearchParams
 }
 
-type Governerate = {
-  id: string;
-  icon: string;
-};
+// type Governerate = {
+//   id: string;
+//   icon: string;
+// };
 
-const governerates: Governerate[] = [
-  { id: "", icon: "All" },
-  { id: "al ahmadi", icon: "Al Ahmadi" },
-  { id: "al asimah", icon: "Al-Asimah" },
-  { id: "al farwaniyah", icon: "Farwaniya" },
-  { id: "hawalli", icon: "Hawalli" },
-  { id: "al jahra", icon: "Jahra" },
-  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
-  { id: "kuwait city", icon: "Kuwait City" },
-];
+// const governerates: Governerate[] = [
+//   { id: "", icon: "All" },
+//   { id: "al ahmadi", icon: "Al Ahmadi" },
+//   { id: "al asimah", icon: "Al-Asimah" },
+//   { id: "al farwaniyah", icon: "Farwaniya" },
+//   { id: "hawalli", icon: "Hawalli" },
+//   { id: "al jahra", icon: "Jahra" },
+//   { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
+//   { id: "kuwait city", icon: "Kuwait City" },
+// ];
 
 function SearchControl({ slug, onSearch, onReset }: SearchControlProps) {
   const locale = useLocale();
@@ -171,6 +172,7 @@ function SearchControl({ slug, onSearch, onReset }: SearchControlProps) {
               {tSearch("location")}
             </Typography>
             <Select
+              isGov
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={governerates}
               selected={selectedGov}

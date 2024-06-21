@@ -9,6 +9,7 @@ import rangeImg from "../../../../../public/assets/Range.png";
 import Feature from "./Feature";
 import RentalPeriod from "./RentalPeriod";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 const paymentTypeToPriceRangeMap = {
   "rent": [10, 5000],
@@ -21,6 +22,8 @@ function FilterSide({ setOpen, onApplyFilters }) {
   const [bathrooms, setBathrooms] = useState(2)
   const [bedrooms, setBedrooms] = useState(4)
   const [value, setValue] = useState(paymentTypeToPriceRangeMap[activeCategory]);
+  const t = useTranslations("PropertySearch.Side")
+  const tGeneral = useTranslations("General.PaymentMethods")
 
   useEffect(() => {
     setValue(paymentTypeToPriceRangeMap[activeCategory])
@@ -39,10 +42,10 @@ function FilterSide({ setOpen, onApplyFilters }) {
         style={{ animationFillMode: "both" }}
       >
         <Typography variant="h4" as="h4" className="mb-8 text-black">
-          More Filters
+          {t("more")}
         </Typography>
         <Typography variant="body-md-bold" className="mb-3 text-black" as="p">
-          Category
+          {t("category")}
         </Typography>
         <ul className="flex flex-row space-x-3">
           <li
@@ -52,7 +55,7 @@ function FilterSide({ setOpen, onApplyFilters }) {
               }`}
             onClick={() => setActiveCategory("rent")}
           >
-            Rent
+            {tGeneral("rent")}
           </li>
           <li
             className={`cursor-pointer rounded-lg border px-5 py-2.5 text-sm ${activeCategory === "installment"
@@ -61,12 +64,12 @@ function FilterSide({ setOpen, onApplyFilters }) {
               }`}
             onClick={() => setActiveCategory("installment")}
           >
-            Installment
+            {tGeneral("installment")}
           </li>
         </ul>
         <Line className="my-6 !bg-gray-100" />
         <Typography variant="body-md-bold" className="mb-3 text-black" as="p">
-          Price Range
+          {t("range")}
         </Typography>
         <div className="relative">
           <Image src={rangeImg} className="mx-auto h-[60px] w-[90%]" alt="" />
@@ -76,8 +79,8 @@ function FilterSide({ setOpen, onApplyFilters }) {
 
         </div>
 
-        <Line className="mt-12 mb-6 !bg-gray-100" />
-        <Feature bathrooms={bathrooms} bedrooms={bedrooms} setBathrooms={setBathrooms} setBedrooms={setBedrooms} />
+        {/* <Line className="mt-12 mb-6 !bg-gray-100" /> */}
+        {/* <Feature bathrooms={bathrooms} bedrooms={bedrooms} setBathrooms={setBathrooms} setBedrooms={setBedrooms} /> */}
         <Line className="my-6 !bg-gray-100" />
         {/* <RentalPeriod /> */}
         <div className="my-16 flex items-center space-x-6">
@@ -100,7 +103,7 @@ function FilterSide({ setOpen, onApplyFilters }) {
               }, 2000)
             }}
           >
-            Reset
+            {t("reset")}
           </Button>
           <Button
             variant="primary"
@@ -115,7 +118,7 @@ function FilterSide({ setOpen, onApplyFilters }) {
               })
             }}
           >
-            Apply
+            {t("apply")}
           </Button>
         </div>
       </div>

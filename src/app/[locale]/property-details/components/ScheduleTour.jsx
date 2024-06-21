@@ -14,6 +14,7 @@ import { useSession } from "next-auth/react";
 import { toast } from "react-toastify"
 import { format } from "date-fns"
 import { useTranslations } from "next-intl";
+import InputGroup from "../../components/Shared/Form/InputGroup";
 
 function ScheduleTour({ visible, setVisible, id, propertyId }) {
   const { register, formState: { errors } } = useForm();
@@ -51,7 +52,7 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
               "auth-token": `Bearer ${session?.user?.accessToken}`
             }
           });
-
+          console.log(response.data.data)
           setAvailableTimeSlots(response.data.data);
         } catch (error) {
           console.error("Error fetching unavailable time slots:", error);
@@ -61,6 +62,14 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
     }
 
   }, [id, session, visible]);
+
+  const getDisplayTime = (timeslot) => {
+    let date = new Date(timeslot)
+    let hours = date.getHours().toString().padStart(2, "0")
+    let minutes = date.getMinutes().toString().padStart(2, "0")
+    console.log(`${hours}:${minutes}`)
+    return `${hours}:${minutes}`
+  }
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -90,12 +99,10 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
 
       // Handle success
 
-      if (response.data.success) {
-        toast.success()
-      }
+      toast.success(t("success"))
       setVisible(false)
     } catch (error) {
-      console.error("Error adding tour:", error);
+      toast.error(t("error"));
     }
   };
 
@@ -119,11 +126,18 @@ function ScheduleTour({ visible, setVisible, id, propertyId }) {
           <div className="flex flex-col space-x-4 lg:flex-row">
             <div className="w-full lg:w-1/2">
               <CalendarComponent onDateChange={handleDateChange} dateRanges={availableTimeSlots} />
+              {availableTimeSlots.length > 0 &&
+                <div className="text-center mt-5">
+                  <Typography variant="body-lg-medium" as="p">
+                    {t("available-slots")} <div className="text-main-orange-500 p-1 rounded-lg shadow-lg shadow-gray-400 flex w-auto justify-center">{`${getDisplayTime(availableTimeSlots[0].from)} - ${getDisplayTime(availableTimeSlots[0].to)}`}</div>
+                  </Typography>
+                </div>
+              }
             </div>
 
             <form className="w-full lg:w-1/2">
               <div className="mt-3 lg:mt-0">
-                <PhoneInput className="lg:w-full" {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
+                <InputGroup className="lg:w-full" {...scheduleTourSchema.phoneNumber} register={scheduleTourSchema.phoneNumber.register} value={phoneNumber} onChange={e => setPhoneNumber(e.target.value)} />
                 <div className="flex flex-col space-y-3">
                   <Label htmlFor="comment">{t("Comment.label")}</Label>
                   <textarea

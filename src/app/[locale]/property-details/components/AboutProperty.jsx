@@ -20,6 +20,7 @@ import ServicesComponent from "./ServicesComponent"
 import Link from "next/link"
 import TentInformation from './TentInformation';
 import { useLocale, useTranslations } from 'next-intl';
+import UnitPricing from './UnitPricing';
 
 function AboutProperty({ property }) {
    const { _id: ownerId, name: ownerName, image: ownerImage } = property?.owner
@@ -121,6 +122,7 @@ function AboutProperty({ property }) {
                </div>
             </div>
             <FeatureComponent property={property} />
+            <UnitPricing property={property} />
             {category && category === "tent_group" && tents_info?.length > 0 && <TentInformation tents={tents_info} />}
             {amenities && amenities.length > 0 && <AmenetiesComponent amenities={amenities} />}
             {services && services.length > 0 && <ServicesComponent services={services} />}

@@ -13,6 +13,7 @@ function FilterSection({ selectedGov, setSelectedGov, governerates, onApplyFilte
     <>
       <div className="relative w-full lg:w-3/5 mr-4 flex space-x-3 flex-row">
         <Select
+          isGov
           containerClass="py-2 px-4 w-full rounded-md !justify-between"
           values={governerates}
           selected={selectedGov}

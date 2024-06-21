@@ -35,13 +35,18 @@ export const useGetVideo = (id) => {
             refetchOnReconnect: true
         }
     )
-
-    
-
     return {
         video: isSuccess ? data?.data.data : null,
         refetch,
         isFetching
+    }
+}
+export const createVideoView = async (id) => {
+    try {
+        let res = await axios.post(`/videos/${id}/views`)
+        console.log(res)
+    } catch (e) {
+        console.error(e)
     }
 }
 export const useGetVideoComments = (id, accessToken) => {

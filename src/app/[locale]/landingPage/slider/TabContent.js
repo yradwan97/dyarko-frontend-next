@@ -8,23 +8,13 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useGetPropertyTypes } from "@/src/app/[locale]/property-listing/propertiesApis";
 import Select from "@/src/app/[locale]/components/Shared/Form/Select";
 import { useTranslations } from "next-intl";
-
-
-const governerates = [
-  { id: "al ahmadi", icon: "Al Ahmadi" },
-  { id: "al asimah", icon: "Al Asimah" },
-  { id: "al farwaniyah", icon: "Al Farwaniya" },
-  { id: "hawalli", icon: "Hawalli" },
-  { id: "al jahra", icon: "Al Jahra" },
-  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
-  { id: "kuwait city", icon: "Kuwait City" }
-]
+import { governerates } from "../../utils/utils";
 
  function TabContent({tab, session}) {
   const t = useTranslations("HomePage.Slider.TabsContent")
    const {data: propertyTypes} = useGetPropertyTypes()
   const [date, setDate] = useState("");
-  const [selectedGov, setSelectedGov] = useState(governerates[0])
+  const [selectedGov, setSelectedGov] = useState(governerates && governerates[0])
   const [selectedPropertyType, setSelectedPropertyType] = useState(propertyTypes ? propertyTypes[0] : undefined)
 
   useEffect(() => {
@@ -68,6 +58,7 @@ const governerates = [
           </Typography>
           <div className="w-full sm:w-full md:mx-0 ">
             <Select
+              isGov
               containerClass="py-2 px-6 w-full rounded-lg !justify-between"
               values={governerates}
               selected={selectedGov}

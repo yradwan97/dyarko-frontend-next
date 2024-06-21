@@ -12,7 +12,7 @@ function Price({ price, period, paymentType }) {
           as="p"
           className="tracking-tightest text-main-yellow-600"
         >
-          {t('KWD')} {price}
+          {price} {t('KWD')}
         </Typography>}
         {period && <span> / </span>}
         {paymentType === "rent" && <Typography variant="body-md-medium" as="p" className="text-gray-400">

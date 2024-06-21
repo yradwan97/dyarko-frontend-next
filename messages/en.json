@@ -10,11 +10,21 @@
       "KWD": "KWD",
       "all": "All"
     },
+    "Regions": {
+      "al_ahmadi": "Al Ahmadi",
+      "al_asimah": "Al Asimah",
+      "al_farwaniyah": "Al Farwaniyah",
+      "hawalli": "Hawalli",
+      "al_jahra": "Al Jahra",
+      "mubarak_al_kabeer": "Mubarak Al Kabeer",
+      "kuwait_city": "Kuwait City"
+    },
     "Categories": {
       "title": "Property Categories",
       "no-data": "No data yet",
       "house": "House",
       "caravan": "Caravan",
+      "category": "Category",
       "chalet": "Chalet",
       "farm": "Farm",
       "land": "Land",
@@ -33,7 +43,22 @@
     "back": "Back",
     "loading": "Loading",
     "property": "Property",
-    "properties": "Properties"
+    "properties": "Properties",
+    "paid": "Paid",
+    "unpaid": "Unpaid"
+  },
+  "PropertySearch": {
+    "home": "Home",
+    "search": "Search",
+    "title": "Search properties",
+    "total": "{count, plural, =1 {property} other {# properties}}",
+    "Side": {
+      "category": "Category",
+      "more": "More Filters",
+      "range": "Price Range",
+      "apply": "Apply",
+      "reset": "Reset"
+    }
   },
   "Navbar": {
     "rent": "rent",
@@ -50,6 +75,18 @@
     "Dropdown": {
       "title": "Notifications",
       "no-new": "No New Notifications."
+    },
+    "RentRequest": {
+      "title": "Approve Rent Request",
+      "property": "Property",
+      "code": "Property Code",
+      "start": "Start Date",
+      "end": "End Date",
+      "type": "Rent Type",
+      "amount": "Rent Amount",
+      "kwd": "KWD",
+      "accept": "Accept",
+      "deny": "Deny"
     }
   },
   "Properties": {
@@ -116,6 +153,15 @@
         "yes": "Yes",
         "no": "No"
       },
+      "Pricing": {
+        "title": "Additional Fees",
+        "daily": "Daily price",
+        "weekly": "Weekly price",
+        "monthly": "Monthly price",
+        "commission": "Commission",
+        "price": "Price",
+        "kwd": "KWD"
+      },
       "Tents": {
         "title": "Tent Information",
         "tent": "Tent",
@@ -157,12 +203,14 @@
         },
         "missing-fields": "Please make sure to select a date and enter your phone number!",
         "success": "Tour added successfully, pending owner confirmation.",
+        "error": "Error adding tour, please try again later",
         "title": "Schedule a tour",
         "Comment": {
           "label": "Comment",
           "placeholder": "Leave a comment"
         },
-        "add": "Add"
+        "add": "Add",
+        "available-slots": "Available time slot"
       },
       "area": "Area",
       "area-unit-1": "m<sup>2</sup>",
@@ -281,7 +329,8 @@
         "title": "About Dyarko",
         "terms": "Terms & Conditions",
         "privacy": "Privacy Policy",
-        "contact": "Contact Us"
+        "contact": "Contact Us",
+        "faqs": "How To Use"
       },
       "Social": {
         "title": "Social Media",
@@ -290,6 +339,18 @@
         "linkedin": "LinkedIn",
         "twitter": "Twitter",
         "tiktok": "TikTok"
+      },
+      "Terms": {
+        "title": "Terms & Conditions",
+        "content": "Content",
+        "file": "File",
+        "open-file": "Open File"
+      },
+      "Privacy": {
+        "header": "Privacy Policy",
+        "content": "Content",
+        "file": "File",
+        "open-file": "Open File"
       },
       "Copyright": {
         "1": "©2024 Dyarko. All rights reserved",
@@ -323,6 +384,9 @@
       "buttons": {
         "forgot-password": "Forgot Password?",
         "login": "Login"
+      },
+      "validation": {
+        "error": "Invalid credentials. Try again!"
       }
     },
     "Modal": {
@@ -330,6 +394,10 @@
       "sub": "Are you sure you want to login?",
       "confirm": "Login",
       "cancel": "Continue Viewing"
+    },
+    "Confirm": {
+      "header": "Your email has been verified successfully!",
+      "subheader": "Close this tab and proceed to login with your credentials."
     }
   },
   "SignUp": {
@@ -373,7 +441,24 @@
     },
     "got-account": "Already have a user account?",
     "login": "Login Here",
-    "is-owner": "Already have an owner account?"
+    "is-owner": "Already have an owner account?",
+    "agree": "Please agree to the following",
+    "Modals": {
+      "view-file": "View file",
+      "content": "content",
+      "terms": {
+        "title": "Terms & Conditions"
+      },
+      "refund": {
+        "title": "Refund Policies"
+      },
+      "privacy": {
+        "title": "Privacy Policies"
+      }
+    },
+    "agree-terms": "Agree to terms and conditions",
+    "agree-refund": "Agree to refund policies",
+    "agree-privacy": "Agree to privacy policies"
   },
   "Companies": {
     "title": "Owners",
@@ -473,12 +558,15 @@
         "account": "Bank Account",
         "account-placeholder": "123456789",
         "account-required": "Account Number is required",
+        "account-valid": "Please enter a valid account number (22 numbers)",
         "iban": "IBAN",
         "iban-placeholder": "XXXXXXXXXXXXXXXXXXXXXX",
         "iban-required": "IBAN is required",
+        "iban-valid": "Please enter a valid IBAN (30 characters)",
         "swift": "Swift Code",
         "swift-placeholder": "XXXXXXXXXXX",
         "swift-required": "Swift code is required",
+        "swift-valid": "Please enter a valid swift code (11 characters)",
         "save": "Save changes",
         "cancel": "Cancel"
       }
@@ -533,6 +621,10 @@
     "RealEstates": {
       "submit": "Submit",
       "cancel": "Cancel",
+      "NoSaved": {
+        "1": "You have no",
+        "2": "real-estates yet"
+      },
       "terminated": "Terminated",
       "title": "My real-estates",
       "rented": "Rented",
@@ -566,11 +658,61 @@
       "ServicesModal": {
         "title": "Available Services",
         "no-services": "No services are available"
+      },
+      "InvoicesTables": {
+        "Installment": {
+          "invoice-no": "Invoice No",
+          "due-on": "Due On",
+          "kwd": "KWD",
+          "paid-on": "Paid On",
+          "amount": "Amount",
+          "pay": "Pay"
+        },
+        "Rent": {
+          "invoice-no": "Invoice No",
+          "due-on": "Due On",
+          "purpose": "Purpose",
+          "kwd": "KWD",
+          "paid-on": "Paid On",
+          "amount": "Amount",
+          "pay": "Pay"
+        }
+      },
+      "Invoice": {
+        "extend": {
+          "footer-main": "Please pick a day!",
+          "footer-error": "Must be 30 days or less!"
+        },
+        "back": "Back to Invoices",
+        "actions": {
+          "title": "Actions",
+          "extend": "Extend Invoice",
+          "pay": "Pay Invoice"
+        },
+        "invoice-no": "Invoice No",
+        "view-invoice": "View Invoice",
+        "no-invoice": {
+          "main": "Invoice not available yet.",
+          "sub": "Kindly pay the invoice amount from the actions above to view your invoice."
+        },
+        "extend-modal": {
+          "title": "Request extension on invoice.",
+          "request": "Request",
+          "cancel": "Cancel",
+          "submit-success": "Extenstion request submitted successfully, pending owner confirmation",
+          "submit-error": "Error submitting request, please try again later"
+        }
+      },
+      "Invoices": {
+        "back": "Back to Real estates",
+        "terminated": "This property has been terminated.",
+        "transactions": "Transactions",
+        "no-invoices": "No Invoices."
       }
     },
     "Transactions": {
       "title": "Transactions",
-      "paid-in": "Paid In",
+      "paid-in": "Paid On",
       "purpose": "Purpose",
       "amount": "Amount"
     },
@@ -692,5 +834,32 @@
     "kwd": "KWD ",
     "total": "Total",
     "pay": "Pay"
+  },
+  "ForgetPassword": {
+    "title": "Forgot Password",
+    "header": "Enter email address",
+    "request-button": "Request new password",
+    "cancel": "Cancel",
+    "Email": {
+      "label": "Email",
+      "placeholder": "hi@example.com",
+      "required": "Email is required",
+      "valid": "Please enter a valid email"
+    }
+  },
+  "ResetPassword": {
+    "title": "Reset Password",
+    "dont-match": "Passwords do not match",
+    "required": "Password is required",
+    "min": "Minimum character length is 6",
+    "save": "Save new password",
+    "NewPassword": {
+      "label": "New Password",
+      "placeholder": "Enter new password"
+    },
+    "ConfirmPassword": {
+      "label": "Confirm New Password",
+      "placeholder": "Enter new password again"
+    }
   }
 }

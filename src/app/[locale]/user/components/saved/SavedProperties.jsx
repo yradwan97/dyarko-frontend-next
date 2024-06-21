@@ -21,7 +21,7 @@ const SavedProperties = () => {
 
   return (
     <div>
-      <Typography variant="h3" as="h3" className="mb-9 text-black">
+      <Typography variant="h3" as="h3" className="mb-9 text-black text-center">
         {t("title")}
       </Typography>
       {data?.length > 0 ? (
@@ -34,6 +34,7 @@ const SavedProperties = () => {
                   property={p?.property}
                   location={"savedProperties"}
                   onTriggerRefetch={onTriggerRefetch}
+                  className={"rounded-lg border-2 border-white p-1"}
                 />
               )
             })}

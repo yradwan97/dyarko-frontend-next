@@ -3,10 +3,12 @@ import { format } from "date-fns"
 import { capitalizeFirst } from "@/src/app/[locale]/utils/utils";
 import Button from '@/src/app/[locale]/components/Shared/Button';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 
 const RentsInvoicesTable = ({ invoices, selected, type, onSelect }) => {
     const router = useRouter()
+    const t = useTranslations("Account.RealEstates.InvoicesTables.Rent")
     const handlePayButtonClick = (e, id) => {
         e.preventDefault()
         e.stopPropagation()
@@ -16,17 +18,17 @@ const RentsInvoicesTable = ({ invoices, selected, type, onSelect }) => {
         <table className="w-full table-auto text-center">
             <thead>
                 <tr className="flex justify-between">
-                    <th className="text-md flex-1 text-left font-bold text-black">
-                        {selected.name === "paid" ? "Paid On" : "Due on"}
+                    <th className="text-md flex-1 text-center font-bold text-black">
+                        {selected.name === "paid" ? t("paid-on") : t("due-on")}
                     </th>
                     <th className={`text-md flex-1 text-center font-bold text-black`}>
-                        Purpose
+                        {t("purpose")}
                     </th>
-                    <th className={`text-md flex-1 ${selected.name === "unpaid" ? "text-center" : "text-right"} font-bold text-black`}>
-                        Amount
+                    <th className={`text-md flex-1 text-center font-bold text-black`}>
+                        {t("amount")}
                     </th>
-                    {selected.name === "unpaid" && <th className="text-md flex-1 text-right mr-2 font-bold text-black">
-                        Pay
+                    {selected.name === "unpaid" && <th className="text-md flex-1 text-center mr-2 font-bold text-black">
+                        {t("pay")}
                     </th>}
                 </tr>
             </thead>
@@ -34,7 +36,7 @@ const RentsInvoicesTable = ({ invoices, selected, type, onSelect }) => {
                 {invoices.data.filter(i => i.status === selected.name.toUpperCase()).map((invoice, index) => (
                     <tr key={index} className={`flex ${invoice.pdf ? "cursor-pointer" : "cursor-default"} justify-between items-center border-b border-main-100 px-2 py-4 hover:bg-main-100`}
                         onClick={() => onSelect(invoice._id)}>
-                        <td className="flex-1 text-left text-sm font-medium text-black">
+                        <td className="flex-1 text-center text-sm font-medium text-black">
                             {format(selected.name === "paid" ?
                                 new Date(invoice?.paid_at)
                                 :
@@ -45,12 +47,12 @@ const RentsInvoicesTable = ({ invoices, selected, type, onSelect }) => {
                         <td className="flex-1 capitalize text-center text-sm font-medium text-black">
                             {invoice?.title} - {capitalizeFirst(invoice?.property[0]?.type)}
                         </td>
-                        <td className={`flex-1 ${selected.name === "unpaid" ? "text-center" : "text-right"} text-sm font-medium text-main-yellow-500`}>
-                            KWD {Math.abs(invoice?.amount)}
+                        <td className={`flex-1 text-center text-sm font-medium text-main-yellow-500`}>
+                            {Math.abs(invoice?.amount)} {t("kwd")}
                         </td>
-                        {selected.name === "unpaid" && <td className={`flex-1 capitalize text-right text-sm font-medium text-black`}>
+                        {selected.name === "unpaid" && <td className={`flex-1 capitalize text-center text-sm font-medium text-black`}>
                             <Button variant='primary' className='!px-3 !py-1' onClick={(e) => handlePayButtonClick(e, invoice._id)}>
-                                Pay
+                                {t("pay")}
                             </Button>
                         </td>}
                     </tr>

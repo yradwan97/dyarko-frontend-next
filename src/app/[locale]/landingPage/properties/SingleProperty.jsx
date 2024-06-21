@@ -19,13 +19,13 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
     <Link href={`/property-details/${property?._id}`}>
       <div className={`flex-1 hover:border-main-600 ${className || ""}`}>
         <div className={`relative ${listView && "w-1/2"}`}>
-          {property && <CategoryBadge category={property?.category} />}
-          {property?.payment_type === "rent" && <TopBadge />}
+          {property && <CategoryBadge category={property?.category} isDark={property?.image && true} />}
+          {property?.payment_type === "rent" && <TopBadge isDark={property?.image && true} />}
           {property?.popular && <PopularBadge />}
           <Image
             src={property?.image || propertyOne}
             alt="property"
-            className={` w-full ${listView ? "h-full rounded-l-lg" : "h-44 rounded-t-lg sm:h-32"
+            className={`bg-cover ${listView ? "h-full rounded-l-lg" : "h-auto rounded-t-lg sm:h-32"
               } `}
             width={250}
             height={250}
@@ -35,7 +35,7 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
         <div
           className={`bg-white  ${listView
             ? "w-1/2 rounded-r-lg border-0 p-4 sm:p-6"
-            : "border border-main-100 py-8 px-6 "
+            : "border border-main-100 py-8 px-6 w-auto"
             }`}
         >
           <div className="flex items-center justify-between">
@@ -73,7 +73,7 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
                     as="p"
                     className="text-gray-500"
                   >
-                    {property?.bedrooms} {location !== "search" ? t("beds") : ""}
+                    {property?.bedrooms} {(location !== "search" && location !== "savedProperties") ? t("beds") : ""}
                   </Typography>
                 </>
               }
@@ -87,7 +87,7 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
                     as="p"
                     className="text-gray-500 "
                   >
-                    {property?.bathrooms} {location !== "search" ? t("baths") : ""}
+                    {property?.bathrooms} {(location !== "search" && location !== "savedProperties") ? t("baths") : ""}
                   </Typography>
                 </>
               }
@@ -101,7 +101,7 @@ const SingleProperty = ({ property, className, location, listView, onTriggerRefe
                     as="p"
                     className="text-gray-500 "
                   >
-                    {property?.area || 100} m²
+                    {property?.area || 100} {(location !== "search" && location !== "savedProperties") ? "m²" : ""}
                   </Typography>
                 </>
               }

@@ -7,16 +7,7 @@ import PropertiesSection from "./PropertiesSection";
 import { useState } from "react";
 import Select from "@/src/app/[locale]/components/Shared/Form/Select";
 import { useTranslations } from "next-intl";
-
-const governerates = [
-  { id: "al ahmadi", icon: "Al Ahmadi" },
-  { id: "al asimah", icon: "Al-Asimah" },
-  { id: "al farwaniyah", icon: "Farwaniya" },
-  { id: "hawalli", icon: "Hawalli" },
-  { id: "al jahra", icon: "Jahra" },
-  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
-  { id: "kuwait city", icon: "Kuwait City" }
-]
+import { governerates } from "../../utils/utils";
 
 function Properties() {
   const [activeTab, setActiveTab] = useState("rent");
@@ -63,6 +54,7 @@ function Properties() {
           </ul>
           <div className="relative mx-auto w-3/4 sm:w-3/4 md:w-5/12 lg:w-4/12">
             <Select
+              isGov
               containerClass="py-3 px-5 w-full rounded-lg !justify-between"
               values={governerates}
               selected={selectedGov}

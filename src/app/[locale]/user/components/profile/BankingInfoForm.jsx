@@ -59,7 +59,12 @@ const UpdateBankingForm = ({ defaultValues, onFormSubmit }) => {
                 className="!text-black placeholder:text-gray-400"
                 id="bankAccount"
                 placeholder={t("account-placeholder")}
-                register={register("bankAccount", { required: t("account-required") })}
+                register={register("bankAccount", {
+                    required: t("account-required"), pattern: {
+                        value: /^\d{22}$/,
+                        message: t("account-valid"),
+                    },
+                })}
                 error={errors.bankAccount}
             />
 
@@ -69,7 +74,12 @@ const UpdateBankingForm = ({ defaultValues, onFormSubmit }) => {
                 id="IBAN"
                 className="!text-black placeholder:text-gray-400"
                 placeholder={t("iban-placeholder")}
-                register={register("IBAN", { required: t("iban-required") })}
+                register={register("IBAN", {
+                    required: t("iban-required"), pattern: {
+                        value: /^[a-zA-Z0-9]{30}$/,
+                        message: t("iban-valid"),
+                    },
+                })}
                 error={errors.IBAN}
             />
 
@@ -79,7 +89,12 @@ const UpdateBankingForm = ({ defaultValues, onFormSubmit }) => {
                 className="!text-black placeholder:text-gray-400"
                 id="swiftCode"
                 placeholder={t("swift-placeholder")}
-                register={register("swiftCode", { required: t("swift-required") })}
+                register={register("swiftCode", {
+                    required: t("swift-required"), pattern: {
+                        value: /^[a-zA-Z0-9]{11}$/,
+                        message: t("swift-valid"),
+                    },
+                })}
                 error={errors.swiftCode}
             />
 

@@ -10,6 +10,15 @@
       "KWD": "د.ك",
       "all": "الكل"
     },
+    "Regions": {
+      "al_ahmadi": "الأحمدي",
+      "al_asimah": "العاصمة",
+      "al_farwaniyah": "الفروانية",
+      "hawalli": "حولي",
+      "al_jahra": "الجهراء",
+      "mubarak_al_kabeer": "مبارك الكبير",
+      "kuwait_city": "مدينة الكويت"
+    },
     "Categories": {
       "title": "أقسام العقارات",
       "no-data": "لا توجد بيانات بعد",
@@ -24,8 +33,8 @@
     "PoweredBy": {
       "main": "مشغل بواسطة",
       "sub": "أنت توافق على ",
-      "link": "شروط الإستخدام & سياسة الخصوصية",
-      "long-text": "You don't need to consent as a condition of renting any property, or buying any other goods or services. Message/data rates may apply."
+      "link": "شروط الإستخدام و سياسة الخصوصية",
+      "long-text": ".لا تحتاج إلى الموافقة كشرط لاستئجار أي عقار، أو شراء أي سلع أو خدمات أخرى. قد يتم تطبيق أسعار الرسائل/البيانات"
     },
     "browse": "تصفح المزيد من العقارات",
     "login": "تسجيل دخول",
@@ -33,7 +42,20 @@
     "back": "عودة",
     "loading": "تحميل",
     "property": "عقار",
-    "properties": "عقارات"
+    "properties": "عقارات",
+    "paid": "مدفوعة",
+    "unpaid": "غير مدفوعة"
+  },
+  "PropertySearch": {
+    "title": "البحث عن عقارات ",
+    "total": "{count, plural, =1 {وحدة واحدة} few {# وحدات} many {# وحدة}}",
+    "Side": {
+      "category": "الفئة",
+      "more": "مرشحات أكثر",
+      "range": "نطاق السعر",
+      "apply": "تطبيق مرشح",
+      "reset": "إعادة تعيين المرشحات"
+    }
   },
   "Navbar": {
     "rent": "إيجار",
@@ -49,7 +71,19 @@
   "Notifications": {
     "Dropdown": {
       "title": "الإشعارات",
-      "no-new": "ليس ليدك إشعارات بعد ."
+      "no-new": ".ليس ليدك إشعارات بعد"
+    },
+    "RentRequest": {
+      "title": "تأكيد طلب الايجار",
+      "property": "الوحدة",
+      "code": "كود الوحدة",
+      "start": "بداية من",
+      "end": "ينتهي في",
+      "type": "نوع الايجار",
+      "amount": "قيمة الايجار",
+      "kwd": "د.ك",
+      "accept": "قبول",
+      "deny": "رفض"
     }
   },
   "Properties": {
@@ -93,8 +127,8 @@
       "Save": {
         "saved": "تم حفظ العقار",
         "unsaved": "تم ازالة العقار من قائمة المحفوظات",
-        "favorite": "مفضل",
-        "unfavorite": "غير مفضل"
+        "favorite": "اضف الى المفضلة",
+        "unfavorite": "ازالة من المفضلة"
       },
       "Features": {
         "title": "عقار مميز",
@@ -162,7 +196,8 @@
           "label": "تعليق",
           "placeholder": "أترك تعليقك"
         },
-        "add": "إضافة"
+        "add": "إضافة",
+        "available-slots": "وقت الزيارة المتاح"
       },
       "area": "المساحة",
       "area-unit-1": "m<sup>2</sup>",
@@ -181,14 +216,14 @@
       "services": "الخدمات المتاحة",
       "interior": "التصميم الداخلى",
       "map": "الخريطة",
-      "map-header": "اسحب الدبوس وأتركة لتحديد الموقع.",
+      "map-header": ".اسحب الدبوس وأتركة لتحديد الموقع",
       "rental-amenities": "وسائل الراحة بالعقار"
     }
   },
   "HomePage": {
     "Slider": {
       "main": "اشتري أو إستئجر أو أعرض عقارك بسهولة",
-      "sub": "منصة رائعة لشراء أو بيع أو حتى تأجير عقاراتك دون أي عمولات.",
+      "sub": ".منصة رائعة لشراء أو بيع أو حتى تأجير عقاراتك دون أي عمولات",
       "TabsContent": {
         "location": "الموقع",
         "when": "متى",
@@ -277,11 +312,24 @@
         "companies": "شركات",
         "videos": "فيديوهات"
       },
+      "Terms": {
+        "title": "الشروط والأحكام",
+        "content": "المحتوى",
+        "file": "الملف",
+        "open-file": "فتح الملف"
+      },
+      "Privacy": {
+        "header": "سياسة الخصوصية",
+        "content": "المحتوى",
+        "file": "الملف",
+        "open-file": "فتح الملف"
+      },
       "About": {
         "title": "عن ديــاركو",
-        "terms": "الشروط & الأحكام",
+        "terms": "الشروط و الأحكام",
         "privacy": "سياسة الخصوصية",
-        "contact": "تواصل معنا"
+        "contact": "تواصل معنا",
+        "faqs": "كيفية الاستخدام"
       },
       "Social": {
         "title": "السوشيال ميديا",
@@ -292,13 +340,17 @@
         "tiktok": "تيك توك"
       },
       "Copyright": {
-        "1": "©2024 Dyarko. All rights reserved",
-        "2": "Developed by",
+        "1": "٢٠٢٤© دياركو. جميع الحقوق محفوظة",
+        "2": "تم التطوير بواسطة",
         "3": "Echosoft"
       }
     }
   },
   "Login": {
+    "Confirm": {
+      "header": "تم التحقق من بريدك الإلكتروني بنجاح",
+      "subheader": "أغلق هذه النافذة وتابع تسجيل الدخول باستخدام بيانات الاعتماد الخاصة بك"
+    },
     "Page": {
       "main": "مرحباً بعودتك!",
       "sub": "مرحبًا بعودتك! الرجاء إدخال البيانات الخاصة بك.",
@@ -316,13 +368,16 @@
       },
       "password": {
         "label": "كلمة المرور",
-        "placeholder": "Enter password",
+        "placeholder": "ادخل كلمة السر",
         "required": "كلمة المرور مطلوبة",
         "valid": "أقل عدد من الحروف 6"
       },
       "buttons": {
         "forgot-password": "نسيت كلمة المرور ؟",
         "login": "دخول"
+      },
+      "validation": {
+        "error": "بيانات الاعتماد غير صحيحة. حاول مرة أخرى"
       }
     },
     "Modal": {
@@ -350,9 +405,9 @@
     },
     "Name": {
       "label": "الإسم",
-      "placeholder": "Enter your name",
+      "placeholder": "ادخل الإسم",
       "required": "الإسم مطلوب",
-      "valid": "من فضلك أدخل إسم حقيقي"
+      "valid": "من فضلك أدخل إسم صحيح"
     },
     "CivilianId": {
       "label": "رقم الهوية المدنية",
@@ -362,18 +417,35 @@
     },
     "Phone": {
       "label": "رقم الهاتف",
-      "placeholder": "Please enter your phone number",
+      "placeholder": "يرجى ادخال رقم الهاتف",
       "required": "رقم الهاتف مطلوب"
     },
     "Password": {
       "label": "كلمة المرور",
-      "placeholder": "Enter password",
+      "placeholder": "ادخل كلمة السر",
       "required": "كلمة المرور مطلوبة",
       "valid": "أقل عدد من الحروف 6"
     },
     "got-account": "لديك جساب مستخدم بالفعل ؟",
     "login": "تسجيل الدخول",
-    "is-owner": "لديك حساب مالك بالفعل ؟"
+    "is-owner": "لديك حساب مالك بالفعل ؟",
+    "Modals": {
+      "terms": {
+        "title": "الشروط و الأحكام"
+      },
+      "refund": {
+        "title": "سياسات الاسترجاع"
+      },
+      "privacy": {
+        "title": "سياسات الخصوصية"
+      },
+      "content": "المحتوى",
+      "view-file": "عرض الملف"
+    },
+    "agree": "يرجى الموافقة",
+    "agree-terms": "الموافقة على الشروط و الأحكام",
+    "agree-refund": "الموافقة على سياسات الاسترجاع",
+    "agree-privacy": "الموافقة على سياسات الخصوصية"
   },
   "Companies": {
     "title": "الملاك",
@@ -451,9 +523,9 @@
         "upload": "تحميل",
         "remove": "حذف",
         "name": "الإسم",
-        "name-placeholder": "Enter your name",
+        "name-placeholder": "ادخل الإسم",
         "name-required": "الإسم مطلوب",
-        "phone": "Phone Number",
+        "phone": "رقم الهاتف",
         "phone-placeholder": "5XXXXXXX",
         "phone-required": "رقم الهاتف مطلوب",
         "email": "البريد الإلكتروني :",
@@ -467,20 +539,23 @@
         "profile-fail": "حدث خطاء أثناء تعديل بيانات ملفك الشخصي !"
       },
       "Banking": {
-        "banking-success": "تم تحديث بيانات حسابك البنكي بنجاح !",
-        "banking-fail": "حدث خطاء أثناء تحديث بيانات حسابك البنكي",
-        "title": "تحديث البيانات",
-        "account": "الحساب البنكي",
+        "banking-success": "تم تحديث معلومات البنك بنجاح.",
+        "banking-fail": "حدث خطأ أثناء تحديث معلومات البنك!",
+        "title": "تحديث المعلومات المصرفية",
+        "account": "حساب بنكي",
         "account-placeholder": "123456789",
-        "account-required": "رقم الحساب مطلوب",
-        "iban": "IBAN",
+        "account-required": "الرقم الحسابي مطلوب",
+        "account-valid": "يرجى إدخال رقم حساب صالح (22 رقمًا)",
+        "iban": "رقم الآيبان",
         "iban-placeholder": "XXXXXXXXXXXXXXXXXXXXXX",
-        "iban-required": "رقم IBAN مطلوب",
-        "swift": "Swift كود",
+        "iban-required": "الآيبان مطلوب",
+        "iban-valid": "يرجى إدخال رقم آيبان صالح (30 رقمًا)",
+        "swift": "الرمز السريع (Swift)",
         "swift-placeholder": "XXXXXXXXXXX",
-        "swift-required": "Swift كود مطلوب ",
+        "swift-required": "الرمز السريع (Swift) مطلوب",
+        "swift-valid": "يرجى إدخال رمز سريع (سويفت) صالح (11 رقمًا)",
         "save": "حفظ التغييرات",
-        "cancel": "الغاء"
+        "cancel": "إلغاء"
       }
     },
     "Wallet": {
@@ -559,6 +634,12 @@
         "terminate": "انهاء التعقاد",
         "contract": "عرض العقد"
       },
+      "Invoices": {
+        "back": "العودة إلى العقارات",
+        "terminated": "تم إنهاء هذا العقار.",
+        "transactions": "المعاملات",
+        "no-invoices": "لا توجد فواتير."
+      },
       "TerminateModal": {
         "title": "لماذا تريد انهاء هذا التعاقد ؟",
         "placeholder": "أدخل سبب الإنهاء"
@@ -566,11 +647,55 @@
       "ServicesModal": {
         "title": "الخدمات المتاحة",
         "no-services": "لا توجد خدمات متاحة"
+      },
+      "InvoicesTables": {
+        "Installment": {
+          "invoice-no": "رقم الفاتورة",
+          "due-on": "تاريخ الاستحقاق",
+          "paid-on": "تاريخ الدفع",
+          "amount": "المبلغ",
+          "kwd": "د.ك",
+          "pay": "دفع"
+        },
+        "Rent": {
+          "invoice-no": "رقم الفاتورة",
+          "due-on": "تاريخ الاستحقاق",
+          "paid-on": "تاريخ الدفع",
+          "amount": "المبلغ",
+          "purpose": "السبب",
+          "kwd": "د.ك",
+          "pay": "دفع"
+        }
+      },
+      "Invoice": {
+        "extend": {
+          "footer-main": "الرجاء اختيار يوم!",
+          "footer-error": "يجب أن يكون أقل من 30 يومًا!"
+        },
+        "back": "العودة إلى الفواتير",
+        "actions": {
+          "title": "الإجراءات",
+          "extend": "تمديد الفاتورة",
+          "pay": "دفع الفاتورة"
+        },
+        "invoice-no": "رقم الفاتورة",
+        "view-invoice": "عرض الفاتورة",
+        "no-invoice": {
+          "main": "الفاتورة غير متوفرة بعد.",
+          "sub": "الرجاء دفع مبلغ الفاتورة من الإجراءات أعلاه لعرض فاتورتك."
+        },
+        "extend-modal": {
+          "title": "طلب تمديد على الفاتورة.",
+          "request": "طلب",
+          "cancel": "إلغاء",
+          "submit-success": "تم إرسال طلب التمديد بنجاح، في انتظار تأكيد المالك",
+          "submit-error": "حدث خطأ أثناء إرسال الطلب، يرجى المحاولة مرة أخرى لاحقًا"
+        }
       }
     },
     "Transactions": {
       "title": "المعاملات المالية",
-      "paid-in": "مدفوعة فى",
+      "paid-in": "تاريخ الدفع",
       "purpose": "السبب",
       "amount": "القيمة"
     },
@@ -583,15 +708,15 @@
       "min": "أقل عدد من الحروف 6",
       "OldPassword": {
         "label": "كلمة المرور القديمة",
-        "placeholder": "Enter old password"
+        "placeholder": "يرجى ادخال كلمة المرور القديمة"
       },
       "NewPassword": {
         "label": "كلمة المرور الجديدة",
-        "placeholder": "Enter new password"
+        "placeholder": "يرجى ادخال كلمة المرور الجديدة"
       },
       "ConfirmPassword": {
-        "label": "تأكدي كلمة المرور",
-        "placeholder": "Enter new password again"
+        "label": "تأكيد كلمة المرور",
+        "placeholder": "يرجى ادخال كلمة المرور الجديدة مجددا"
       }
     }
   },
@@ -614,7 +739,7 @@
     },
     "Process": {
       "renting-information": "تفاصيل الإيجار",
-      "terms-and-conditions": "الشروط & الأحكام",
+      "terms-and-conditions": "الشروط و الأحكام",
       "OTP": "OTP",
       "payment-option": "خيارات الدفع",
       "payment": "الدفع"
@@ -634,7 +759,7 @@
       },
       "DatePicker": {
         "available-date": "بداية التاريخ المتاح",
-        "min-months": "أقل عدد من الشهور {months, plural, =1 {one month} other {# months}} في الإيجار الشهري :.",
+        "min-months": "أقل عدد من الشهور {months, plural, =1 {شهر واحد} few {# شهر} many {# شهور}} في الإيجار الشهري :.",
         "start-date": "من تاريخ",
         "end-date": "الى تاريخ"
       },
@@ -669,14 +794,14 @@
       "pay": "إدفع"
     },
     "Success": {
-      "1": "{points, plural, =1 {one point} other {# points}}",
-      "2": "لقد حصلت على {points, plural, =1 {one point} other {# points}} التي يمكن إستخدامها فى طلب الجوائز",
+      "1": "{points, plural, =1 {نقطة واحدة} few {# نقاط} many {# نقطة}}",
+      "2": "لقد حصلت على {points, plural, =1 {نقطة واحدة} few {# نقاط} many {# نقطة}} التي يمكن إستخدامها فى طلب الجوائز",
       "3": "تم الدفع بنجاح",
       "ok": "حسناً"
     }
   },
   "Payment": {
-    "invoice-paid": "هذه الفاتورة مدفوعة بالفعل !",
+    "invoice-paid": "هذه الفاتورة مدفوعة بالفعل",
     "error": "حدث خطاء ما !",
     "title": "إدفع الفاتورة",
     "type": "نوع الإيجار",
@@ -692,5 +817,32 @@
     "kwd": "د.ك ",
     "total": "الإجمالي",
     "pay": "دفع"
+  },
+  "ForgetPassword": {
+    "title": "نسيت كلمة المرور",
+    "header": "أدخل عنوان البريد الإلكتروني",
+    "request-button": "طلب كلمة مرور جديدة",
+    "cancel": "إلغاء",
+    "Email": {
+      "label": "البريد الإلكتروني",
+      "placeholder": "hi@example.com",
+      "required": "البريد الإلكتروني مطلوب",
+      "valid": "يرجى إدخال بريد إلكتروني صحيح"
+    }
+  },
+  "ResetPassword": {
+    "title": "إعادة تعيين كلمة المرور",
+    "dont-match": "كلمات المرور غير متطابقة",
+    "required": "كلمة المرور مطلوبة",
+    "min": "الحد الأدنى لطول الأحرف هو 6",
+    "save": "حفظ كلمة المرور الجديدة",
+    "NewPassword": {
+      "label": "كلمة مرور جديدة",
+      "placeholder": "أدخل كلمة المرور الجديدة"
+    },
+    "ConfirmPassword": {
+      "label": "تأكيد كلمة المرور الجديدة",
+      "placeholder": "أدخل كلمة المرور الجديدة مرة أخرى"
+    }
   }
 }

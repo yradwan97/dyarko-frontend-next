@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useLocale, useTranslations } from "next-intl";
+import LocalizationDropdown from "../../components/Shared/Header/LocalizationDropdown";
 
 const navLinks = [
   { to: '/property-listing/rent', text: 'rent' },
@@ -70,7 +71,7 @@ function SideBar({ visible, setVisible }) {
                     bg-white bg-gradient-to-b from-main-100 to-white p-5 text-start`}
             >
               <Image className="mx-auto" width={150} height={150} src={locale === "en" ? logo : logoAr} alt="logo" />
-
+              <LocalizationDropdown showLanguage />
               <div className={`mt-4 flex flex-col ${locale === "ar" && "text-end"} space-y-1`}>
                 {navLinks.map((navLink, index) => (
                   <Link

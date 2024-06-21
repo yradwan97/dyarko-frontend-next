@@ -53,7 +53,7 @@ const MyRequests = ({ request }) => {
   return (
     <>
       <div>
-        <Typography variant="body-xl-bold" as="h2" className="mb-6 text-black">
+        <Typography variant="body-xl-bold" as="h2" className="mb-6 text-black text-center">
           {t("title")}
         </Typography>
         <div className="tabs-container mb-5">

@@ -8,13 +8,16 @@ import Paginator from "@/src/app/[locale]/components/Shared/pagination/Paginatio
 import PDFViewer from "./PDFViewer";
 import RentsInvoicesTable from "./RentsInvoicesTable"
 import InstallmentInvoicesTable from "./InstallmentInvoicesTable"
+import { useTranslations } from "next-intl";
 
-const values = [
-  { name: "paid", icon: "Paid" },
-  { name: "unpaid", icon: "Unpaid" }
-];
 const Invoices = ({ setShowRequest, id, type, selectedPropertyTerminated }) => {
+  const tGeneral = useTranslations("General")
+  const values = [
+    { name: "paid", icon: tGeneral("paid") },
+    { name: "unpaid", icon: tGeneral("unpaid") }
+  ];
   const [selected, setSelected] = useState(type && type === "installment" ? values[1] : values[0]);
+  const t = useTranslations("Account.RealEstates.Invoices")
   const [page, setPage] = useState(1)
   const [invoices, setInvoices] = useState({ data: [], itemCount: 0, pages: 1 })
   const [showInvoice, setShowInvoice] = useState(false)
@@ -37,7 +40,7 @@ const Invoices = ({ setShowRequest, id, type, selectedPropertyTerminated }) => {
 
   useEffect(() => {
     const getInvoices = async () => {
-      let endpoint = type === "rent" ? `/invoices?property=${id}&page=${page}` : `/installments_invoices?page=${page}`
+      let endpoint = type === "rent" ? `/invoices?property=${id}&page=${page}` : `/installments_invoices?property=${id}&page=${page}`
       try {
         let response = await axios.get(endpoint)
 
@@ -65,27 +68,29 @@ const Invoices = ({ setShowRequest, id, type, selectedPropertyTerminated }) => {
       >
         <ChevronLeftIcon className="mr-2.5 h-6 w-5 text-main-600" />
         <span className="text-md font-bold text-main-600">
-          Back to my real-estates
+          {t("back")}
         </span>
       </div>
 
       {selectedPropertyTerminated.isTerminated ? (
         <div className="w-full space-y-3">
           <Typography variant="body-xl-bold" as="h2" className="text-black text-center">
-            This property has been terminated
+            {t("terminated")}
           </Typography>
           <Typography variant="body-xl-bold" as="h2" className="text-black text-center">
-            Reason: {selectedPropertyTerminated.terminationReason}
+            {selectedPropertyTerminated.terminationReason}
           </Typography>
         </div>
       ) :
         <>
-          <div className="mb-8 flex items-center flex-row justify-between space-y-2">
-            <Typography variant="body-xl-bold" as="h2" className="text-black">
-              Transactions
-            </Typography>
+          <div className="mb-6 grid grid-cols-5">
+            <div className="flex col-span-3 items-center justify-center pl-[50%]">
+              <Typography variant="body-xl-bold" as="h2" className="text-black text-center">
+                {t("transactions")}
+              </Typography>
+            </div>
 
-            <div className="items-center justify-end space-x-4 flex">
+            <div className="flex col-span-2 justify-end">
               <Select
                 containerClass="py-1 sm:py-3 px-2 sm:px-5 w-full rounded-lg !justify-between"
                 values={values}
@@ -105,7 +110,7 @@ const Invoices = ({ setShowRequest, id, type, selectedPropertyTerminated }) => {
             :
             <div className="mt-7 flex items-center justify-center">
               <Typography variant="body-xl-bold" as="h2" className=" text-black">
-                No {selected.icon} Invoices.
+                {t("no-invoices")}
               </Typography>
             </div>
           }

@@ -116,7 +116,7 @@ function ReservationBox({ property }) {
                             <div className={`flex flex-col ${locale === "en" ? "items-start" : "items-end"}`}>
                                 <Typography variant='body-xs' as="span" className="text-main-secondary">{property?.payment_type === "rent" ? t("rent-price") : t("price")}</Typography>
                                 <Typography variant='body-lg-bold' as="p" className="text-main-yellow-600">
-                                    {t("kwd")} {property && getPropertyPrice(property)}
+                                    {property && getPropertyPrice(property)} {t("kwd")}
                                     {property?.payment_type === "rent" && <sub><Typography variant='body-xs' as="span" className="text-main-secondary"> / {property && tPrice(getPropertyPeriod(property))}</Typography></sub>}
                                 </Typography>
                             </div>

@@ -8,7 +8,7 @@ const Input = (props) => {
     return (
       <textarea
         id={id}
-        className={`relative block w-full rounded-lg border border-gray-200 py-3 px-5 text-main-secondary text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600 ${
+        className={`relative block w-full rounded-lg border border-gray-200 py-3 px-5  text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600 ${
           className || ""
         }`}
         rows="5"
@@ -20,7 +20,7 @@ const Input = (props) => {
   return (
     <input
       id={id}
-      className={`${className || ""} relative block w-full rounded-lg border border-gray-200 py-3 px-5 text-main-secondary text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600 `}
+      className={`${className || ""} relative block w-full rounded-lg border border-gray-200 py-3 px-5  text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600 `}
       {...register}
       {...otherAttrs}
     />

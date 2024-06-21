@@ -8,10 +8,13 @@ import PasswordInput from "@/src/app/[locale]/components/Shared/Form/PasswordInp
 import { axiosClient as axios } from "../../services/axiosClient"
 import PasswordChangedSuccessfully from '@/src/app/[locale]/user/components/change-password/PasswordChangedSuccessfully'
 import { toast } from "react-toastify"
+import { useLocale, useTranslations } from 'next-intl'
 
 
 const ResetPasswordForm = () => {
     const { slug: tempToken } = useParams()
+    const t = useTranslations("ResetPassword")
+    const locale = useLocale()
     const [visible, setVisible] = useState(false)
     const mutation = useMutation({
         mutationFn: async (params) => {
@@ -38,7 +41,7 @@ const ResetPasswordForm = () => {
         if (data.newPassword !== data.confirmPassword) {
             setError('confirmPassword', {
                 type: 'manual',
-                message: 'Passwords do not match',
+                message: t("dont-match"),
             });
         } else {
             clearErrors('confirmPassword')
@@ -64,14 +67,14 @@ const ResetPasswordForm = () => {
     const resetPasswordSchema = {
         newPassword: {
             id: "newPassword",
-            label: "New Password",
-            placeholder: "Enter New password",
+            label: t("NewPassword.label"),
+            placeholder: t("NewPassword.placeholder"),
             register: {
                 ...register("newPassword", {
-                    required: "Password is required",
+                    required: t("required"),
                     minLength: {
                         value: 6,
-                        message: "Minimum character length is 6",
+                        message: t("min"),
                     },
                 }),
             },
@@ -79,14 +82,14 @@ const ResetPasswordForm = () => {
         },
         confirmPassword: {
             id: "confirmPassword",
-            label: "Confirm New Password",
-            placeholder: "Enter New password",
+            label: t("ConfirmPassword.label"),
+            placeholder: t("ConfirmPassword.placeholder"),
             register: {
                 ...register("confirmPassword", {
-                    required: "Password is required",
+                    required: t("required"),
                     minLength: {
                         value: 6,
-                        message: "Minimum character length is ",
+                        message: t("min"),
                     },
                 }),
             },
@@ -100,16 +103,16 @@ const ResetPasswordForm = () => {
                 <Typography
                     variant="body-xl-bold"
                     as="h2"
-                    className="mb-6 capitalize text-black"
+                    className="mb-6 capitalize text-black text-center"
                 >
-                    Reset Password
+                    {t("title")}
                 </Typography>
 
                 <PasswordInput {...resetPasswordSchema.newPassword} register={resetPasswordSchema.newPassword.register} error={errors.newPassword} />
                 <PasswordInput {...resetPasswordSchema.confirmPassword} register={resetPasswordSchema.confirmPassword.register} error={errors.confirmPassword} />
-                <div className="mt-6 flex items-center justify-start space-x-4">
+                <div className={`mt-6 flex items-center ${locale === "ar" ? "justify-end" : "justify-start"} gap-x-4`}>
                     <Button type="submit" disabled={!isValid} variant={isValid ? "primary" : "primary-outline"} className="mr-4">
-                        Save new password
+                        {t("save")}
                     </Button>
                 </div>
             </form>

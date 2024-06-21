@@ -32,7 +32,7 @@ function InputGroup(props) {
         {label}
       </Label>
       {props.type === "file" ? (
-        <div className="relative block w-full rounded-lg border border-gray-200 py-3 px-5 text-main-secondary text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600 ">
+        <div className="relative block w-full rounded-lg border border-gray-200 py-3 px-5 placeholder:text-main-secondary text-black outline-none focus:border-main-yellow-600 focus-visible:ring-main-yellow-600 ">
           {cardIdentity}
           <input
             type="file"

@@ -9,8 +9,11 @@ import Label from "../components/Shared/Form/Label"
 import { useForm } from "react-hook-form";
 import { axiosClient as axios } from "@/src/app/[locale]/services/axiosClient"
 import { toast } from "react-toastify"
+import { useLocale, useTranslations } from "next-intl";
 
 const ForgetPassword = () => {
+  const t = useTranslations("ForgetPassword")
+  const locale = useLocale()
   const {
     register,
     handleSubmit,
@@ -32,14 +35,14 @@ const ForgetPassword = () => {
   const forgetPasswordSchema = {
     email: {
       id: "email",
-      label: "Email",
-      placeholder: "hi@example.com",
+      label: t("Email.label"),
+      placeholder: t("Email.placeholder"),
       register: {
         ...register("email", {
-          required: "Email is required",
+          required: t("Email.required"),
           pattern: {
             value: /^[a-zA-Z0-9_\-.]+@[a-zA-Z-.]+.[a-zA-Z-.]+$/,
-            message: "Please enter a valid email",
+            message: t("Email.valid"),
           },
         }),
       },
@@ -54,20 +57,20 @@ const ForgetPassword = () => {
           <Typography
             variant="body-xl-bold"
             as="h2"
-            className="mb-6 capitalize text-black"
+            className="mb-6 capitalize text-black text-center"
           >
-            Forgot Password
+            {t("title")}
           </Typography>
           <div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="forgetPass" className="">
-                Enter mail address
+              <Label htmlFor="forgetPass" className={locale === "ar" ? "text-end" : "text-start"}>
+                {t("header")}
               </Label>
               <Input {...forgetPasswordSchema.email} error={errors.email} />
             </div>
-            <div className="mt-6 flex items-center justify-start space-x-4">
+            <div className={`mt-6 flex items-center ${locale === "ar" ? "justify-start gap-x-4 flex-row-reverse" : "justify-start"} space-x-4`}>
               <Button type="submit" variant="primary" className="mr-4">
-                Request for new password
+                {t("request-button")}
               </Button>
               <Button
                 type="button"
@@ -75,7 +78,7 @@ const ForgetPassword = () => {
                 className="text-main"
                 to="/login"
               >
-                Cancel
+                {t("cancel")}
               </Button>
             </div>
           </div>

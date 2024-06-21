@@ -6,7 +6,6 @@ import Slider from "react-slick";
 import { Flex, Box } from "@chakra-ui/react"
 
 function PropertySlider({ property }) {
-  console.log(property?.images.length > 1, property)
   const [visible, setVisible] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
 

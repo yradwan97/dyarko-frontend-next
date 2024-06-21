@@ -60,12 +60,11 @@ const LoginForm = () => {
       const response = await signIn("credentials", {...data, role: "user", redirect: false})
       
       if (response.error) {
-        toast.error("Invalid credentials. Try again!")
+        toast.error(t("validation.error"))
         return
       } else if (response.ok) {
         await update()
-        let url = new URL(decodeURIComponent(response.url.substring(response.url.indexOf("=") + 1)))
-        router.push(url.pathname ? url.pathname : "/")
+        router.push("/")
         
       }
     } catch (error) {

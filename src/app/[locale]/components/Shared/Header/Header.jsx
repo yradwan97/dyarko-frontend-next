@@ -135,7 +135,7 @@ const Header = () => {
             :
             <>
               <div
-                className={`hidden items-center gap-x-3 lg:flex ${locale === "ar" ? "mr-auto lg:flex lg:flex-row-reverse" : "ml-auto lg:flex"}`}
+                className={`hidden items-center gap-x-3 xl:flex ${locale === "ar" ? "mr-auto xl:flex-row-reverse" : "ml-auto "}`}
               >
                 <LocalizationDropdown />
 

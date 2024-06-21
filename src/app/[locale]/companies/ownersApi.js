@@ -159,7 +159,10 @@ export const useGetSingleOwner = (id, accessToken) => {
 export const useGetOwnerVideos = (ownerId) => {
   const { data, isSuccess, isFetching, refetch } = useQuery(
     ["owner-videos", ownerId], 
-        async () => await axios.get(`/videos/users/${ownerId}`),
+        async () => await axios.get(`/videos/users/${ownerId}`).then(res => {
+            console.log(res)
+            return res
+        }),
         {
             refetchOnWindowFocus: false,
             refetchOnReconnect: true

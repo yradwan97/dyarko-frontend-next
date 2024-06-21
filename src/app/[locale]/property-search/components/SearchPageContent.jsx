@@ -1,11 +1,7 @@
 'use client'
 import React, { Suspense, useEffect, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import map from "../../../../../public/assets/map.png";
 import Button from "../../components/Shared/Button";
 import Typography from "../../components/Shared/Typography";
-import ChevronRight from "../../components/UI/icons/ChevronRight";
 import GridSolid from "../../components/UI/icons/GridSolid"
 import ListSolid from "../../components/UI/icons/ListSolid"
 import Paginator from "../../components/Shared/pagination/Pagination"
@@ -14,23 +10,14 @@ import SearchSection from "./SearchSection";
 import { useGetProperties, useGetPropertyTypes } from "../../property-listing/propertiesApis";
 import SingleProperty from "@/src/app/[locale]/landingPage/properties/SingleProperty";
 import { useSearchParams } from "next/navigation";
-import { useUrlSearchParams } from "@/src/app/[locale]/utils/utils";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
+import { governerates } from "../../utils/utils";
 
 const sortingValues = [
   { name: "Lowest Price", icon: "Lowest Price", id: 1 },
   { name: "Highest Price", icon: "Highest Price", id: 2 }
 ];
-
-const governerates = [
-  { id: "al ahmadi", icon: "Al Ahmadi" },
-  { id: "al asimah", icon: "Al-Asimah" },
-  { id: "al farwaniyah", icon: "Farwaniya" },
-  { id: "hawalli", icon: "Hawalli" },
-  { id: "al jahra", icon: "Jahra" },
-  { id: "mubarak al-kabeer", icon: "Mubarak Al-Kabeer" },
-  { id: "kuwait city", icon: "Kuwait City" }
-]
 
 function SearchPageContent() {
   const searchParams = useSearchParams()
@@ -46,6 +33,7 @@ function SearchPageContent() {
   const [selectedSort, setSelectedSort] = useState(sortingValues[0]);
   const [bedrooms, setBedrooms] = useState("")
   const size = 12
+  const t = useTranslations("PropertySearch")
 
   useEffect(() => {
 
@@ -104,7 +92,7 @@ function SearchPageContent() {
 
   const handleApplyFilters = () => {
     const searchParams = {
-      bedrooms: bedrooms,
+      // bedrooms: bedrooms,
       price_from: priceTo ? 0 : null,
       price_to: priceTo,
       type: selectedPropertyType?.id,
@@ -135,35 +123,15 @@ function SearchPageContent() {
     <Suspense>
       <div className="flex ">
         <div className="h-full  px-4 py-8 sm:px-8 md:px-12 w-full">
-          <nav className="flex" aria-label="Breadcrumb">
-            <ol className="inline-flex items-center space-x-1 md:space-x-3">
-              <li className="inline-flex items-center">
-                <Link
-                  href="/"
-                  className="text-md inline-flex items-center font-medium text-main-secondary hover:text-main-blue"
-                >
-                  Home
-                </Link>
-              </li>
-              <li aria-current="page">
-                <div className="flex items-center">
-                  <ChevronRight className="h-2.5 w-2 stroke-main-secondary" />
-                  <span className="text-md ml-1 font-medium text-main-blue md:ml-2">
-                    Search
-                  </span>
-                </div>
-              </li>
-            </ol>
-          </nav>
           <Typography variant="h3" as="h3" className="my-4 text-main-blue">
-            Search properties
+            {t("title")}
           </Typography>
           <Typography
             variant="body-md-medium"
             as="p"
             className="text-main-blue/70"
           >
-            {totalCount} properties
+            {t("total", { count: 1 })}
           </Typography>
           <div className="flex flex-col space-y-4 mt-5 ">
             <div className="w-full lg:w-1/2 flex items-center mr-4">
@@ -207,8 +175,8 @@ function SearchPageContent() {
                 setSelectedPropertyType={setSelectedPropertyType}
                 priceTo={priceTo}
                 setPriceTo={setPriceTo}
-                bedrooms={bedrooms}
-                setBedrooms={setBedrooms}
+                // bedrooms={bedrooms}
+                // setBedrooms={setBedrooms}
                 selectedSort={selectedSort}
                 sortingValues={sortingValues}
                 setSelectedSort={setSelectedSort}

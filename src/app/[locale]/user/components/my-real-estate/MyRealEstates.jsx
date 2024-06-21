@@ -9,6 +9,7 @@ import Paginator from "@/src/app/[locale]/components/Shared/pagination/Paginatio
 import Loader from "@/src/app/[locale]/components/Shared/Loader";
 import scrollToTop from "@/src/app/[locale]/utils/scrollToTop";
 import { useTranslations } from "next-intl";
+import NoProperties from "./NoProperties"
 
 
 const MyRealEstates = () => {
@@ -17,6 +18,7 @@ const MyRealEstates = () => {
   const [page, setPage] = useState(1)
   const [propertyType, setPropertyType] = useState()
   const [selectedPropertyTerminated, setSelectedPropertyTerminated] = useState({ isTerminated: false, terminationReason: null });
+  const [endpoint, setEndPoint] = useState()
   const t = useTranslations("Account.RealEstates")
   const values = [
     { name: "rents", icon: t("rented"), id: 1 },
@@ -31,10 +33,12 @@ const MyRealEstates = () => {
   }, [page, refetch, selectedValue])
 
 
-  const onShowInvoices = (id, type, isTerminatedProperty, terminationReason) => {
+  const onShowInvoices = (id, type, terminalRequest) => {
     setSelectedId(id)
     setPropertyType(type)
-    setSelectedPropertyTerminated({ isTerminated: isTerminatedProperty, terminationReason })
+    if (terminalRequest) {
+      setSelectedPropertyTerminated({ isTerminated: true, terminationReason: terminalRequest.adminComment })
+    }
     setTimeout(() => {
       setShowRequest(true)
     }, 500)
@@ -50,13 +54,13 @@ const MyRealEstates = () => {
         <Invoices setShowRequest={setShowRequest} type={propertyType} id={selectedId} selectedPropertyTerminated={selectedPropertyTerminated} />
       ) : (
         <>
-          <div className="mb-6 flex items-center">
-            <div className="w-1/2 flex justify-start">
-              <Typography variant="body-xl-bold" as="h2" className="text-black">
+          <div className="mb-6 grid grid-cols-5">
+            <div className="flex col-span-3 items-center justify-center pl-[50%]">
+              <Typography variant="body-xl-bold" as="h2" className="text-black text-center">
                 {t("title")}
               </Typography>
             </div>
-            <div className="w-1/2 flex justify-end">
+            <div className="flex col-span-2 justify-end">
               <Select
                 containerClass="py-3 px-5 rounded-lg"
                 values={values}
@@ -66,9 +70,11 @@ const MyRealEstates = () => {
             </div>
           </div>
           <div className="flex flex-col gap-4">
-            {data?.data?.map((f, i) => (
+            {data?.data?.length > 0 ? data?.data?.map((f, i) => (
               <RealEstateProperty onShowInvoices={onShowInvoices} key={i} request={f} />
-            ))}
+            ))
+              :
+              <NoProperties />}
           </div>
           <Paginator page={page} lastPage={data?.pages || 1} onChange={e => setPage(e)} />
         </>

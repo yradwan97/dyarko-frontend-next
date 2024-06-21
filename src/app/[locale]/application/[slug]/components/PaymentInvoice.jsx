@@ -67,13 +67,13 @@ const Invoice = ({ paymentDetails, onEnd }) => {
                         {filteredInvoiceItems.map((item, index) => (
                             <div className='space-x-1 justify-between  flex flex-row' key={index}>
                                 <p className='capitalize'>{item.description}: </p>
-                                <p className='text-main-yellow-600 ml-3'> {t("kwd")} {Math.abs(item.amount)}</p>
+                                <p className='text-main-yellow-600 ml-3'>  {Math.abs(item.amount)} {t("kwd")}</p>
                             </div>
                         ))}
                         <Line className='mt-2' />
                         <div className='space-x-1 justify-between flex flex-row'>
                             <p>Total: </p>
-                            <p className='text-main-yellow-600 ml-3'> {t("kwd")} {finalAmount}</p>
+                            <p className='text-main-yellow-600 ml-3'> {finalAmount} {t("kwd")}</p>
                         </div>
                     </div>
                     <PaymentButton

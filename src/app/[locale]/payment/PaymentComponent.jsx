@@ -105,7 +105,7 @@ const PaymentComponent = ({ invoiceId }) => {
                             </div>}
                             {invoice?.rent_type === "monthly" && <div className='space-x-1 mb-2 justify-between flex flex-row'>
                                 <p>{t("monthly")}: </p>
-                                <p className='text-main-yellow-600 ml-3'> KWD {invoice?.property?.monthly_price}</p>
+                                <p className='text-main-yellow-600 ml-3'> {invoice?.property?.monthly_price} {t("kwd")}</p>
                             </div>}
                             <hr />
                             <Typography as='h4' className='text-center' variant='body-md-medium'>
@@ -116,7 +116,7 @@ const PaymentComponent = ({ invoiceId }) => {
                                     {invoice?.details.map((d, i) => (
                                         <div key={i} className='space-x-1 mb-2 justify-between flex flex-row'>
                                             <p className='capitalize'>{d.description}</p>
-                                            <p className='text-main-yellow-600 ml-3'> {t("kwd")} {d.amount}</p>
+                                            <p className='text-main-yellow-600 ml-3'> {d.amount} {t("kwd")}</p>
                                         </div>
                                     ))}
                                 </>
@@ -124,7 +124,7 @@ const PaymentComponent = ({ invoiceId }) => {
                             <hr />
                             <div className='space-x-1 mt-2 justify-between flex flex-row'>
                                 <p>{t("total")}: </p>
-                                <p className='text-main-yellow-600 ml-3'> {t("kwd")} {invoice?.amount}</p>
+                                <p className='text-main-yellow-600 ml-3'> {invoice?.amount} {t("kwd")}</p>
                             </div>
                         </div>
                         {showPaymentButton && <PaymentButton

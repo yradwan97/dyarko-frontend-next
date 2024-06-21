@@ -28,7 +28,7 @@ const Transactions = () => {
     <NoTransaction />
   ) : (
     <div>
-      <Typography variant="body-xl-bold" as="h2" className="mb-12 text-black">
+      <Typography variant="body-xl-bold" as="h2" className="mb-12 text-black text-center">
         {t("title")}
       </Typography>
 
@@ -41,7 +41,7 @@ const Transactions = () => {
             <th className="text-md flex-1 text-center font-bold text-black">
               {t("purpose")}
             </th>
-            <th className="text-md flex-1 text-cemter font-bold text-black">
+            <th className="text-md flex-1 text-center font-bold text-black">
               {t("amount")}
             </th>
           </tr>
@@ -50,13 +50,13 @@ const Transactions = () => {
           {data?.data && data?.data.wallet.map((t, i) => {
             return (
               <tr key={i} className="flex justify-between border-b border-main-100 py-7 hover:bg-main-100">
-                <td className="flex-1 text-left text-sm font-medium text-gray-500">
+                <td className="flex-1 text-center text-sm font-medium text-gray-500">
                   {format(new Date(t.paid_at), "dd/MM/yyyy hh:mm a")}
                 </td>
                 <td className="capitalize flex-1 text-center text-sm font-medium text-black">
                   {t.title}
                 </td>
-                <td className="flex-1 text-right text-sm font-medium text-black">
+                <td className="flex-1 text-center text-sm font-medium text-black">
                   {t.amount}
                 </td>
               </tr>

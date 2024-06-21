@@ -26,7 +26,7 @@ const NotificationsContent = () => {
     }, [session, page, refetch])
 
     useEffect(() => {
-
+        console.log(data?.data?.data)
         if (data?.data.length > 0) {
             setNotifications(data?.data)
         }
@@ -85,7 +85,7 @@ const NotificationsContent = () => {
             case "property":
                 if (!notification.is_read) {
                     setApproveRent(prev => {
-                        setHasARenterProperty(notification)
+                        setHasARenterProperty(notification?.property)
                         return true
                     })
                 } else {

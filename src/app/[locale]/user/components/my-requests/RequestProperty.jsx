@@ -1,4 +1,4 @@
-import propertyOne from "../../../../../../public/assets/property-1.png";
+import propertyOne from "../../../../../../public/assets/DYARKO LOGO PNG-01.png";
 import Typography from "../../../components/Shared/Typography"
 import BathSolid from "../../../components/UI/icons/BathSolid"
 import BedSolid from "../../../components/UI/icons/BedSolid"
@@ -26,7 +26,7 @@ const stylesMap = {
 
 
 function RequestProperty({ badge, request, activeTab }) {
-  const t = useTranslations("Requests")
+  const t = useTranslations("Account.Requests")
   let { property, owner_status, user_status } = request
   const [showInstallmentPlanModal, setShowInstallmentPlanModal] = useState(false)
   let startingDate = request?.start_date ? new Date(request?.start_date) : new Date()

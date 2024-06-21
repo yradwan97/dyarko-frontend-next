@@ -1,23 +1,30 @@
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import Form from "@/src/app/[locale]/components/Shared/Form/Form";
 import InputGroup from "../components/Shared/Form/InputGroup";
-import PhoneInput from "@/src/app/[locale]/components/Shared/Form/PhoneInput"
-import PasswordInput from "@/src/app/[locale]/components/Shared/Form/PasswordInput"
-import CustomRadioGroup from "@/src/app/[locale]/components/Shared/Form/CustomRadioGroup"
-import Button from "../components/Shared/Button"
-import Typography from "../components/Shared/Typography"
+import PasswordInput from "@/src/app/[locale]/components/Shared/Form/PasswordInput";
+import Button from "../components/Shared/Button";
+import Typography from "../components/Shared/Typography";
 import Link from "next/link";
-import SaleColoredIcon from "../components/UI/icons/SaleColoredIcon"
-import HouseColoredIcon from "../components/UI/icons/HouseColoredIcon"
-import { useTranslations } from "next-intl";
+import HouseColoredIcon from "../components/UI/icons/HouseColoredIcon";
+import { useLocale, useTranslations } from "next-intl";
+import { Checkbox } from "@mui/material";
+import Modal from '@/src/app/[locale]/components/Shared/Modal';
+import { useGetTermsAndConditions } from "./hooks/useGetTermsAndConditions";
+import { useGetPrivacyPolicy } from "./hooks/useGetPrivacyPolicy";
+import { useGetRefundPolicy } from "./hooks/useGetRefundPolicy";
+import TermsModal from "./modals/TermsModal"
+import RefundModal from "./modals/RefundModal"
+import PrivacyModal from "./modals/PrivacyModal"
 
 const OWNER_DASHBOARD_URL = process.env.NEXT_PUBLIC_NEXT_APP_OWNER_DASHBOARD_URL;
 
-
-
 const SignUpForm = (props) => {
-  const t = useTranslations("SignUp")
+  const t = useTranslations("SignUp");
+  const [termsOpen, setTermsOpen] = useState(false);
+  const [refundOpen, setRefundOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
+  const locale = useLocale()
   const userTypes = [
     {
       value: "consumer",
@@ -25,12 +32,20 @@ const SignUpForm = (props) => {
       icon: <HouseColoredIcon />,
     }
   ];
-  const [userType, setUserType] = useState(userTypes[0]);
+  const { terms, isSuccess } = useGetTermsAndConditions();
+  const { policies, isSuccess: isPrivacySuccess } = useGetPrivacyPolicy();
+  const { policies: refundPolicies, isSuccess: isRefundSuccess } = useGetRefundPolicy();
+  console.log(terms, policies, refundPolicies)
+  const hasTerms = isSuccess && terms.length > 0;
+  const hasPolicies = isPrivacySuccess && policies.length > 0;
+  const hasRefund = isRefundSuccess && refundPolicies.length > 0;
+  const hasAny = hasTerms || hasRefund || hasPolicies;
 
   const {
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm();
 
@@ -108,34 +123,86 @@ const SignUpForm = (props) => {
     },
   };
 
-  const submitHandler = (data) => props.handler({...data, type: userType.value, role: "user"}, reset);
+  const submitHandler = (data) => props.handler({...data, type: userTypes[0].value, role: "user"}, reset);
 
   return (
+    <>
     <Form formHandleSubmit={handleSubmit} submitHandler={submitHandler}>
-      <CustomRadioGroup
-        value={userType}
-        setValue={setUserType}
-        list={userTypes}
-        variant="yellow"
-        radioClassName="w-36 h-36"
-        {...signUpSchema.type}
-      />
-      {/* {userType === "owner" ? (
-        <CustomRadioGroup
-          value={userGroup}
-          setValue={setUserGroup}
-          list={userGroups}
-          className="flex-col"
-          hasIndicator={true}
-          {...signUpSchema.group}
-        />
-      ) : null} */}
       <InputGroup {...signUpSchema.name} />
       <InputGroup {...signUpSchema.email} />
       <InputGroup {...signUpSchema.civilianId} />
       <InputGroup {...signUpSchema.phoneNumber} register={signUpSchema.phoneNumber.register} error={errors.phoneNumber} />
-      {/* <PhoneInput {...signUpSchema.phoneNumber} /> */}
       <PasswordInput {...signUpSchema.password} />
+      
+      {hasTerms && <>
+        <div className={`flex items-center ${locale === "ar" ? "flex-row-reverse ml-auto" : "flex-row"}`}>
+          <Controller
+            name="termsAgree"
+            control={control}
+            rules={{ required: t("agree") }}
+            render={({ field }) => (
+              <Checkbox {...field} checked={field.value} />
+            )}
+          />
+          <button type="button" className="shadow-md hover:shadow-lg rounded-lg py-1 px-2" onClick={() => setTermsOpen(true)}>
+            {t("agree-terms")}
+          </button>
+        </div>
+        <div className={`flex ${locale === "ar" && "justify-end"}`}>
+          {errors.termsAgree && (
+            <Typography className={`my-2 text-error`} variant="body-md-medium" as="span">
+              {errors.termsAgree.message}
+            </Typography>
+          )}
+        </div>
+      </>}
+
+      {hasRefund && <>
+        <div className={`flex items-center ${locale === "ar" ? "flex-row-reverse ml-auto" : "flex-row"}`}>
+          <Controller
+            name="refundAgree"
+            control={control}
+            rules={{ required: t("agree") }}
+            render={({ field }) => (
+              <Checkbox {...field} checked={field.value} />
+            )}
+          />
+          <button type="button" className="shadow-md hover:shadow-lg rounded-lg py-1 px-2" onClick={() => setRefundOpen(true)}>
+            {t("agree-refund")}
+          </button>
+        </div>
+        <div className={`flex ${locale === "ar" && "justify-end"}`}>
+          {errors.refundAgree && (
+            <Typography className={`my-2 text-error ${locale === "ar" && "ml-auto"}`} variant="body-md-medium" as="span">
+              {errors.refundAgree.message}
+            </Typography>
+          )}
+        </div>
+      </>}
+
+      {hasPolicies && <>
+        <div className={`flex items-center ${locale === "ar" ? "flex-row-reverse ml-auto" : "flex-row"}`}>
+          <Controller
+            name="privacyAgree"
+            control={control}
+            rules={{ required: t("agree") }}
+            render={({ field }) => (
+              <Checkbox {...field} checked={field.value} />
+            )}
+          />
+          <button type="button" className="shadow-md hover:shadow-lg rounded-lg py-1 px-2" onClick={() => setPrivacyOpen(true)}>
+            {t("agree-privacy")}
+          </button>
+        </div>
+        <div className={`flex ${locale === "ar" && "justify-end"}`}>
+          {errors.privacyAgree && (
+            <Typography className={`my-2 text-error ${locale === "ar" && "ml-auto"}`} variant="body-md-medium" as="span">
+              {errors.privacyAgree.message}
+            </Typography>
+          )}
+        </div>
+      </>}
+
       <Button
         type="submit"
         variant="primary"
@@ -143,6 +210,7 @@ const SignUpForm = (props) => {
       >
         {t("sign-up")}
       </Button>
+
       <Typography
         className="text-center text-gray-500 my-2"
         variant="body-sm-bold"
@@ -164,6 +232,11 @@ const SignUpForm = (props) => {
         </Link>
       </Typography>
     </Form>
+
+    {isSuccess && <TermsModal isOpen={termsOpen} onClose={setTermsOpen} terms={terms} />}
+    {isRefundSuccess && <RefundModal isOpen={refundOpen} onClose={setRefundOpen} policies={refundPolicies} />}
+    {isPrivacySuccess && <PrivacyModal isOpen={privacyOpen} onClose={setPrivacyOpen} policies={policies} /> }
+    </>
   );
 };
 

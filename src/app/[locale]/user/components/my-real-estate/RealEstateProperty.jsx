@@ -20,8 +20,10 @@ import Input from "../../../components/Shared/Form/Input"
 import Button from "../../../components/Shared/Button"
 import Line from "@/src/app/[locale]/property-search/components/Line";
 import { useTranslations } from "next-intl";
+import CategoryBadge from "../../../landingPage/properties/CategoryBadge";
 
 function RealEstateProperty({ request, onShowInvoices }) {
+  console.log(request)
   const [anchorEl, setAnchorEl] = useState(null);
   const [services, setServices] = useState([])
   const [showReason, setShowReason] = useState(false)
@@ -29,7 +31,7 @@ function RealEstateProperty({ request, onShowInvoices }) {
   const [selectedService, setSelectedService] = useState()
   const [showServicesModal, setShowServicesModal] = useState(false)
   const { data: session } = useSession()
-  const { property, contract, is_terminated } = request
+  const { property, contract, terminal_request } = request
   const t = useTranslations("Account.RealEstates")
 
   useEffect(() => {
@@ -109,16 +111,16 @@ function RealEstateProperty({ request, onShowInvoices }) {
     setReason("")
     setShowReason(false)
   }
-  const handleMenuItemClick = async (event) => {
+  const handleMenuItemClick = async (menuItem) => {
 
-    if (event.target.textContent === "Financial Discharge") {
+    if (menuItem === "Discharge") {
       confirmSubmit("Discharge")
-    } else if (event.target.textContent === "Services") {
+    } else if (menuItem === "Services") {
       setShowServicesModal(true)
-    } else if (event.target.textContent === "Terminate Contract") {
+    } else if (menuItem === "Terminate") {
       setShowReason(true)
-    } else if (event.target.textContent === "Invoices") {
-      onShowInvoices(property?._id, property?.payment_type, property?.is_terminated, property?.terminated_reason)
+    } else if (menuItem === "Invoices") {
+      onShowInvoices(property?._id, property?.payment_type, request?.terminal_request)
     }
     handleClose()
   };
@@ -148,8 +150,9 @@ function RealEstateProperty({ request, onShowInvoices }) {
 
     <div className={`relative flex flex-col rounded-lg border border-main-200 p-1 md:flex-row`}>
       <div className="relative">
-        {property?.payment_type === "rent" && <TopBadge />}
-        {is_terminated && <TerminatedBadge />}
+        {/* {property && <CategoryBadge category={property?.category} isDark={property?.image && true} />} */}
+        {property?.payment_type === "rent" && !terminal_request && <TopBadge isDark={property?.image && true} />}
+        {terminal_request && <TerminatedBadge />}
         <Link href={`/property-details/${property?._id}`}>
           <Image
             src={fixImageSource(property?.image) || propertyOne}
@@ -180,11 +183,11 @@ function RealEstateProperty({ request, onShowInvoices }) {
         </div>
 
         <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
-          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>{t("ActionMenu.discharge")}</MenuItem>}
-          <MenuItem onClick={(e) => handleMenuItemClick(e)}>{t("ActionMenu.invoices")}</MenuItem>
-          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>{t("ActionMenu.services")}</MenuItem>}
-          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick(e)}>{t("ActionMenu.terminate")}</MenuItem>}
-          {contract && <MenuItem onClick={(e) => handleMenuItemClick(e)}>
+          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick("Discharge")}>{t("ActionMenu.discharge")}</MenuItem>}
+          <MenuItem onClick={(e) => handleMenuItemClick("Invoices")}>{t("ActionMenu.invoices")}</MenuItem>
+          {property?.payment_type === "rent" && <MenuItem onClick={(e) => handleMenuItemClick("Services")}>{t("ActionMenu.services")}</MenuItem>}
+          {(property?.payment_type === "rent" && !request?.terminal_request) && <MenuItem onClick={(e) => handleMenuItemClick("Terminate")}>{t("ActionMenu.terminate")}</MenuItem>}
+          {contract && <MenuItem>
             <Link href={contract} passHref legacyBehavior>
               <a target="_blank" rel="noopener noreferrer">{t("ActionMenu.contract")}</a>
             </Link>

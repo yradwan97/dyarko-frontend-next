@@ -152,3 +152,18 @@ export const filterPropertyTypes = (category: string, propertyTypes: PropertyTyp
             }) || []
     }
 }
+
+export const governerates: Governerate[] = [
+    { id: "al_ahmadi", icon: "Al Ahmadi" },
+    { id: "al_asimah", icon: "Al-Asimah" },
+    { id: "al_farwaniyah", icon: "Farwaniya" },
+    { id: "hawalli", icon: "Hawalli" },
+    { id: "al_jahra", icon: "Jahra" },
+    { id: "mubarak_al_kabeer", icon: "Mubarak Al-Kabeer" },
+    { id: "kuwait_city", icon: "Kuwait City" }
+  ]
+
+export type Governerate = {
+    id: string;
+    icon: string;
+  };

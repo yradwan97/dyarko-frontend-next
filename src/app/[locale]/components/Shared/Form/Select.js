@@ -2,15 +2,17 @@ import React, { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import PropTypes from "prop-types";
+import { useTranslations } from "next-intl";
 
 const Select = (props) => {
-  const { values, containerClass, selected, setSelected } = props;
+  const { values, containerClass, selected, setSelected, isGov } = props;
+  const t = useTranslations("General.Regions")
   
   return (
     <Listbox value={selected} onChange={(value) => setSelected(value)}>
       <div className="relative">
         <Listbox.Button className={`flex h-full items-center justify-center gap-x-5 border border-gray focus:border-main-yellow-600 ${containerClass || ""}`}>
-          <div className="hidden sm:flex">{selected && selected.icon}</div>
+          <div className="hidden sm:flex">{selected && (isGov ? t(selected.id) : selected.icon)}</div>
           <span className="pointer-events-none">
             <ChevronDownIcon
               className="h-5 w-5 stroke-black sm:stroke-none"
@@ -37,7 +39,7 @@ const Select = (props) => {
               >
                 {({ selected }) => (
                   <div className={`${selected ? "font-medium" : "font-normal"}`}>
-                    {value.icon}
+                    {isGov ? t(value.id) : value.icon}
                   </div>
                 )}
               </Listbox.Option>
@@ -54,6 +56,7 @@ Select.propTypes = {
   containerClass: PropTypes.string,
   selected: PropTypes.object,
   setSelected: PropTypes.func,
+  isGov: PropTypes.bool
 };
 
 export default Select;

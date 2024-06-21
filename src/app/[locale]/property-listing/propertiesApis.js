@@ -29,27 +29,38 @@ export const useGetPropertyTypes = () => {
 }
 
 export const useGetSingleProperty = (id) => {
-    const {isLoading, data, refetch} = useQuery(
-        ["property-details"], 
+    const {isLoading, data, refetch, isSuccess} = useQuery(
+        ["property-details", id], 
         async () => await axios.get(`/properties/${id}`),
         {
             refetchOnWindowFocus: false,
-            refetchOnReconnect: true
+            refetchOnReconnect: true,
+            
         }
     )
-
+    // if (isSuccess) {
+    //     createPropertyView(id)
+    // }
     return {
         data,
         isLoading,
-        refetchSingleProperty: refetch
+        refetch
+    }
+}
+
+export const createPropertyView = async (id) => {
+    try {
+        let res = await axios.post(`/properties/${id}/views`)
+    } catch (e) {
+        console.error(e)
     }
 }
 
 export const useGetProperties = (searchParams = "") => {
-    
+    let params = typeof searchParams === 'object' ? searchParams[0] : searchParams
     const {isLoading, data, refetch} = useQuery(
         ["properties", searchParams],
-        async () => await axios.get(`/properties?${searchParams}`),
+        async () => await axios.get(`/properties?${params}`),
         {
             refetchOnWindowFocus: false,
             refetchOnReconnect: true

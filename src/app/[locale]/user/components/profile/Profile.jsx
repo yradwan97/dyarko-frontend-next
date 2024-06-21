@@ -142,7 +142,7 @@ const Profile = () => {
           <Typography
             variant="h4"
             as="h4"
-            className="pb-5 font-bold capitalize text-black"
+            className="pb-5 font-bold capitalize text-black text-center"
           >
             {t("Sections.personal")}
           </Typography>
@@ -159,7 +159,7 @@ const Profile = () => {
           <Typography
             variant="h4"
             as="h4"
-            className="pb-5 font-bold capitalize text-black"
+            className="pb-5 font-bold capitalize text-black text-center"
           >
             {t("Sections.banking")}
           </Typography>

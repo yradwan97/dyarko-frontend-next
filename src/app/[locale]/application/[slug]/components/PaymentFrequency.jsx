@@ -29,7 +29,7 @@ const PaymentFrequency = ({ property, onChange, paymentFrequency }) => {
             onChange={handleFrequencyChange}
           />
           <label htmlFor="daily" className="text-black">
-            {t("daily")}: {t("kwd")}{property?.daily_price}
+            {t("daily")}: {property?.daily_price}{t("kwd")}
           </label>
         </div>
       )}
@@ -45,7 +45,7 @@ const PaymentFrequency = ({ property, onChange, paymentFrequency }) => {
             onChange={handleFrequencyChange}
           />
           <label htmlFor="weekly" className="text-black">
-            {t("weekly")}: {t("kwd")}{property?.weekly_price}
+            {t("weekly")}: {property?.weekly_price}{t("kwd")}
           </label>
         </div>
       )}
@@ -61,7 +61,7 @@ const PaymentFrequency = ({ property, onChange, paymentFrequency }) => {
             onChange={handleFrequencyChange}
           />
           <label htmlFor="monthly" className="text-black">
-            {t("monthly")}: {t("kwd")}{property?.monthly_price}
+            {t("monthly")}: {property?.monthly_price}{t("kwd")}
           </label>
         </div>
       )}

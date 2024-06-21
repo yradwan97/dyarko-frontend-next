@@ -121,7 +121,7 @@ const ChangePassword = () => {
         <Typography
           variant="body-xl-bold"
           as="h2"
-          className="mb-6 capitalize text-black"
+          className="mb-6 capitalize text-black text-center"
         >
           {t("title")}
         </Typography>

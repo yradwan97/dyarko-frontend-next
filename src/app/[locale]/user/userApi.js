@@ -123,7 +123,8 @@ export const useGetNotifications = (page = 1) => {
             async () => await axios.get(`/notifications?sort=is_read&page=${page}`), 
             {
                 refetchOnWindowFocus: false,
-                refetchOnReconnect: true
+                refetchOnReconnect: true,
+                refetchInterval: 30000
             }
         )
         return {data: isSuccess ? data?.data : null, isSuccess, isFetching, refetch}

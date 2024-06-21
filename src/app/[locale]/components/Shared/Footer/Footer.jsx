@@ -32,7 +32,7 @@ function Footer() {
 
   return (
     <div>
-      <div className="container mx-auto py-20">
+      <div className="container mx-auto bg-main-100 rounded-md shadow-sm py-20">
         <div className={`grid gap-4 sm:grid-cols-1 md:grid-cols-4`}>
           <div className={`${locale === "ar" ? "order-4 ml-auto" : "order-1"}`}>
             <Image src={locale === "ar" ? logoAr : logo} height={160} width={160} loading="lazy" alt="" />
@@ -87,6 +87,13 @@ function Footer() {
               className="mb-3 text-gray-600"
             >
               <Link href="/privacy-policy">{t("About.privacy")}</Link>
+            </Typography>
+            <Typography
+              variant="body-sm-medium"
+              as="p"
+              className="mb-3 text-gray-600"
+            >
+              <Link href="/faqs">{t("About.faqs")}</Link>
             </Typography>
             <Typography
               variant="body-sm-medium"
